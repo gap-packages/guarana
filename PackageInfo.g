@@ -37,27 +37,21 @@ Status := "other",
 #CommunicatedBy := "Charles Wright (Eugene)",
 #AcceptDate := "08/2005",
 
-
 README_URL := "http://www.icm.tu-bs.de/ag_algebra/software/assmann/Polenta/README",
 PackageInfoURL := "http://www.icm.tu-bs.de/ag_algebra/software/assmann/Polenta/PackageInfo.g",
 
-AbstractHTML := 
-"The <span class=/"pkgname"\Guarana</span> package provides
-methods for fast collection in infinite polycyclic groups. 
-It further contains functionality to realize the Mal'cev
-correspondence between Q-powered nilpotent groups and nilpotent
-Lie algebras.",
+AbstractHTML := "The Guarana packages provives methods for fast collection in infinite polycyclic groups.", 
 
-PackageWWWHome := "http://www.icm.tu-bs.de/ag_algebra/software/assmann/Polenta",
+PackageWWWHome :="http://www.icm.tu-bs.de/ag_algebra/software/assmann/Polenta",
 
-PackageDoc := rec(          
-  BookName  := "Polenta",
-  ArchiveURLSubset := ["doc", "htm"],
-  HTMLStart := "htm/chapters.htm",
-  PDFFile   := "doc/manual.pdf",
-  SixFile   := "doc/manual.six",
-  LongTitle := "Polycyclic presentations for matrix groups",
-  Autoload  := true),
+#PackageDoc := rec(          
+#  BookName  := "Polenta",
+#  ArchiveURLSubset := ["doc", "htm"],
+#  HTMLStart := "htm/chapters.htm",
+#  PDFFile   := "doc/manual.pdf",
+#  SixFile   := "doc/manual.six",
+#  LongTitle := "Polycyclic presentations for matrix groups",
+#  Autoload  := true ),
 
 Dependencies := rec(
   GAP := ">= 4.3fix4",

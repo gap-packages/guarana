@@ -1,7 +1,6 @@
 #############################################################################
 ##
-#W    read.g                 The Example package                Werner Nickel
-#W                                                                Greg Gamble
+#W    read.g                 Guarana Package                  Bjoern Assmannn
 ##
 ##    @(#)$Id$
 ##
@@ -10,7 +9,8 @@
 ##
 #R  Read the install files.
 ##
-ReadPackage( "example", "gap/files.gi" );
+ReadPackage( "guarana", "gap/bch.gi" );
 
-#E  read.g . . . . . . . . . . . . . . . . . . . . . . . . . . . .  ends here
-
+#############################################################################
+##
+#E
