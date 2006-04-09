@@ -10,8 +10,8 @@
 ## First we compute z as a polynomial in the x_i. For this purpose,
 ## we use the paper of Reinsch 'A simple expression for the terms in the
 ## Baker-Campbell-Hausdorff series'
-## Then we transform it to an expression only involving liebrackets  
-## with the trick of Michael Vaughan-Lee 
+## Then we transform it to an expression only involving Liebrackets  
+## with the trick of Michael Vaughan-Lee.
 ##
 ## In addition, this file contains code for the computation of 
 ## identities that are related to BCH formula. 
@@ -27,13 +27,15 @@
 ##   be an overkill to use the BCH formula in 60 Variables!
 ## - Should we use basic commutators for all series ?
 
-#############################################################################
-#
-# IN: v ..... upper or lower trinagular matrix with 0s on the diagonal
-#
-# OUT: exp(x) where exp is given by the usual power series. 
-#
-GUARANA_Exponential := function( A, v )
+##############################################################################
+##
+#F GUARANA.Exponential( A, v )                                                
+##
+## IN: v ..... upper or lower trinagular matrix with 0s on the diagonal
+##
+## OUT: exp(x) where exp is given by the usual power series. 
+##
+GUARANA.Exponential := function( A, v )
     local n,exp, vPow, fac, i;
     n := Length( v[1] );
     exp := One( A )* IdentityMat(n) + v;
@@ -48,12 +50,14 @@ GUARANA_Exponential := function( A, v )
 end;
 
 #############################################################################
-#
-# IN: x ..... upper or lower trinagular matrix with ones on the diagonal
-#
-# OUT: log(x) where log is given by the usual power series. 
-#
-GUARANA_Logarithm := function( x )
+##
+#F GUARANA.Logarithm( x )
+##
+## IN: x ..... upper or lower trinagular matrix with ones on the diagonal
+##
+## OUT: log(x) where log is given by the usual power series. 
+##
+GUARANA.Logarithm := function( x )
     local n,mat,matPow,log,i;
     n := Length( x[1] );
     mat := x - x^0;
@@ -64,13 +68,13 @@ GUARANA_Logarithm := function( x )
         log := log + (-1)^(i-1)*(i)^-1*matPow;
     od;
     return log;
-
+end;
 
 #############################################################################
 #
 # matrix F,G and H as in paper of Reinsch 
 #
-GUARANA_Compute_F := function( n )
+GUARANA.Compute_F := function( n )
     local F,i,j;
     F := IdentityMat( n+1 );
     for i in [1..n+1] do
@@ -82,17 +86,17 @@ GUARANA_Compute_F := function( n )
 end;
 
 # compute F^pow where pow = +- 1
-GUARANA_Compute_F_Power := function( n, pow )
+GUARANA.Compute_F_Power := function( n, pow )
     local mat,i,F_pow;
     mat := 0*IdentityMat( n+1 );
     for i in [1..n] do
         mat[i][i+1] := 1;
     od;
-    F_pow := GUARANA_Exponential( Rationals, pow*mat ); 
+    F_pow := GUARANA.Exponential( Rationals, pow*mat ); 
     return F_pow;
 end;
 
-GUARANA_Compute_G := function( n, PolRing )
+GUARANA.Compute_G := function( n, PolRing )
     local G,i,j,prod,I;
     I := IndeterminatesOfPolynomialRing( PolRing );
     G := IdentityMat( n+1 );
@@ -106,18 +110,18 @@ GUARANA_Compute_G := function( n, PolRing )
 end;
 
 # compute G^pow where pow = +- 1
-GUARANA_Compute_G_Power := function( n, PolRing, pow )
+GUARANA.Compute_G_Power := function( n, PolRing, pow )
     local mat,i,G_pow,I;
     mat := 0*IdentityMat( n+1 );
     I := IndeterminatesOfPolynomialRing( PolRing );
     for i in [1..n] do
         mat[i][i+1] := I[i];
     od;
-    G_pow := GUARANA_Exponential( Rationals, pow*mat ); 
+    G_pow := GUARANA.Exponential( Rationals, pow*mat ); 
     return G_pow;
 end;
 
-GUARANA_Compute_H := function( n, PolRing )
+GUARANA.Compute_H := function( n, PolRing )
     local H,i,j,prod,I;
     I := IndeterminatesOfPolynomialRing( PolRing );
     H := IdentityMat( n+1 );
@@ -136,10 +140,10 @@ end;
 #     pow ............ rational number
 # 
 # OUT: mat^pow
-GUARANA_RationalPowerOfUnipotentMat := function( mat, pow )
+GUARANA.RationalPowerOfUnipotentMat := function( mat, pow )
     local log;
-    log := GUARANA_Logarithm( mat );
-    return GUARANA_Exponential( Rationals, pow*log ); 
+    log := GUARANA.Logarithm( mat );
+    return GUARANA.Exponential( Rationals, pow*log ); 
 end;
 
 
@@ -159,7 +163,7 @@ end;
 #
 # A := FreeAssociativeAlgebraWithOne( Rationals, k, "x" );
 #
-GUARANA_Compute_HMatrices := function( n, k, A )
+GUARANA.Compute_HMatrices := function( n, k, A )
     local gens,i,j,mat,H;
     gens := GeneratorsOfAlgebraWithOne( A );
     H := [];
@@ -168,14 +172,14 @@ GUARANA_Compute_HMatrices := function( n, k, A )
         for j in [1..n] do
             mat[j][j+1] := gens[i];
         od; 
-        H[i] := GUARANA_Exponential( A, mat );
+        H[i] := GUARANA.Exponential( A, mat );
     od;
     return H;
 end;
 
 
 # typical input string = "1/180*x_1*x_2*x_5"
-GUARANA_SigmaExpression2XY := function( n, string, A )
+GUARANA.SigmaExpression2XY := function( n, string, A )
     local ll,k,gens,monomial,start,ll2,i,rat;
 
     ll := SplitString( string, "*" );
@@ -214,10 +218,10 @@ end;
 # result of operator T.
 # 
 # Example:
-# gap> GUARANA_SigmaExpression2List( 7, "1/180*x_1*x_2*x_5" );
+# gap> GUARANA.SigmaExpression2List( 7, "1/180*x_1*x_2*x_5" );
 # [ 1/180, [ 2, 2, 1, 1, 2, 1, 1 ] ]
 #
-GUARANA_SigmaExpression2List := function( n, string )
+GUARANA.SigmaExpression2List := function( n, string )
     local ll,k,start,ll2,i,rat,result;
 
     ll := SplitString( string, "*" );
@@ -262,7 +266,7 @@ end;
 # OUT
 # A list describing this element, in the  example [ 4/5, [ 2, 1 ] ]
 #
-GUARANA_Monomial2List := function( string )
+GUARANA.Monomial2List := function( string )
     local ll,b,a,rat,inds,index,i,power,j,ss;
     # get rid of new lines commands
     ll := ReplacedString( string, "\n", "" );
@@ -299,7 +303,7 @@ end;
 # Conversion corresponding to Reinsch
 # Output lies in A
 #
-GUARANA_SumOfSigmaExpresions2XY := function( n, string, A )
+GUARANA.SumOfSigmaExpresions2XY := function( n, string, A )
     local ll1,ll2,ll3,k, gens,pol,i;
     ll1 :=  ReplacedString( string, "-", "+-" );
     ll2 := SplitString( ll1, "+" );
@@ -309,7 +313,7 @@ GUARANA_SumOfSigmaExpresions2XY := function( n, string, A )
     gens := GeneratorsOfAlgebra( A );
     pol := gens[1]*0;
     for i in [1..k] do
-        pol := pol + GUARANA_SigmaExpression2XY( n, ll3[i], A );
+        pol := pol + GUARANA.SigmaExpression2XY( n, ll3[i], A );
     od;
     return pol;
 end;
@@ -319,7 +323,7 @@ end;
 # typical input string = "-1/720*x_1*x_2+1/180*x_3*x_5";
 # Conversion corresponding to Reinsch
 #
-GUARANA_SumOfSigmaExpresions2List := function( n, string )
+GUARANA.SumOfSigmaExpresions2List := function( n, string )
     local ll1,ll2,ll3,k,i,result;
     ll1 :=  ReplacedString( string, "-", "+-" );
     ll2 := SplitString( ll1, "+" );
@@ -328,7 +332,7 @@ GUARANA_SumOfSigmaExpresions2List := function( n, string )
 
     result := [];
     for i in [1..k] do
-        Add( result , GUARANA_SigmaExpression2List( n, ll3[i] ));
+        Add( result , GUARANA.SigmaExpression2List( n, ll3[i] ));
     od;
     return result;
 end;
@@ -342,18 +346,18 @@ end;
 # A list describing this element, in the  example 
 # [ [ 1/2, [ 1, 2 ] ], [ -1/2, [ 2, 1 ] ] ]
 #
-GUARANA_Polynomial2List := function( string )
+GUARANA.Polynomial2List := function( string )
     local ll,y,result,i;
     ll := SplitString( string, "+" );
     y := Length( ll );
     result := [];
     for i in [1..y] do
-        Add( result , GUARANA_Monomial2List( ll[i] ));
+        Add( result , GUARANA.Monomial2List( ll[i] ));
     od;
     return result;
 end;
 
-GUARANA_WeightInY := function( list )
+GUARANA.WeightInY := function( list )
     local weight,i;
     weight := 0;
     for i in list do
@@ -376,7 +380,7 @@ end;
 # a list which specifies an elment of the Lie algebra, written 
 # with Lie brackets, which is the image under the map of Vaughan-Lee
 #
-GUARANA_MonomialList2LieBracketList := function( ll )
+GUARANA.MonomialList2LieBracketList := function( ll )
     local k,result,i,l,sum,weight;
     k := Length( ll );
     result := [];
@@ -385,7 +389,7 @@ GUARANA_MonomialList2LieBracketList := function( ll )
         if ll[i][2][1]=2 and ll[i][2][2]=1 then
             l := StructuralCopy( ll[i] );
             # weight in y
-            weight := GUARANA_WeightInY( l[2] );
+            weight := GUARANA.WeightInY( l[2] );
             #sum := Sum( l[2] );
             l[1] := l[1]/weight;
             Add( result, l );
@@ -412,7 +416,7 @@ end;
 #
 # TODO Is this function really correct for more than 2 variables ? 
 #
-GUARANA_MonimalInKVariablesList2LieBracketList := function( ll )
+GUARANA.MonimalInKVariablesList2LieBracketList := function( ll )
     local k,result,i,l,weight;
     k := Length( ll );
     result := [];
@@ -432,40 +436,40 @@ end;
 # 
 # Eample:
 # 
-# gap> GUARANA_ComputeCoefficientsAndBrackets( 2 );
+# gap> GUARANA.ComputeCoefficientsAndBrackets( 2 );
 # [ [ -1/2, [ 1, 0 ] ] ]
-# gap> GUARANA_ComputeCoefficientsAndBrackets( 3 );
+# gap> GUARANA.ComputeCoefficientsAndBrackets( 3 );
 # [ [ -1/12, [ 1, 0, 1 ] ], [ 1/12, [ 1, 0, 0 ] ] ]
 #
-GUARANA_ComputeCoefficientsAndBrackets := function( n )
+GUARANA.ComputeCoefficientsAndBrackets := function( n )
      local P,F,G,elm,string,ll,lie ;
      P := PolynomialRing( Rationals, n );
-     F := GUARANA_Compute_F( n );;
-     G := GUARANA_Compute_G( n, P );;
-     elm := GUARANA_Logarithm( F*G )[1][n+1];
+     F := GUARANA.Compute_F( n );;
+     G := GUARANA.Compute_G( n, P );;
+     elm := GUARANA.Logarithm( F*G )[1][n+1];
      string := String( elm );
-     ll := GUARANA_SumOfSigmaExpresions2List( n, string );
-     lie := GUARANA_MonomialList2LieBracketList( ll ); 
+     ll := GUARANA.SumOfSigmaExpresions2List( n, string );
+     lie := GUARANA.MonomialList2LieBracketList( ll ); 
      return lie;
 end;
 
 # compute bch series up to weight c
-GUARANA_Series := function( c )
+GUARANA.Series := function( c )
     local sers, terms,i;
     sers := [];
     for i in [2..c] do
-        terms := GUARANA_ComputeCoefficientsAndBrackets( i );
+        terms := GUARANA.ComputeCoefficientsAndBrackets( i );
         sers := Concatenation( sers, terms );
     od;
     return sers;
 end;
 
 # compute bch series up to weight c
-GUARANA_SeriesOrdered := function( c )
+GUARANA.SeriesOrdered := function( c )
     local sers, terms,i;
     sers := [];
     for i in [2..c] do
-        terms := GUARANA_ComputeCoefficientsAndBrackets( i );
+        terms := GUARANA.ComputeCoefficientsAndBrackets( i );
         Add( sers, terms );
     od;
     return sers;
@@ -473,15 +477,15 @@ end;
 
 
 
-GUARANA_ComputeMonomials := function( n )
+GUARANA.ComputeMonomials := function( n )
      local P,F,G,elm,string,A,ll,lie ;
      P := PolynomialRing( Rationals, n );
-     F := GUARANA_Compute_F( n );;
-     G := GUARANA_Compute_G( n, P );;
-     elm := GUARANA_Logarithm( F*G )[1][n+1];
+     F := GUARANA.Compute_F( n );;
+     G := GUARANA.Compute_G( n, P );;
+     elm := GUARANA.Logarithm( F*G )[1][n+1];
      string := String( elm );
      #A := FreeAlgebraWithOne( Rationals, 2 );
-     ll := GUARANA_SumOfSigmaExpresions2List( n, string );
+     ll := GUARANA.SumOfSigmaExpresions2List( n, string );
      return ll;
 end;
 
@@ -495,7 +499,7 @@ end;
 # Compute z where e^z = word( e^x, e^y ).
 # Note that word can be any product of e^x,e^y,e^-x,e^-y
 #
-GUARANA_ComputeCoefficientsAndBracketWord := function( n, word )
+GUARANA.ComputeCoefficientsAndBracketWord := function( n, word )
      local P,F,G,elm,string,ll,lie,mats,i,prod,l ;
      P := PolynomialRing( Rationals, n );
      mats := [];
@@ -504,36 +508,36 @@ GUARANA_ComputeCoefficientsAndBracketWord := function( n, word )
      l := Length( word );
      for i in [1..l] do
          if AbsoluteValue( word[i] ) = 1 then 
-            Add( mats, GUARANA_Compute_F_Power( n, SignInt( word[i] ) ));
+            Add( mats, GUARANA.Compute_F_Power( n, SignInt( word[i] ) ));
          elif AbsoluteValue( word[i] ) = 2 then 
-            Add( mats, GUARANA_Compute_G_Power( n, P, SignInt( word[i] ) ));
+            Add( mats, GUARANA.Compute_G_Power( n, P, SignInt( word[i] ) ));
          else 
             Error( "Wrong Input\n" );
          fi;
      od;
      prod := Product( mats );
-     elm := GUARANA_Logarithm( prod )[1][n+1];
+     elm := GUARANA.Logarithm( prod )[1][n+1];
      string := String( elm );
-     ll := GUARANA_SumOfSigmaExpresions2List( n, string );
-     lie := GUARANA_MonomialList2LieBracketList( ll ); 
+     ll := GUARANA.SumOfSigmaExpresions2List( n, string );
+     lie := GUARANA.MonomialList2LieBracketList( ll ); 
      return lie;
 end;
 
-GUARANA_InverseWord := function( word )
+GUARANA.InverseWord := function( word )
     local res;
     res := Reversed( word );
     res := -1*res;
     return res;
 end;
 
-GUARANA_Comm2Word := function( comm )
+GUARANA.Comm2Word := function( comm )
     local l,res,word,wordInv;
     l := Length( comm );
     if l = 2 then 
          res := [ -comm[1],-comm[2],comm[1],comm[2] ];
     else  
-         word := GUARANA_Comm2Word( comm{[1..l-1]} );
-         wordInv := GUARANA_InverseWord( word );
+         word := GUARANA.Comm2Word( comm{[1..l-1]} );
+         wordInv := GUARANA.InverseWord( word );
          res := Concatenation( wordInv, [-comm[l]], word, [comm[l]] );
      fi;
      return res;
@@ -548,42 +552,42 @@ end;
 #            
 # Compute z where e^z = kappa( e^x, e^y ).
 #
-GUARANA_ComputeCoefficientsAndBracketsByCommutator := function( n, kappa )
+GUARANA.ComputeCoefficientsAndBracketsByCommutator := function( n, kappa )
     local word;
     # check if 
     if Length( kappa ) = n then
         return [ [1,kappa] ];
     else
-        word := GUARANA_Comm2Word( kappa );
-        return GUARANA_ComputeCoefficientsAndBracketWord( n, word );
+        word := GUARANA.Comm2Word( kappa );
+        return GUARANA.ComputeCoefficientsAndBracketWord( n, word );
     fi;
 end;
 
 
 # BCH in k variables 
-GUARANA_ComputeMonomialsExtendedBCHSeries := function( n, k )
+GUARANA.ComputeMonomialsExtendedBCHSeries := function( n, k )
      local A,H,mat,elm,string,ll;
      A := FreeAssociativeAlgebraWithOne( Rationals, k, "y" );     
-     H := GUARANA_Compute_HMatrices( n, k, A );
+     H := GUARANA.Compute_HMatrices( n, k, A );
      mat := Product( H );
-     elm := GUARANA_Logarithm( mat )[1][n+1];
+     elm := GUARANA.Logarithm( mat )[1][n+1];
      string := StringPrint( elm );
-     ll := GUARANA_Polynomial2List( string );
+     ll := GUARANA.Polynomial2List( string );
      return ll;
 end;
 
 # BCH in k variables
 # e^z = e^y_1* ... * e^y_k
 #
-GUARANA_ComputeCoefficientsAndBracketsExtendedBCH :=  function( n, k )
+GUARANA.ComputeCoefficientsAndBracketsExtendedBCH :=  function( n, k )
      local A,H,mat,elm,string,ll,lie;
      A := FreeAssociativeAlgebraWithOne( Rationals, k, "y" );     
-     H := GUARANA_Compute_HMatrices( n, k, A );
+     H := GUARANA.Compute_HMatrices( n, k, A );
      mat := Product( H );
-     elm := GUARANA_Logarithm( mat )[1][n+1];
+     elm := GUARANA.Logarithm( mat )[1][n+1];
      string := StringPrint( elm );
-     ll := GUARANA_Polynomial2List( string );
-     lie := GUARANA_MonimalInKVariablesList2LieBracketList( ll );
+     ll := GUARANA.Polynomial2List( string );
+     lie := GUARANA.MonimalInKVariablesList2LieBracketList( ll );
      return lie;
 end;
 
@@ -598,7 +602,7 @@ end;
 # kappa( e^x, e^y )  = e^z
 # 
 # 
-GUARANA_ComputeCommutatorSeries := function( wSers, wCom )
+GUARANA.ComputeCommutatorSeries := function( wSers, wCom )
     local coms,i,a,lie,j,n,com,series,terms;
 
     if wSers < wCom then
@@ -630,7 +634,7 @@ GUARANA_ComputeCommutatorSeries := function( wSers, wCom )
             series := [];
             # the BCH of com starts with weight length of com
             for n in [Length(com)..wSers] do
-                terms := GUARANA_ComputeCoefficientsAndBracketsByCommutator( 
+                terms := GUARANA.ComputeCoefficientsAndBracketsByCommutator( 
                                                                 n, com );
                 series := Concatenation( series, terms );
             od;
@@ -647,7 +651,7 @@ end;
 # kappa( logx, logy ) = log( kappa(x,y) ) +  tail
 # factor*kappa( logx, logy ) = factor*log( kappa(x,y) ) + factor* tail
 #
-GUARANA_GetTail := function( kappa, sersOfComs, factor )
+GUARANA.GetTail := function( kappa, sersOfComs, factor )
     local w, pos,sers,i,l;
     w := Length( kappa );
     pos := Position( sersOfComs.coms[w], kappa );
@@ -669,7 +673,7 @@ end;
 # add lie brackets that are similar.
 # for example [ [1/4, [ 2, 1, 2, 1 ] ], [1/4, [ 2, 1, 2, 1 ] ]]
 # becomes [  [1/2, [ 2, 1, 2, 1 ] ] ]
-GUARANA_SimplifySers := function( sers )
+GUARANA.SimplifySers := function( sers )
     local res,l,term,contained,term2,pos,i,res_without_zeros;
     res := [];
     l := Length( sers );
@@ -705,7 +709,6 @@ GUARANA_SimplifySers := function( sers )
             Add( res_without_zeros, res[pos] );
         fi;
     od;
-       
     return res_without_zeros;
 end;
 
@@ -713,7 +716,7 @@ end;
 #############################################################################
 #
 # Aim:
-#[logx,logy] = Q-linear combination of logs of group commutators.
+# [logx,logy] = Q-linear combination of logs of group commutators.
 #
 #
 # c .............. class of nilpotent groups for which the result
@@ -728,18 +731,22 @@ end;
 # chi(x,y)_L by chi(x,y)_G + higher commutators in x,y, which we 
 # compute with the extended BCH-series.
 #
+# Example:
+# gap> GUARANA.LieBracketInTermsOfLogs( 3 );
+# [ [ [ 1, [ 1, 2 ] ] ], [ [ 1/2, [ 2, 1, 2 ] ], [ 1/2, [ 2, 1, 1 ] ] ] ]
 #
-GUARANA_LieBracketInTermsOfLogs := function( c )
+#
+GUARANA.LieBracketInTermsOfLogs := function( c )
     local sersOfComs,logs,term,lieTerms,tail,i,logs_ordered,le;
 
     # get bch series of all commutators up to weight c
-    sersOfComs := GUARANA_ComputeCommutatorSeries( c, c );
+    sersOfComs := GUARANA.ComputeCommutatorSeries( c, c );
 
     # we know the first term of the logs expressions
     logs := [ [1,[1,2]] ];
     
     # get remaining terms in logx, logy
-    lieTerms := GUARANA_GetTail( [1,2], sersOfComs, 1 );
+    lieTerms := GUARANA.GetTail( [1,2], sersOfComs, 1 );
 
     # replace iteratively all remaining Lie bracktes
     i := 1;
@@ -747,11 +754,11 @@ GUARANA_LieBracketInTermsOfLogs := function( c )
         term := lieTerms[i];
         # replace it by factor*log( kappa(x,y) ) + factor*tail
         Add( logs, term );
-        tail := GUARANA_GetTail( term[2], sersOfComs, term[1] );
+        tail := GUARANA.GetTail( term[2], sersOfComs, term[1] );
         Append( lieTerms, tail );
         i := i+1;
     od;
-    logs := GUARANA_SimplifySers( logs );
+    logs := GUARANA.SimplifySers( logs );
 
     # order result corresponding to weight
     logs_ordered := [];
