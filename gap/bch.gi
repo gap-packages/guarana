@@ -454,7 +454,7 @@ GUARANA.ComputeCoefficientsAndBrackets := function( n )
 end;
 
 # compute bch series up to weight c
-GUARANA.Series := function( c )
+GUARANA.BchSeries := function( c )
     local sers, terms,i;
     sers := [];
     for i in [2..c] do
@@ -465,7 +465,7 @@ GUARANA.Series := function( c )
 end;
 
 # compute bch series up to weight c
-GUARANA.SeriesOrdered := function( c )
+GUARANA.BchSeriesOrdered := function( c )
     local sers, terms,i;
     sers := [];
     for i in [2..c] do
@@ -725,7 +725,7 @@ end;
 #                  which is non-trivial.
 #
 # Approach: Compute this expression for a group of fixed nilpotency 
-# class. Then we can probably show that a group of nilpotency class
+# class. A group of nilpotency class
 # c+1 contains the old series plus some new terms. 
 # We can compute this by replacing in (*) the higher commutators in x,y
 # chi(x,y)_L by chi(x,y)_G + higher commutators in x,y, which we 
@@ -773,3 +773,38 @@ GUARANA.LieBracketInTermsOfLogs := function( c )
     return logs_ordered;
 end;
 
+############################################################################
+##
+#F ComputeBchIdentities
+##
+## IN 
+## w ................... maximal length of Lie bracket
+## 
+## OUT
+## 
+## A record containg
+## bchSers ........... a list containing all terms of the Bch formula
+##		       up to length w
+## bchLBITOL....... .. a list containing all terms up to length w of 
+##                     the identity that expresses a lie bracket 
+##                     in terms of logs of group commutators. 
+## 
+## Example: 
+## gap> GUARANA.ComputeBchIndentities( 3 );
+## rec(
+##   bchSers := [ [ [ -1/2, [ 2, 1 ] ] ], [ [ -1/12, [ 2, 1, 2 ] ], 
+##                  [ 1/12, [ 2,1, 1 ] ] ] ],
+##   bchLBITOL := [ [ [ 1, [ 1, 2 ] ] ], [ [ 1/2, [ 2, 1, 2 ] ],
+##	            [ 1/2, [ 2, 1, 1 ] ] ] ] )
+##				   
+## 
+GUARANA.ComputeBchIndentities := function( w )
+    local bchSers, bchLBITOL;
+    bchSers := GUARANA.BchSeriesOrdered( w );
+    bchLBITOL :=  GUARANA.LieBracketInTermsOfLogs( w );
+
+    return rec( bchSers := bchSers,
+                bchLBITOL := bchLBITOL );
+end;
+
+			    
