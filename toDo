@@ -1,4 +1,21 @@
 To do:
 
-- Finish off the integration of the bch code. 
-  Give some examples for the usage in the file. 
+- Finish off the integration of the bch.g code. 
+  Give some examples for the usage in the file.
+- Long term aim:
+  The user comes along with a pc-group G.
+ 
+  In a first step a good polycyclic sequence of G is computed. 
+  Second the Mal'cev correspondence is set up and everything else
+  that is needed for the fast multiplication. 
+  Then collection can be performed using this setup. 
+
+  It seems reasonable to have a record like 
+  recLieAlg 
+  that contains everything that is needed to go back
+  and forwards between N and L(N). 
+
+  Probably it is not so good to attach information to N,
+  because N might change or at least the pcp presentation 
+  of it. 
+ 
