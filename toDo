@@ -2,6 +2,9 @@ To do:
 
 - Finish off the integration of the bch.g code. 
   Give some examples for the usage in the file.
+  - finish conversion of exmas/tgrps.gi
+  - finish conversion gap/setup.gi 
+
 - Long term aim:
   The user comes along with a pc-group G.
  
