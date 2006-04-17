@@ -10,10 +10,21 @@
 ##
 ##
 ##
+GUARANA.NilpotentQuotient := function( ) return 0; end;
+GUARANA.NilpotentEngelQuotient := function( ) return 0; end;
+
+if TestPackageAvailability( "nq" , "2.0" )=fail then 
+    GUARANA.NqAvailable := false;
+else
+    GUARANA.NqAvailable := true;
+    GUARANA.NilpotentQuotient := NilpotentQuotient;
+    GUARNAN.NilpotentEngelQuotient := NilpotentEngelQuotient;
+fi;
+
 
 #############################################################################
 ##
-#F Guarana.Examples_FreeNilpotentGrp( n, c )
+#F GUARANA.Examples_FreeNilpotentGrp( n, c )
 ##
 ##
 ## IN
@@ -23,11 +34,11 @@
 ## OUT
 ## Pcp of a free nilpotent group on n generators of class c
 ##
-Guarana.Examples_FreeNilpotentGrp := function( n, c )
+GUARANA.Examples_FreeNilpotentGrp := function( n, c )
     local F,N;
     F := FreeGroup( n );
     LoadPackage( "nq" );
-    N := NilpotentQuotient( F, c );
+    N := GUARANA.NilpotentQuotient( F, c );
     return N;
 end;
 
@@ -35,17 +46,18 @@ end;
 
 #############################################################################
 ##
-#F Guarana.Examples_Unitriangular( dim , degree )
+#F GUARANA.Examples_Unitriangular( dim , degree )
 ##
 ## IN
-## dim .............. dim of an example number field K over Q.
+## degree ........... degree of an example number field K over Q.
 ##                    currently this can be only 2 or 3.
-## degree ........... degree of matrix group 
+## dim   ............ degree/dim  of matrix group 
 ##
 ## OUT 
 ## Pcp of a upper unitriangular matrix Tr_1(n,O) where O is 
 ## the maximal order of K.
-Guarana.Examples_Unitriangular := function( dim, degree  )
+##
+GUARANA.Examples_Unitriangular := function( dim, degree  )
     local x,pol,R;
     x := Indeterminate( Rationals );
     if degree = 2 then
@@ -55,23 +67,31 @@ Guarana.Examples_Unitriangular := function( dim, degree  )
     else
         Error( "Sorry no appropriate polynomial\n" );
     fi;
-    R := GURANA.Triang_PresentTriang( dim, pol );
-    return GURANA.Triang_UpperTriangAndUnitriang( R ).N;
+    R := GUARANA.Triang_PresentTriang( dim, pol );
+    return GUARANA.Triang_UpperTriangAndUnitriang( R ).N;
 end;
 
-#####################
-
-# Engel groups of Werners paper, NilpotentEngelQuotient and then factor
-# torsion out.
-Guarana.Examples_Engel := function( n, c )
+#############################################################################
+##
+#F GUARANA.Examples_Engel( n, c )
+##
+## IN
+## n................... number of generators
+## c .................  nilpotency class 
+## 
+## OUT
+## Pcp of  Engel groups of Werners paper. 
+## Use first NilpotentEngelQuotient and then factor
+## torsion out.
+##
+GUARANA.Examples_Engel := function( n, c )
     local G,T,H,N;
-    G := NilpotentEngelQuotient( FreeGroup(n), c );
+    G := GUARANA.NilpotentEngelQuotient( FreeGroup(n), c );
     T := TorsionSubgroup( G );
     H := G/T;
     N := PcpGroupBySeries( UpperCentralSeries(H), "snf" );
     return N;
 end;
-
 
 #############################################################################
 # additional  ideas to produce T-groups
@@ -81,28 +101,6 @@ end;
 # - Nilpotent quotient of other finitely presented groups and then
 #   factor torsion out. 
 
-Guarana.Get_FNG_TGroupRecords := function( n, c )
-    local i,ll,N,r;
-    ll := [[n,c]];
-    for i in [1..c] do
-        Print( "Free nilpotent group ", n, " ", i, "\n" );
-        N := Guarana.Examples_FreeNilpotentGrp( n, i );
-        r := Guarana.TGroupRec( N );
-        Add( ll, r );
-    od;
-    return ll;
-end;
-
-# dim ..... upper bound for dimension
-Guarana.Get_Unitriangular_TGroupRecords := function( dim , degree )
-    local i,ll,N,r;
-    ll := [[dim,degree]];
-    for i in [2..dim] do
-        Print( "Untriangular group ", degree, " ", i, "\n" );
-        N := Guarana.Examples_Unitriangular( i, degree );
-        r := Guarana.TGroupRec( N );
-        Add( ll, r );
-    od;
-    return ll;
-end;
-
+#############################################################################
+##
+#E

@@ -12,11 +12,6 @@
 ##
 ##
 ##
-if TestPackageAvailability( "nq" , "2.0" )=fail then
-    GUARANA.NqAvailable := false;
-else
-    GUARANA.NqAvailable := true;
-fi;
 
 #############################################################################
 ##
@@ -88,13 +83,13 @@ GUARANA.Triang_UnipoMat2Word := function( mat, O, noD, noU )
     # dimension of maximal order
     n := Length( O );
 
-    ent :=  FindNonZeroEntry( mat );
+    ent :=  GUARANA.Triang_FindNonZeroEntry( mat );
     if ent = fail then return fail; fi;
     coeff := Coefficients( O, ent[2] );     
 
     pos := ent[1];
     # get the positions of the corresponding generators in the U(n,O)
-    ll := PositionsUnipotentGens( pos, n, dim, noD  );
+    ll := GUARANA.Triang_PositionsUnipotentGens( pos, n, dim, noD  );
     
     # construct the word
     word := [];
@@ -275,7 +270,7 @@ end;
 ##
 ## This function was previously called SC_Exams_Help1
 ##
-GURANA.Triang_UpperTriangAndUnitriang := function( R )
+GUARANA.Triang_UpperTriangAndUnitriang := function( R )
     local G,m,ll,N;
     G := R.Tr;
     m := Length( Pcp(G) );
