@@ -11,8 +11,19 @@
 ##
 ##
 
-# 1. Free nilpotent groups on n generators and class c
-BCH_Examples_FreeNilpotentGrp := function( n, c )
+#############################################################################
+##
+#F Guarana.Examples_FreeNilpotentGrp( n, c )
+##
+##
+## IN
+## n................... number of generators
+## c .................  nilpotency class 
+## 
+## OUT
+## Pcp of a free nilpotent group on n generators of class c
+##
+Guarana.Examples_FreeNilpotentGrp := function( n, c )
     local F,N;
     F := FreeGroup( n );
     LoadPackage( "nq" );
@@ -20,8 +31,21 @@ BCH_Examples_FreeNilpotentGrp := function( n, c )
     return N;
 end;
 
-# 2. Tr_1(n,O) where O is the maximal order of some number field.
-BCH_Examples_Unitriangular := function( dim, degree  )
+
+
+#############################################################################
+##
+#F Guarana.Examples_Unitriangular( dim , degree )
+##
+## IN
+## dim .............. dim of an example number field K over Q.
+##                    currently this can be only 2 or 3.
+## degree ........... degree of matrix group 
+##
+## OUT 
+## Pcp of a upper unitriangular matrix Tr_1(n,O) where O is 
+## the maximal order of K.
+Guarana.Examples_Unitriangular := function( dim, degree  )
     local x,pol,R;
     x := Indeterminate( Rationals );
     if degree = 2 then
@@ -31,14 +55,15 @@ BCH_Examples_Unitriangular := function( dim, degree  )
     else
         Error( "Sorry no appropriate polynomial\n" );
     fi;
-
-    R := PresentTriang( dim, pol );
-    return SC_Exams_Help1( R ).N;
+    R := GURANA.Triang_PresentTriang( dim, pol );
+    return GURANA.Triang_UpperTriangAndUnitriang( R ).N;
 end;
+
+#####################
 
 # Engel groups of Werners paper, NilpotentEngelQuotient and then factor
 # torsion out.
-BCH_Examples_Engel := function( n, c )
+Guarana.Examples_Engel := function( n, c )
     local G,T,H,N;
     G := NilpotentEngelQuotient( FreeGroup(n), c );
     T := TorsionSubgroup( G );
@@ -56,26 +81,26 @@ end;
 # - Nilpotent quotient of other finitely presented groups and then
 #   factor torsion out. 
 
-BCH_Get_FNG_TGroupRecords := function( n, c )
+Guarana.Get_FNG_TGroupRecords := function( n, c )
     local i,ll,N,r;
     ll := [[n,c]];
     for i in [1..c] do
         Print( "Free nilpotent group ", n, " ", i, "\n" );
-        N := BCH_Examples_FreeNilpotentGrp( n, i );
-        r := BCH_TGroupRec( N );
+        N := Guarana.Examples_FreeNilpotentGrp( n, i );
+        r := Guarana.TGroupRec( N );
         Add( ll, r );
     od;
     return ll;
 end;
 
 # dim ..... upper bound for dimension
-BCH_Get_Unitriangular_TGroupRecords := function( dim , degree )
+Guarana.Get_Unitriangular_TGroupRecords := function( dim , degree )
     local i,ll,N,r;
     ll := [[dim,degree]];
     for i in [2..dim] do
         Print( "Untriangular group ", degree, " ", i, "\n" );
-        N := BCH_Examples_Unitriangular( i, degree );
-        r := BCH_TGroupRec( N );
+        N := Guarana.Examples_Unitriangular( i, degree );
+        r := Guarana.TGroupRec( N );
         Add( ll, r );
     od;
     return ll;
