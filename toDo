@@ -2,8 +2,10 @@ To do:
 
 - Finish off the integration of the bch.g code. 
   Give some examples for the usage in the file.
+  - finish of gap/pcs.gi ( include example ). 
   - finish conversion gap/setup.gi 
   - integrate the st andrews examples. 
+  - include data directory with bch information. 
 
 - Long term aim:
   The user comes along with a pc-group G.
