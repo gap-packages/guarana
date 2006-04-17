@@ -56,7 +56,7 @@ PackageWWWHome :="http://www.icm.tu-bs.de/ag_algebra/software/assmann/Polenta",
 Dependencies := rec(
   GAP := ">= 4.3fix4",
   NeededOtherPackages := [[ "polycyclic", ">=1.1" ]],
-  SuggestedOtherPackages := [ ], 
+  SuggestedOtherPackages := [ ["nq", ">=2.0"]], 
   ExternalConditions :=[], 
 ), 
 

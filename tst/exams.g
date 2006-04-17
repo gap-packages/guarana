@@ -4,26 +4,6 @@
 # 
 #
 
-RequirePackage( "nq" );
-if TestPackageAvailability( "nq" , "2.0" )=fail then
-    GUARANA.NqAvailable := false;
-else
-        GUARANA.NqAvailable := true;
-fi;
-
-
-#############################################################################
-#
-ExamplesOfSomeTGroups := function()
-    local G, FF, F,n;
-    n := 10;
-    G := List( [1..n], x-> ExamplesOfSomePcpGroups(x) );
-    FF := List( G, FittingSubgroup );
-    F := List( [1..n], x-> PcpGroupByPcp( Pcp( FF[x] ) ) );
-    List( F, IsNilpotent );
-    return rec( G := G, FF := FF, F := F );
-
-end;
 
 
 

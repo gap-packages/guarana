@@ -94,6 +94,22 @@ GUARANA.Examples_Engel := function( n, c )
 end;
 
 #############################################################################
+##
+## Examples coming from the package "polycyclic"
+##
+GUARANA.ExamplesOfSomeTGroups := function()
+    local G, FF, F,n;
+    n := 10;
+    G := List( [1..n], x-> ExamplesOfSomePcpGroups(x) );
+    FF := List( G, FittingSubgroup );
+    F := List( [1..n], x-> PcpGroupByPcp( Pcp( FF[x] ) ) );
+    List( F, IsNilpotent );
+    return rec( G := G, FF := FF, F := F );
+
+end;
+
+
+#############################################################################
 # additional  ideas to produce T-groups
 #
 # - take subgroups
