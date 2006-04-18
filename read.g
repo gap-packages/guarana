@@ -16,6 +16,7 @@ BindGlobal("GUARANA", rec());
 ##
 #R  Read the install files.
 ##
+ReadPackage( "guarana", "gap/help.gi" );
 ReadPackage( "guarana", "data/bchdat.g" );
 ReadPackage( "guarana", "gap/bch.gi" );
 ReadPackage( "guarana", "exams/triang.gi" );

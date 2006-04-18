@@ -18,7 +18,7 @@ if TestPackageAvailability( "nq" , "2.0" )=fail then
 else
     GUARANA.NqAvailable := true;
     GUARANA.NilpotentQuotient := NilpotentQuotient;
-    GUARNAN.NilpotentEngelQuotient := NilpotentEngelQuotient;
+    GUARANA.NilpotentEngelQuotient := NilpotentEngelQuotient;
 fi;
 
 
