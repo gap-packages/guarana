@@ -22,16 +22,10 @@
 ## For example it contains a Mal'cev basis of N and 
 ## pcp with respect to that basis. 
 ## 
-## Example
+## Example of usage
 ## gap> N := GUARANA.Examples_Unitriangular( 4, 2 );
 ## Pcp-group with orders [ 0, 0, 0, 0, 0, 0 ]
 ## gap> GUARANA.TGroupRec( N );
-##  rec( N := Pcp-group with orders [ 0, 0, 0, 0, 0, 0 ], 
-##    NN := Pcp-group with orders [ 0, 0, 0, 0, 0, 0 ], 
-##   sers := [ Pcp-group with orders [ 0, 0, 0, 0, 0, 0 ], 
-##    Pcp-group with orders [ 0, 0 ], Pcp-group with orders [  ] ], 
-##    indices := [ [ 1 .. 4 ], [ 5, 6 ] ], class := 2, 
-##   weights := [ 1, 1, 1, 1, 2, 2 ], largestAbelian := 2 )
 ##
 ## TODO
 ## - weights should be computed in a different way.

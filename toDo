@@ -2,8 +2,11 @@ To do:
 
 - Finish off the integration of the bch.g code. 
   Give some examples for the usage in the file.
-  - integrate the st andrews examples. 
 
+- Go step for step through the paper and implement everything
+  that is mentionend. For example:
+  - application of powers of automorph.
+  - application of recursive powers of autom.
 - Write code to compute the weights of a collector. 
   Compare with Werner's code in polycyclic ( IsWeightedCollector ). 
 
