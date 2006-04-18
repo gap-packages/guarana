@@ -83,14 +83,14 @@ GUARANA.PcpGroupTGroupByAbelianGroup := function( N, auts )
             con := pcpN[i]^pcpN[j];
             exp2 := Exponents( con ); 
             exp := Concatenation( exp1, exp2 );
-            genList:=POL_Exp2GenList(exp);
+            genList:=GUARANA.Exp2GenList(exp);
             SetConjugate( coll, i+m, j+m, genList);
 
             # compute g_i^(g_j^-1)
             con := pcpN[i]^(pcpN[j]^-1);
             exp2 := Exponents( con ); 
             exp := Concatenation( exp1, exp2 );
-            genList:=POL_Exp2GenList(exp);
+            genList:=GUARANA.Exp2GenList(exp);
             SetConjugate( coll, i+m, -(j+m), genList);
         od;
     od;
@@ -102,14 +102,14 @@ GUARANA.PcpGroupTGroupByAbelianGroup := function( N, auts )
             g := pcpN[i]^(auts[j]);
             exp2 := Exponents( g );
             exp := Concatenation( exp1, exp2 );
-            genList:=POL_Exp2GenList(exp);
+            genList:=GUARANA.Exp2GenList(exp);
             SetConjugate( coll, i+m, j, genList);
 
             #action of g_j^-1 onf g_{i+m}
             g := pcpN[i]^(auts[j]^-1);
             exp2 := Exponents( g );
             exp := Concatenation( exp1, exp2 );
-            genList:=POL_Exp2GenList(exp);
+            genList:=GUARANA.Exp2GenList(exp);
             SetConjugate( coll, i+m, -j, genList);
         od;
     od;
@@ -124,7 +124,10 @@ end;
 #F GUARANA.NilpotentByFreeAbelianExmas( n )
 ##
 ## IN
-## n ........... natural number between 1 and ...
+## n ........... natural number between 1 and 8 for the 
+##               Sta paper examples.
+##               Further choices [-11..-1]
+##               [10..29]. 
 ##
 ## OUT 
 ## Pcp of a nilpotent by free abelian group.
@@ -167,7 +170,7 @@ GUARANA.NilpotentByFreeAbelianExmas := function( n )
         hl := HirschLength( F_nc );
         auts := GUARANA.GetSomeAutomorphsimOfF_nc( F_nc, m );
         a := auts[1]*auts[2]*auts[3]^3;
-        G := PcpGroupTGroupByAbelianGroup( F_nc, [a] );
+        G := GUARANA.PcpGroupTGroupByAbelianGroup( F_nc, [a] );
         N := Subgroup( G, Pcp(G){[2..hl+1]} );
         T := rec( G := G, N := N );
         return T;
@@ -179,7 +182,7 @@ GUARANA.NilpotentByFreeAbelianExmas := function( n )
         hl := HirschLength( F_nc );
         auts := GUARANA.GetSomeAutomorphsimOfF_nc( F_nc, m );
         a := auts[1]*auts[2]*auts[3]^3;
-        G := PcpGroupTGroupByAbelianGroup( F_nc, [a] );
+        G := GUARANA.PcpGroupTGroupByAbelianGroup( F_nc, [a] );
         N := Subgroup( G, Pcp(G){[2..hl+1]} );
         T := rec( G := G, N := N );
         return T;
@@ -191,7 +194,7 @@ GUARANA.NilpotentByFreeAbelianExmas := function( n )
         hl := HirschLength( F_nc );
         auts := GUARANA.GetSomeAutomorphsimOfF_nc( F_nc, m );
         a := auts[1]*auts[3]^3;
-        G := PcpGroupTGroupByAbelianGroup( F_nc, [a] );
+        G := GUARANA.PcpGroupTGroupByAbelianGroup( F_nc, [a] );
         N := Subgroup( G, Pcp(G){[2..hl+1]} );
         T := rec( G := G, N := N );
         return T;
@@ -248,7 +251,7 @@ GUARANA.NilpotentByFreeAbelianExmas := function( n )
         hl := HirschLength( F_nc );
         auts := GUARANA.GetSomeAutomorphsimOfF_nc( F_nc, 2 );
         a := auts[1]*auts[2]*auts[3]^3;
-        G := PcpGroupTGroupByAbelianGroup( F_nc, [a] );
+        G := GUARANA.PcpGroupTGroupByAbelianGroup( F_nc, [a] );
         N := Subgroup( G, Pcp(G){[2..hl+1]} );
         T := rec( G := G, N := N );
         return T;

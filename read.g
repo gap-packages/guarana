@@ -22,7 +22,7 @@ ReadPackage( "guarana", "exams/triang.gi" );
 ReadPackage( "guarana", "exams/tgrps.gi" );
 ReadPackage( "guarana", "gap/pcs.gi" );
 ReadPackage( "guarana", "exams/recs.gi" );
-ReadPackage( "guarana", "exmas/sta.gi" );
+ReadPackage( "guarana", "exams/sta.gi" );
 
 #############################################################################
 ##
