@@ -31,11 +31,10 @@
 ## about the corresponding Lie algebra. 
 ##
 GUARANA.SetUpLieAlgebraRecordByMalcevbasis := function( recTGroup )
-    local NN,hl,T,L;
+    local hl,T,L;
     
     # get dimension of algebra
-    NN := recTGroup.NN;
-    hl := HirschLength( NN );
+    hl := HirschLength( recTGroup.N );
 
     # get prototype for structure constant table and Lie algebra 
     T:= EmptySCTable( hl, 0, "antisymmetric" );
@@ -64,7 +63,7 @@ end;
 ##                        y corresponds to 2 
 ##                        For example [1,2,1] corresponds to 
 ##                        the commutator [x,y,x]
-## info ................  string that is either "lieAlgebra" or 
+## info ................  string that is either "strucConst" or 
 ##                        "matrix". In the first case the 
 ##                        x,y are elements of a Lie algebra given
 ##                        by strcuture constants. In the second 
@@ -79,7 +78,7 @@ GUARANA.EvaluateLieBracket := function( x, y, com, info )
     r := tmp[com[1]];
 
     l := Length( com );
-    if info = "lieAlgebra" then
+    if info = "strucConst" then
         for i in [2..l] do
             r := r * tmp[com[i]];
         od; 
@@ -254,7 +253,7 @@ GUARANA.AbstractLog_Simple_ByExponent := function( recLieAlg, exp )
                 # compute weights of x,y
                 wx := recLieAlg.weights[i];
                 wy := GUARANA.WeightOfLieAlgElm( recLieAlg, y );
-                r := GUARANA.Star_Simple( x,y,wx,wy,class, "lieAlgebra" );
+                r := GUARANA.Star_Simple( x,y,wx,wy,class, "strucConst" );
             fi;
         fi;
     od;
@@ -289,7 +288,7 @@ end;
 ## OUT 
 ## Log( g )
 ##
-GUARANA.AbstractLog_Simple_ByElm := function( recLieAlg,   g )
+GUARANA.AbstractLog_Simple_ByElm := function( recLieAlg, g )
     local exp,hl,l,expNN;
     
     # get exponents with respect to gens of T group NN
@@ -313,7 +312,7 @@ end;
 ## OUT 
 ## Log( g ) given by a coefficient vector.
 ##
-GUARANA.AbstractLogCoeff_Simple_ByElm := function( recLieAlg,   g )
+GUARANA.AbstractLogCoeff_Simple_ByElm := function( recLieAlg, g )
     local r;
     r := GUARANA.AbstractLog_Simple_ByElm( recLieAlg,   g );
     return Coefficients( Basis( recLieAlg.L ), r);
@@ -392,14 +391,6 @@ GUARANA.LieAlgElm2CoeffGenList := function( L, x )
 end;
 
 
-#N := PcpGroupByMatGroup( PolExamples(4 ) );
-#recTGroup := GUARANA.TGroupRec( N );  
-#recLieAlg := GUARANA.SetUpLieAlgebraRecordByMalcevbasis( recTGroup );
-
-# F := FreeGroup( 3 );
-# N := NilpotentQuotient( F, 5 );
-# recTGroup := GUARANA.TGroupRec( N );
-# recLieAlg := GUARANA.SetUpLieAlgebraRecordByMalcevbasis( recTGroup );
 
 #############################################################################
 ##
@@ -420,7 +411,7 @@ end;
 ## uses this more general version ( GEN ) or the UCS version.
 ##
 GUARANA.ComputeStructureConstants := function( recLieAlg )
-    local gens,n,T,index_y,index_x,g,h,wg,wh,lie_elm,ll,T; 
+    local gens,n,T,index_y,index_x,g,h,wg,wh,lie_elm,ll; 
 
     # setup
     gens := GeneratorsOfGroup( recLieAlg.recTGroup.NN );
@@ -503,6 +494,23 @@ GUARANA.ComputeStructureConstants_UCS := function( recLieAlg )
     return 0;
 end;
 
+## Example of usage
+if false then 
+    F := FreeGroup( 2 );
+    N := NilpotentQuotient( F, 3 );
+    recTGroup := GUARANA.TGroupRec( N );
+    recLieAlg := GUARANA.SetUpLieAlgebraRecordByMalcevbasis( recTGroup );
+
+    GUARANA.ComputeStructureConstants_UCS( recLieAlg );
+
+    GUARANA.ComputeStructureConstants( recLieAlg );
+
+    N := PcpGroupByMatGroup( PolExamples(4 ) );
+    recTGroup := GUARANA.TGroupRec( N );  
+    recLieAlg := GUARANA.SetUpLieAlgebraRecordByMalcevbasis( recTGroup );
+fi;
+
+##  
 ## TODO 
 ## Write a more general version of this function. 
 ##
@@ -533,7 +541,7 @@ GUARANA.Abstract_Exponential_ByElm := function(  recLieAlg, x )
             w_divider := GUARANA.WeightOfLieAlgElm ( recLieAlg, divider );
             w_tail := GUARANA.WeightOfLieAlgElm ( recLieAlg, tail );
             tail := GUARANA.Star_Simple(  divider, tail, w_divider, 
-                                     w_tail, class, "lieAlgebra"  );
+                                     w_tail, class, "strucConst"  );
         
             # set up coefficient vector
             coeffs := Coefficients( basis, tail );
