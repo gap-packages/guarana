@@ -49,7 +49,8 @@ GUARANA.SetUpLieAlgebraRecordByMalcevbasis := function( recTGroup )
     return rec( L := L, 
                 recTGroup := recTGroup, 
 		scTable := T,
-	        weights := recTGroup.weights );
+	        weights := recTGroup.weights,
+		class := recTGroup.class );
 end;
 
 #############################################################################
@@ -217,7 +218,7 @@ GUARANA.WeightOfLieAlgElm := function( recLieAlg, elm )
             return recLieAlg.weights[i];
         fi;
     od;
-    return recLieAlg.recTGroup.class;
+    return recLieAlg.class;
 end;
 
 #############################################################################
@@ -236,7 +237,7 @@ GUARANA.AbstractLog_Simple_ByExponent := function( recLieAlg, exp )
 
     # setup
     gensL := GeneratorsOfAlgebra( recLieAlg.L );
-    class := recLieAlg.recTGroup.class;
+    class := recLieAlg.class;
 
     r := Zero( recLieAlg.L );
     # go backwards through exponents. 
@@ -277,10 +278,21 @@ GUARANA.AbstractLogCoeff_Simple_ByExponent := function( recLieAlg,  exp )
     return Coefficients( Basis( recLieAlg.L ), r);
 end;
 
+#############################################################################
+##
+#F GUARANA.AbstractLog_Simple_ByElm( recLieAlg, g )
+## 
+## IN
+## recLieAlg ............... Lie algebra record
+## g .....................   group element g. 
+## 
+## OUT 
+## Log( g )
+##
 GUARANA.AbstractLog_Simple_ByElm := function( recLieAlg,   g )
     local exp,hl,l,expNN;
     
-    # get exponets with respect to gens of T group NN
+    # get exponents with respect to gens of T group NN
     # (g might an elment of PcpGroup which contains NN as a normal sugroup,
     # then Exponents(g) would be longer hl(NN))
     exp := Exponents( g );
@@ -290,12 +302,38 @@ GUARANA.AbstractLog_Simple_ByElm := function( recLieAlg,   g )
     return GUARANA.AbstractLog_Simple_ByExponent( recLieAlg,   expNN );
 end;
 
+#############################################################################
+##
+#F GUARANA.AbstractLogCoeff_Simple_ByElm( recLieAlg, g )
+## 
+## IN
+## recLieAlg ............... Lie algebra record
+## g .....................   group element g. 
+## 
+## OUT 
+## Log( g ) given by a coefficient vector.
+##
 GUARANA.AbstractLogCoeff_Simple_ByElm := function( recLieAlg,   g )
     local r;
     r := GUARANA.AbstractLog_Simple_ByElm( recLieAlg,   g );
     return Coefficients( Basis( recLieAlg.L ), r);
 end;
 
+#############################################################################
+##
+#F  GUARANA.EvaluateLieBracketsInTermsOfLogarithmsSers 
+##
+## IN
+## recLieAlg ................... Lie algebra record
+## g,h ......................... group elements 
+## wg,wh ........................weights of g,h
+##
+## OUT 
+## [Log g, Log h] 
+## This is computed by using an  identity that expresses
+## Lie brackets as a linear combination of logarithms of group
+## commutators. 
+##
 GUARANA.EvaluateLieBracketsInTermsOfLogarithmsSers 
                             := function(  recLieAlg, g,h,wg,wh )
     local bchLBITOL,r,max,min,bound,class,i,term,com,a,log_a;
@@ -305,7 +343,7 @@ GUARANA.EvaluateLieBracketsInTermsOfLogarithmsSers
 
     # compute upper bound for the Length of commutators, which 
     # can be involved
-    class := recLieAlg.recTGroup.class;
+    class := recLieAlg.class;
     max := Maximum( wg,wh );
     min := Minimum( wg,wh );
     # max + min* (bound-1 ) <= class
@@ -326,12 +364,20 @@ GUARANA.EvaluateLieBracketsInTermsOfLogarithmsSers
             fi;
         od;
     od;
-    
     return r;
-
 end;
 
-# output is a list, as required for SetEntrySCTable
+#############################################################################
+##
+#F GUARANA.LieAlgElm2CoeffGenList( L, x )
+##
+## IN
+## L .............. Lie algebra 
+## x .............. elments of L
+##
+## OUT 
+## a list, as required for SetEntrySCTable
+##
 GUARANA.LieAlgElm2CoeffGenList := function( L, x )
     local basis, coeff,i,ll;
     basis := Basis( L );
@@ -345,7 +391,6 @@ GUARANA.LieAlgElm2CoeffGenList := function( L, x )
     return ll;
 end;
 
-#GUARANA.recBCH := GUARANA.FullBCHInformation( 5 );
 
 #N := PcpGroupByMatGroup( PolExamples(4 ) );
 #recTGroup := GUARANA.TGroupRec( N );  
@@ -356,13 +401,79 @@ end;
 # recTGroup := GUARANA.TGroupRec( N );
 # recLieAlg := GUARANA.SetUpLieAlgebraRecordByMalcevbasis( recTGroup );
 
-GUARANA.ComputeStructureConstants := function( args )
+#############################################################################
+##
+#F GUARANA.ComputeStructureConstants( recLieAlg )
+##
+## IN  
+## recLieAlg ........... lie algebra record. 
+##
+## OUT
+## 0
+##
+## This function computes the structure constants of the Lie algebra
+## and stores them in the Lie algebra record.
+##
+## TODO 
+## check wehter this function works fine. 
+##
+GUARANA.ComputeStructureConstants := function( recLieAlg )
     local factors, index_x, index_y, indices,indicesNoCenter,l,g,h,wg,wh,
-          lie_elm,ll,gens,T,out,recLieAlg,GUARANA.recBCH;
+          lie_elm,ll,gens,T,out;
 
     # setup
-    recLieAlg := args[2];
-    GUARANA.recBCH := args[1];
+    indices := recLieAlg.recTGroup.indices;
+    l := Length( indices );
+    indicesNoCenter := indices{[1..l-1]};
+    gens := GeneratorsOfGroup( recLieAlg.recTGroup.NN );
+    T := recLieAlg.scTable;
+
+    # go through blocks of generators backwards, 
+    # where a block corresponds to the generators of the factors
+    # of the upper central series
+    for factors in Reversed( indicesNoCenter ) do
+        for index_y in Reversed( factors ) do
+            for index_x in  [1..index_y-1]   do
+                g := gens[index_x];
+                h := gens[index_y];
+                wg := recLieAlg.weights[index_x];
+                wh := recLieAlg.weights[index_y];
+                # compute [log(g),log(h)]
+                lie_elm := GUARANA.EvaluateLieBracketsInTermsOfLogarithmsSers( 
+                                             recLieAlg, g,h, wg, wh );
+                # set entry in structure constant table 
+                ll := GUARANA.LieAlgElm2CoeffGenList( recLieAlg.L, lie_elm );
+                if Length( ll ) > 0 then
+                    SetEntrySCTable( T, index_x, index_y, ll );
+                fi;
+            od;
+        od;
+        # update Lie algebra with new structure constant table
+        recLieAlg.L:= LieAlgebraByStructureConstants( Rationals, T );
+    od;
+    return 0;
+end;
+#############################################################################
+##
+#F GUARANA.ComputeStructureConstants_UCS( recLieAlg )
+##
+## IN  
+## recLieAlg ........... lie algebra record. 
+##
+## OUT
+## 0
+##
+## This function computes the structure constants of the Lie algebra
+## and stores them in the Lie algebra record.
+## We assume here that the Mal'cev basis goes through the upper
+## central series of N. This knowledge is used to reduce 
+## the number of structure constants that has to be computed. 
+##
+GUARANA.ComputeStructureConstants_UCS := function( recLieAlg )
+    local factors, index_x, index_y, indices,indicesNoCenter,l,g,h,wg,wh,
+          lie_elm,ll,gens,T,out;
+
+    # setup
     indices := recLieAlg.recTGroup.indices;
     l := Length( indices );
     indicesNoCenter := indices{[1..l-1]};
@@ -401,7 +512,7 @@ GUARANA.Abstract_Exponential_ByElm := function(  recLieAlg, x )
 
     indices := recLieAlg.recTGroup.indices;
     basis := Basis( recLieAlg.L );
-    class := recLieAlg.recTGroup.class;
+    class := recLieAlg.class;
 
     # divide some exponents untill the remaining element lies in an
     # abelian group.
