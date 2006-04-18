@@ -783,6 +783,7 @@ end;
 ## OUT
 ## 
 ## A record containg
+## length ............ maximal length of Lie bracket. 
 ## bchSers ........... a list containing all terms of the Bch formula
 ##		       up to length w
 ## bchLBITOL....... .. a list containing all terms up to length w of 
@@ -792,6 +793,7 @@ end;
 ## Example: 
 ## gap> GUARANA.ComputeBchIndentities( 3 );
 ## rec(
+##   length := 3,
 ##   bchSers := [ [ [ -1/2, [ 2, 1 ] ] ], [ [ -1/12, [ 2, 1, 2 ] ], 
 ##                  [ 1/12, [ 2,1, 1 ] ] ] ],
 ##   bchLBITOL := [ [ [ 1, [ 1, 2 ] ] ], [ [ 1/2, [ 2, 1, 2 ] ],
@@ -803,7 +805,8 @@ GUARANA.ComputeBchIndentities := function( w )
     bchSers := GUARANA.BchSeriesOrdered( w );
     bchLBITOL :=  GUARANA.LieBracketInTermsOfLogs( w );
 
-    return rec( bchSers := bchSers,
+    return rec( length := w,
+                bchSers := bchSers,
                 bchLBITOL := bchLBITOL );
 end;
 
