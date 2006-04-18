@@ -415,44 +415,41 @@ end;
 ## and stores them in the Lie algebra record.
 ##
 ## TODO 
-## check wehter this function works fine. 
+## check wether this function works fine.
+## Write a more general function that depending on recLieAlg
+## uses this more general version ( GEN ) or the UCS version.
 ##
 GUARANA.ComputeStructureConstants := function( recLieAlg )
-    local factors, index_x, index_y, indices,indicesNoCenter,l,g,h,wg,wh,
-          lie_elm,ll,gens,T,out;
+    local gens,n,T,index_y,index_x,g,h,wg,wh,lie_elm,ll,T; 
 
     # setup
-    indices := recLieAlg.recTGroup.indices;
-    l := Length( indices );
-    indicesNoCenter := indices{[1..l-1]};
     gens := GeneratorsOfGroup( recLieAlg.recTGroup.NN );
+    n := Length( gens );
     T := recLieAlg.scTable;
 
-    # go through blocks of generators backwards, 
-    # where a block corresponds to the generators of the factors
-    # of the upper central series
-    for factors in Reversed( indicesNoCenter ) do
-        for index_y in Reversed( factors ) do
-            for index_x in  [1..index_y-1]   do
-                g := gens[index_x];
-                h := gens[index_y];
-                wg := recLieAlg.weights[index_x];
-                wh := recLieAlg.weights[index_y];
-                # compute [log(g),log(h)]
-                lie_elm := GUARANA.EvaluateLieBracketsInTermsOfLogarithmsSers( 
+    # go through generators backwards and compute the 
+    # structure constants.  
+    for index_y in Reversed( [1..n-1] ) do 
+	for index_x in [1..index_y-1]  do
+            g := gens[index_x];
+            h := gens[index_y];
+            wg := recLieAlg.weights[index_x];
+            wh := recLieAlg.weights[index_y];
+            # compute [log(g),log(h)]
+            lie_elm := GUARANA.EvaluateLieBracketsInTermsOfLogarithmsSers( 
                                              recLieAlg, g,h, wg, wh );
-                # set entry in structure constant table 
-                ll := GUARANA.LieAlgElm2CoeffGenList( recLieAlg.L, lie_elm );
-                if Length( ll ) > 0 then
-                    SetEntrySCTable( T, index_x, index_y, ll );
-                fi;
-            od;
-        od;
+            # set entry in structure constant table 
+            ll := GUARANA.LieAlgElm2CoeffGenList( recLieAlg.L, lie_elm );
+            if Length( ll ) > 0 then
+                SetEntrySCTable( T, index_x, index_y, ll );
+            fi;
+	od;
         # update Lie algebra with new structure constant table
         recLieAlg.L:= LieAlgebraByStructureConstants( Rationals, T );
     od;
     return 0;
 end;
+
 #############################################################################
 ##
 #F GUARANA.ComputeStructureConstants_UCS( recLieAlg )
@@ -506,6 +503,9 @@ GUARANA.ComputeStructureConstants_UCS := function( recLieAlg )
     return 0;
 end;
 
+## TODO 
+## Write a more general version of this function. 
+##
 GUARANA.Abstract_Exponential_ByElm := function(  recLieAlg, x )
     local indices,basis,class,tail,coeffs,largestAbelian,exp_x,i,factor,
           divider,w_divider,w_tail,l,exp_x_2ndPart,j;
@@ -563,7 +563,7 @@ end;
 GUARANA.LieAlgebraByTGroupRec := function(  recTGroup )
     local recLieAlg;
 
-    recLieAlg := GUARANA.SetUpLieAlgebraRecordByMalcevbasis( recTGroup );
+    recLieAlg := GUARANA.SetUpLieAlgebraRecordByMalcevbasis_UCS( recTGroup );
     GUARANA.ComputeStructureConstants( [ recLieAlg] );
    
     return recLieAlg;
