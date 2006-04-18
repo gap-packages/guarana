@@ -16,7 +16,7 @@
 ##
 #Y 2006
 ##
-recBCH := 
+GUARANA.recBCH := 
 rec( 
 length := 9;
 bchSers := 
