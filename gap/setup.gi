@@ -633,7 +633,7 @@ GUARANA.Abstract_Exponential_ByElm_GEN := function(  recLieAlg, x )
     # TODO This can be done better. 
     largestAbelian := Length( basis ) -1 ; 
     exp_x := [];
-    for j in [1..largesAbelian-1] do
+    for j in [1..largestAbelian-1] do
         # get element to divide of
          divider := -coeffs[j]*basis[j];
 
@@ -701,12 +701,33 @@ GUARANA.Abstract_Exponential_ByVector := function(  recLieAlg, vec )
     return GUARANA.Abstract_Exponential_ByElm(  recLieAlg, x ); 
 end;
 
-GUARANA.LieAlgebraByTGroupRec := function(  recTGroup )
-    local recLieAlg;
-
-    recLieAlg := GUARANA.SetUpLieAlgebraRecordByMalcevbasis_UCS( recTGroup );
-    GUARANA.ComputeStructureConstants( [ recLieAlg] );
-   
+#############################################################################
+##
+#N GUARANA.LieAlgebraByTGroupRec( recTGroup )
+##
+## IN
+## args[1]=recTGroup .................... T-group record
+## args[2]=malcevBasisInfo .............. String containing information
+##                                        about the Malcev basis. 
+##                                        This determines the way how
+##                                        the structure constants and Exp
+##                                        are computed. Currently 
+##                                        there are 2 choices 
+##                                        "gen" general
+##                                        "ucs" upper central series. 
+##
+## OUT 
+## Lie algebra record, that contains already the structure 
+## constants of the Lie algebra. 
+## 
+GUARANA.LieAlgebraByTGroupRec := function( args )
+    local recLieAlg,recTGroup;
+    recTGroup := args[1];
+    recLieAlg := GUARANA.SetUpLieAlgebraRecordByMalcevbasis( recTGroup );
+    if IsBound( args[2] ) then
+	recLieAlg.malcevBasisInfo := args[2];
+    fi;
+    GUARANA.ComputeStructureConstants(  recLieAlg );
     return recLieAlg;
 end;
 
@@ -715,11 +736,12 @@ end;
 # TEST Functions
 #
 #############################################################################
-
+#
+# Test Log, Exp and the computation of structur constants
+#
 
 GUARANA.Test_LogOfExp := function(  recLieAlg, noTests )
     local x,exp,x2,i;
-
     for i in [1..noTests] do
         x := Random( recLieAlg.L );
         exp := GUARANA.Abstract_Exponential_ByElm(  recLieAlg, x );
@@ -730,6 +752,24 @@ GUARANA.Test_LogOfExp := function(  recLieAlg, noTests )
     od;
     return 0;
 end;
+# Testing some examples 
+if false then
+    recLieAlgs := GUARANA.Get_FNG_LieAlgRecords( 2, 5 );
+
+    recLieAlg := recLieAlgs[5];
+    GUARANA.Test_LogOfExp( recLieAlg, 10 );
+    recLieAlg.malcevBasisInfo := "gen";
+    GUARANA.Test_LogOfExp( recLieAlg, 10 );
+
+    recLieAlgs := GUARANA.Get_Unitriangular_LieAlgRecords( 6, 2 );
+    for i in [1..Length( recLieAlgs )] do
+	recLieAlg := recLieAlgs[i];
+	GUARANA.Test_LogOfExp( recLieAlg, 10 );
+	recLieAlg.malcevBasisInfo := "gen";
+	GUARANA.Test_LogOfExp( recLieAlg, 10 );
+    od;
+
+fi;
 
 GUARANA.Test_ExpOfLog := function(  recLieAlg, noTests,range )
     local i,hl,domain,exp,x,exp2;
