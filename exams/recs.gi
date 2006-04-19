@@ -27,7 +27,7 @@ GUARANA.Get_FNG_TGroupRecords := function( n, c )
     for i in [1..c] do
         Print( "Free nilpotent group ", n, " ", i, "\n" );
         N := GUARANA.Examples_FreeNilpotentGrp( n, i );
-        r := GUARANA.TGroupRec( N );
+        r := GUARANA.TGroupRec( [N] );
         Add( ll, r );
     od;
     return ll;
@@ -48,7 +48,7 @@ GUARANA.Get_Unitriangular_TGroupRecords := function( dim , degree )
     for i in [2..dim] do
         Print( "Untriangular group ", degree, " ", i, "\n" );
         N := GUARANA.Examples_Unitriangular( i, degree );
-        r := GUARANA.TGroupRec( N );
+	r := GUARANA.TGroupRec( [N] );
         Add( ll, r );
     od;
     return ll;
