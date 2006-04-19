@@ -31,7 +31,7 @@
 ## about the corresponding Lie algebra. 
 ##
 GUARANA.SetUpLieAlgebraRecordByMalcevbasis := function( recTGroup )
-    local hl,T,L;
+    local hl,T,L,malcevBasisInfo;
     
     # get dimension of algebra
     hl := HirschLength( recTGroup.N );
@@ -45,11 +45,19 @@ GUARANA.SetUpLieAlgebraRecordByMalcevbasis := function( recTGroup )
         # not necessary, because empty entries are interpreted 
         # as commuting elements
 
+    # get information about Mal'cev basis.
+    # This entry has influence how the Structure constants and Exp
+    # are computed. 
+    malcevBasisInfo := StructuralCopy( recTGroup.malcevBasisInfo );
+    
+
     return rec( L := L, 
+                dim := hl,
                 recTGroup := recTGroup, 
 		scTable := T,
 	        weights := recTGroup.weights,
-		class := recTGroup.class );
+		class := recTGroup.class,
+	        malcevBasisInfo := malcevBasisInfo );
 end;
 
 #############################################################################
@@ -394,7 +402,7 @@ end;
 
 #############################################################################
 ##
-#F GUARANA.ComputeStructureConstants( recLieAlg )
+#F GUARANA.ComputeStructureConstants_GEN( recLieAlg )
 ##
 ## IN  
 ## recLieAlg ........... lie algebra record. 
@@ -404,13 +412,14 @@ end;
 ##
 ## This function computes the structure constants of the Lie algebra
 ## and stores them in the Lie algebra record.
+## It does not assume any any additonal knowledge about the 
+## Mal'cev basis, apart from the fact that we need weights 
+## of the elements of the Mal'cev basis. 
 ##
 ## TODO 
 ## check wether this function works fine.
-## Write a more general function that depending on recLieAlg
-## uses this more general version ( GEN ) or the UCS version.
 ##
-GUARANA.ComputeStructureConstants := function( recLieAlg )
+GUARANA.ComputeStructureConstants_GEN := function( recLieAlg )
     local gens,n,T,index_y,index_x,g,h,wg,wh,lie_elm,ll; 
 
     # setup
@@ -494,27 +503,63 @@ GUARANA.ComputeStructureConstants_UCS := function( recLieAlg )
     return 0;
 end;
 
+
+#############################################################################
+##
+#F GUARANA.ComputeStructureConstants( recLieAlg )
+##
+## IN  
+## recLieAlg ........... lie algebra record. 
+##
+## OUT
+## 0
+##
+## This function computes the structure constants of the Lie algebra
+## and stores them in the Lie algebra record.
+##
+##
+GUARANA.ComputeStructureConstants := function( recLieAlg )
+    # decide which method should be used. 
+    if recLieAlg.malcevBasisInfo = "ucs" then
+	return GUARANA.ComputeStructureConstants_UCS( recLieAlg );
+    elif recLieAlg.malcevBasisInfo = "gen" then 
+	return GUARANA.ComputeStructureConstants_GEN( recLieAlg );
+    fi;   
+    Error( "Unknown method" );
+end;
+
 ## Example of usage
 if false then 
     F := FreeGroup( 2 );
     N := NilpotentQuotient( F, 3 );
-    recTGroup := GUARANA.TGroupRec( N );
+    recTGroup := GUARANA.TGroupRec( [N] );
     recLieAlg := GUARANA.SetUpLieAlgebraRecordByMalcevbasis( recTGroup );
-
-    GUARANA.ComputeStructureConstants_UCS( recLieAlg );
 
     GUARANA.ComputeStructureConstants( recLieAlg );
 
+    # try general method 
+    recLieAlg.malcevBasisInfo := "gen";
+    GUARANA.ComputeStructureConstants( recLieAlg );
+    
     N := PcpGroupByMatGroup( PolExamples(4 ) );
-    recTGroup := GUARANA.TGroupRec( N );  
+    recTGroup := GUARANA.TGroupRec([ N] );  
     recLieAlg := GUARANA.SetUpLieAlgebraRecordByMalcevbasis( recTGroup );
 fi;
 
-##  
-## TODO 
-## Write a more general version of this function. 
+#############################################################################
 ##
-GUARANA.Abstract_Exponential_ByElm := function(  recLieAlg, x )
+#F GUARANA.Abstract_Exponential_ByElm_UCS( recLieAlg, x )
+##
+## IN 
+## recLieAlg ................. Lie algebra record
+## x  ........................ element of Lie algebra
+##
+## OUT
+## Exp( x )
+## Here we assume that the underlying Mal'cev basis goes through
+## the upper central series.
+##
+GUARANA.Abstract_Exponential_ByElm_UCS := function(  recLieAlg, x )
     local indices,basis,class,tail,coeffs,largestAbelian,exp_x,i,factor,
           divider,w_divider,w_tail,l,exp_x_2ndPart,j;
 
@@ -561,6 +606,94 @@ GUARANA.Abstract_Exponential_ByElm := function(  recLieAlg, x )
     
 end;
 
+#############################################################################
+##
+#F GUARANA.Abstract_Exponential_ByElm_GEN( recLieAlg, x )
+##
+## IN 
+## recLieAlg ................. Lie algebra record
+## x  ........................ element of Lie algebra
+##
+## OUT
+## Exp( x )
+## GENeral method.
+##
+GUARANA.Abstract_Exponential_ByElm_GEN := function(  recLieAlg, x )
+    local basis, class, tail, coeffs, largestAbelian, exp_x, divider, 
+          w_divider, w_tail, l, exp_x_2ndPart, j;
+
+    basis := Basis( recLieAlg.L );
+    class := recLieAlg.class;
+
+    # divide some exponents untill the remaining element lies in an
+    # abelian group.
+    tail := x;
+    coeffs := Coefficients( basis, tail );
+    # smallest index i such that n_i,...,n_l generate an abelian group
+    # TODO This can be done better. 
+    largestAbelian := Length( basis ) -1 ; 
+    exp_x := [];
+    for j in [1..largesAbelian-1] do
+        # get element to divide of
+         divider := -coeffs[j]*basis[j];
+
+        # save exponents of divider
+        Add( exp_x, coeffs[j] );
+
+        # divide off
+        w_divider := GUARANA.WeightOfLieAlgElm ( recLieAlg, divider );
+        w_tail := GUARANA.WeightOfLieAlgElm ( recLieAlg, tail );
+        tail := GUARANA.Star_Simple(  divider, tail, w_divider, 
+                                     w_tail, class, "strucConst"  );
+        
+        # set up coefficient vector
+        coeffs := Coefficients( basis, tail );
+    od;
+
+    # test intermediate result
+    l := Length( exp_x );
+    if not coeffs{[1..l]} = 0 *  coeffs{[1..l]} then
+        Error( "Failure in Abstract_Exponential \n" );
+    fi;
+
+    # get the remaining coefficients 
+    exp_x_2ndPart := coeffs{[l+1..Length(coeffs)]};
+    
+    return Concatenation( exp_x, exp_x_2ndPart );
+end;
+
+#############################################################################
+##
+#F GUARANA.Abstract_Exponential_ByElm_UCS( recLieAlg, x )
+##
+## IN 
+## recLieAlg ................. Lie algebra record
+## x  ........................ element of Lie algebra
+##
+## OUT
+## Exp( x )
+##
+GUARANA.Abstract_Exponential_ByElm := function( recLieAlg, x )
+    if recLieAlg.malcevBasisInfo = "ucs" then 
+	return GUARANA.Abstract_Exponential_ByElm_UCS( recLieAlg, x );
+    elif recLieAlg.malcevBasisInfo = "gen" then 
+	return GUARANA.Abstract_Exponential_ByElm_GEN( recLieAlg, x );
+    else
+	Error( "Method not known" );
+    fi;
+end;
+
+#############################################################################
+##
+#F GUARANA.Abstract_Exponential_ByVector( recLieAlg, x )
+##
+## IN 
+## recLieAlg ................. Lie algebra record
+## vec........................ coeff vector of an element of Lie algebra
+##
+## OUT
+## Exp( x )
+##
 GUARANA.Abstract_Exponential_ByVector := function(  recLieAlg, vec )
     local basis,x;
     basis := Basis( recLieAlg.L );
