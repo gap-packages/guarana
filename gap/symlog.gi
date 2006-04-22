@@ -384,7 +384,7 @@ GUARANA.AddStarPolynomialsToRecLieAlg := function( recLieAlg )
     local i,n,vars_x,vars_y,x_i,elm_y,wx,wy,recStarPols,c,star_pols;
 
     # get variable for polynomials
-    n := HirschLength( recLieAlg.recTGroup.NN );
+    n := recLieAlg.dim;
     vars_x := GUARANA.RationalVariableList( n, "x" ); 
     vars_y := GUARANA.RationalVariableList( n, "y" );  
 
@@ -432,7 +432,7 @@ GUARANA.Star_Symbolic_SingleVersusGeneric := function( recLieAlg, x, y  )
     if not x[1][1] = y[1][1] then Error( "wrong start index of y\n" ); fi;
 
     # setup
-    n := HirschLength( recLieAlg.recTGroup.NN );
+    n := recLieAlg.dim;
     index_x := x[1][1];
     vars_y := recLieAlg.recStarPols.vars_y;
     vars_x := recLieAlg.recStarPols.vars_x;
@@ -471,7 +471,7 @@ GUARANA.ComputeSymbolicLogPolynomials := function( recLieAlg )
     local n, vars_e,c,log_pols,tail,x_i,w_x_i,w_tail,i;
 
     # get variables for polynomials
-    n := HirschLength( recLieAlg.recTGroup.NN );
+    n := recLieAlg.dim;
     vars_e := GUARANA.RationalVariableList( n, "e" ); 
 
     # compute recursively polynomials as follows
@@ -522,7 +522,7 @@ GUARANA.ComputeSymbolicLogPolynomialsByStarPols := function( recLieAlg )
     local n,vars_e,c,log_pols,tail,x_i,i;
 
     # get variable for polynomials
-    n := HirschLength( recLieAlg.recTGroup.NN );
+    n := recLieAlg.dim;
     vars_e := GUARANA.RationalVariableList( n, "e" ); 
 
     # compute recursively polynomials as follows
@@ -538,49 +538,42 @@ GUARANA.ComputeSymbolicLogPolynomialsByStarPols := function( recLieAlg )
     return rec( pols := tail, vars_e := vars_e );
 end;
 
-GUARANA.AddLogPolynomialsToLieAlgRecord := function( recLieAlg, recBCH )
+GUARANA.AddLogPolynomialsToLieAlgRecord := function( recLieAlg )
     local pols, recLogPols;
     recLogPols := GUARANA.ComputeSymbolicLogPolynomialsByStarPols( 
-                                                      recLieAlg, recBCH );
+                                                      recLieAlg );
     recLieAlg.recLogPols := recLogPols;
     return 0;
 end;
 
-
-
-
-# IN: exp_n .... exponent vector of element n in \hat{N}
-#    
-# OUT: coeffcients of Log n, computed with the polynomials,
-#      describing Log
-#
-# Example:
-# exams_F3c := GUARANA.Get_FNG_TGroupRecords( 3, 5 );;
-# recLieAlgs_bch_F3c := List( [2..Length( exams_F3c )], x-> GUARANA.LieAlgebraByTGroupRec( recBCH9,exams_F3c[x] ));;
-#  GUARANA.AddStarPolynomialsToRecLieAlg( recLieAlgs_bch_F3c[5], recBCH9 );
-#  GUARANA.AddLogPolynomialsToLieAlgRecord( recLieAlgs_bch_F3c[5], recBCH9 );
-#  exp_n := GUARANA.Random_IntegralExpVector( recLieAlgs_bch_F3c[5], 2^12 );  
-#  GUARANA.Logarithm_Symbolic( recLieAlgs_bch_F3c[5], exp_n );
-#
-#  compare 
-#  GUARANA.AbstractLog_Simple_ByExponent( recLieAlgs_bch_F3c[5], recBCH9,exp_n);
-#
-# Example 2:
-# 
-# exams_unitr_2 := GUARANA.Get_Unitriangular_TGroupRecords( 10, 2 );
-# recLieAlgs_bch_unitr_2 := List( [2..Length( exams_unitr_2)-3], x-> GUARANA.LieAlgebraByTGroupRec( recBCH9,exams_unitr_2[x] ));; 
-#  GUARANA.AddStarPolynomialsToRecLieAlg( recLieAlgs_bch_unitr_2[5], recBCH9 );
-#  GUARANA.AddLogPolynomialsToLieAlgRecord( recLieAlgs_bch_unitr_2[5], recBCH9 );
-#  exp_n := GUARANA.Random_IntegralExpVector( recLieAlgs_bch_unitr_2[5], 2^10 );  
-#  GUARANA.Logarithm_Symbolic( [recLieAlgs_bch_unitr_2[5], exp_n] );
-# 
+#############################################################################
+##
+#F GUARANA.Logarithm_Symbolic( args )
+##
+## IN
+## args[1]=recLieAlg ...... Lie algebra record
+## args[2[=exp_n .......... exponent vector of element n in \hat{N}
+##    
+## OUT: 
+## coeffcients of Log n, computed with the polynomials describing Log
+## 
+##
+##  Example:
+##  recLieAlgs_bch_F2c := GUARANA.Get_FNG_LieAlgRecords( 2, 9 );
+##  GUARANA.AddStarPolynomialsToRecLieAlg( recLieAlgs_bch_F2c[5] );
+##  GUARANA.AddLogPolynomialsToLieAlgRecord( recLieAlgs_bch_F2c[5] );
+##  exp_n := GUARANA.Random_IntegralExpVector( recLieAlgs_bch_F2c[5], 2^12 );  
+##  GUARANA.Logarithm_Symbolic( [recLieAlgs_bch_F2c[5], exp_n] );
+##
+##  compare 
+##  GUARANA.AbstractLog_Simple_ByExponent( recLieAlgs_bch_F2c[5], exp_n);
+## 
 GUARANA.Logarithm_Symbolic := function( args )
     local n,indets,pols,coeffs,i,coeff,recLieAlg,exp_n;
-
     # setup    
     recLieAlg := args[1];
     exp_n := args[2];
-    n := HirschLength( recLieAlg.recTGroup.NN ); 
+    n := recLieAlg.dim; 
     indets := recLieAlg.recLogPols.vars_e;
     pols := recLieAlg.recLogPols.pols[2];
     
@@ -590,19 +583,27 @@ GUARANA.Logarithm_Symbolic := function( args )
         coeff := Value( pols[i], indets, exp_n );
         Add( coeffs, coeff );
     od;
-
     return coeffs;
 end;
 
-
-GUARANA.ComputeSymbolicExpPolynomialsByStarPols := function( recLieAlg, recBCH )
+#############################################################################
+##
+#F GUARANA.ComputeSymbolicExpPolynomialsByStarPols( recLieAlg )
+##
+## IN
+## recLieAlg ................. lie algebra record
+## 
+## OUT
+## The polynomials describing Exp are computed and stored in the 
+## Lie algebra record. Note that the star polynomials are used
+## for this purpose.
+## 
+GUARANA.ComputeSymbolicExpPolynomialsByStarPols := function( recLieAlg )
     local i,n,vars_a,c,exp_pols,tail,a_bar,divider;
 
     # get variable for polynomials
-    n := HirschLength( recLieAlg.recTGroup.NN );
+    n := recLieAlg.dim;
     vars_a := GUARANA.RationalVariableList( n, "a" ); 
-
-    
 
     # compute recursively polynomials as follows
     # exp( a_1 log g_1 + ... + a_n log g_n ) 
@@ -617,37 +618,48 @@ GUARANA.ComputeSymbolicExpPolynomialsByStarPols := function( recLieAlg, recBCH )
         # get divider 
         a_bar := tail[2][1];
         divider := [ [i], [ (-1)* a_bar ] ];
-        tail:= GUARANA.Star_Symbolic_SingleVersusGeneric(recLieAlg,divider,tail);
+        tail:=GUARANA.Star_Symbolic_SingleVersusGeneric(recLieAlg,divider,tail);
         Remove( tail[1], 1 );
         Remove( tail[2], 1 );
         Add( exp_pols, a_bar );
     od;
-  
     return rec( pols := [[1..n],exp_pols], vars_a := vars_a );
-
 end;
 
-GUARANA.AddExpPolynomialsToLieAlgRecord := function( recLieAlg, recBCH )
+GUARANA.AddExpPolynomialsToLieAlgRecord := function( recLieAlg )
     local pols, recExpPols;
-    recExpPols := GUARANA.ComputeSymbolicExpPolynomialsByStarPols( 
-                                                      recLieAlg, recBCH );
+    recExpPols := GUARANA.ComputeSymbolicExpPolynomialsByStarPols( recLieAlg );
     recLieAlg.recExpPols := recExpPols;
     return 0;
 end;
 
-
-#  coeffs_x := GUARANA.Random_IntegralExpVector( recLieAlg, 2^12 );  
-#  GUARANA.Exponential_Symbolic( recLieAlg, coeffs_x );
-#  
-#  compare 
-#  GUARANA.Abstract_Exponential_ByVector( recBCH9, recLieAlg, coeffs_x );
+#############################################################################
+##
+#F GUARANA.Exponential_Symbolic( args )
+##
+## IN
+## args[1]=recLieAlg .............. lie algebra record
+## args[2]=coeffs_x ............... coefficient vector of Lie algebra elm. x
+##
+## OUT 
+## Exp(x) computed using polynomials.
+## 
+## Example:
+## recLieAlgs_bch_F2c := GUARANA.Get_FNG_LieAlgRecords( 2, 9 );
+## GUARANA.AddStarLogAndExpPols( recLieAlgs_bch_F2c[7] );
+## coeffs_x :=GUARANA.Random_IntegralExpVector( recLieAlgs_bch_F2c[7], 2^12 );  
+## GUARANA.Exponential_Symbolic( [recLieAlgs_bch_F2c[7], coeffs_x] );
+##  
+## compare 
+## GUARANA.Abstract_Exponential_ByVector( recLieAlgs_bch_F2c[7], coeffs_x );
+##
 GUARANA.Exponential_Symbolic := function( args )
     local recLieAlg,n,indets,pols,exp,i,e,coeffs_x;
     
     # setup
     recLieAlg := args[1];
     coeffs_x := args[2];
-    n := HirschLength( recLieAlg.recTGroup.NN ); 
+    n := recLieAlg.dim; 
     indets := recLieAlg.recExpPols.vars_a;
     pols := recLieAlg.recExpPols.pols[2];
     
@@ -657,7 +669,6 @@ GUARANA.Exponential_Symbolic := function( args )
         e := Value( pols[i], indets, coeffs_x );
         Add( exp , e );
     od;
-
     return exp;
 end;
 
@@ -669,13 +680,10 @@ end;
 # exams_unitr_3 := GUARANA.Get_Unitriangular_TGroupRecords( 8, 3 ); 
 # recLieAlgs_bch_unitr_3 := List( [2..Length( exams_unitr_3 )], x-> GUARANA.LieAlgebraByTGroupRec( recBCH9,exams_unitr_3[x] ));;
 # GUARANA.AddStarLogAndExpPols( [recLieAlgs_bch_unitr_3[5], recBCH9] );
-GUARANA.AddStarLogAndExpPols := function( args )
-    local recLieAlg,recBCH;
-    recLieAlg := args[1];
-    recBCH := args[2];
-    GUARANA.AddStarPolynomialsToRecLieAlg( recLieAlg, recBCH ); 
-    GUARANA.AddLogPolynomialsToLieAlgRecord( recLieAlg, recBCH ); 
-    GUARANA.AddExpPolynomialsToLieAlgRecord( recLieAlg, recBCH ); 
+GUARANA.AddStarLogAndExpPols := function( recLieAlg )
+    GUARANA.AddStarPolynomialsToRecLieAlg( recLieAlg ); 
+    GUARANA.AddLogPolynomialsToLieAlgRecord( recLieAlg ); 
+    GUARANA.AddExpPolynomialsToLieAlgRecord( recLieAlg ); 
     return 0;
 end;
 
@@ -685,15 +693,4 @@ end;
 # - give collection an option
 # - test the new collection and compare it with the old method
 
-
-# test functions
-GUARANA.Random_IntegralExpVector := function( recLieAlg, range )
-    local n,ll,vec;
-    n := HirschLength( recLieAlg.recTGroup.NN );
-    ll := [ - range .. range ];
-    vec := List( [ 1 .. n ], function ( x )
-            return RandomList( ll );
-        end );
-    return vec;
-end;
 

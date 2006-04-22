@@ -37,4 +37,15 @@ GUARANA.CopyVectorList := function( list )
     od;
     return list2;
 end;
+#############################################################################
+##
+GUARANA.Random_IntegralExpVector := function( recLieAlg, range )
+    local n,ll,vec;
+    n := recLieAlg.dim;
+    ll := [ - range .. range ];
+    vec := List( [ 1 .. n ], function ( x )
+            return RandomList( ll );
+        end );
+    return vec;
+end;
 

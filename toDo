@@ -1,6 +1,7 @@
 To do:
 
 - integrate code from symbolic.g
+  How can we speed up the computation of the star polynomials ? 
   
 - Go step for step through the paper and implement everything
   that is mentionend. For example:
