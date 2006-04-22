@@ -25,6 +25,8 @@ ReadPackage( "guarana", "gap/pcs.gi" );
 ReadPackage( "guarana", "exams/sta.gi" );
 ReadPackage( "guarana", "gap/setup.gi" );
 ReadPackage( "guarana", "exams/recs.gi" );
+ReadPackage( "guarana", "gap/symlog.gi" );
+
 #############################################################################
 ##
 #E

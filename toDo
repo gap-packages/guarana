@@ -1,11 +1,7 @@
 To do:
 
-- Finish off the integration of the bch.g code. 
-  Give some examples for the usage in the file.
-  - Give TGroup record an info string that describes 
-    the way it was built ( for example "ucs" or "general" )
-  - Wrapper function for compute structure constants.
-
+- integrate code from symbolic.g
+  
 - Go step for step through the paper and implement everything
   that is mentionend. For example:
   - application of powers of automorph.

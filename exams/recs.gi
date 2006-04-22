@@ -66,7 +66,7 @@ end;
 GUARANA.Get_FNG_LieAlgRecords := function( n, c )
     local ll,ll2; 
     ll := GUARANA.Get_FNG_TGroupRecords( n, c );
-    ll2 := List( ll, x-> GUARANA.LieAlgebraByTGroupRec( x ) );
+    ll2 := List( ll, x-> GUARANA.LieAlgebraByTGroupRec( [x] ) );
     return ll2;
 end;
 
@@ -82,7 +82,7 @@ end;
 GUARANA.Get_Unitriangular_LieAlgRecords := function( dim , degree )
     local ll,ll2;
     ll := GUARANA.Get_Unitriangular_TGroupRecords( dim, degree );
-    ll2 := List( ll, x-> GUARANA.LieAlgebraByTGroupRec( x ) );
+    ll2 := List( ll, x-> GUARANA.LieAlgebraByTGroupRec( [x] ) );
     return ll2;
 end;
 

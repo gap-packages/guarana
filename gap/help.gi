@@ -22,3 +22,19 @@ GUARANA.Exp2GenList := function( exp )
     od;
     return genList;
 end;
+
+#############################################################################
+##
+GUARANA.CopyVectorList := function( list )
+    local  i, j, k, list2;
+    list2 := [  ];
+    for i  in [ 1 .. Length( list ) ]  do
+	Add( list2, [  ] );
+	for j  in [ 1 .. Length( list[i] ) ]  do
+	    Add( list2[i], [  ] );
+	    list2[i][j] := list[i][j];
+	od;
+    od;
+    return list2;
+end;
+
