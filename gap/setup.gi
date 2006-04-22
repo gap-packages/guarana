@@ -703,7 +703,7 @@ end;
 
 #############################################################################
 ##
-#N GUARANA.LieAlgebraByTGroupRec( recTGroup )
+#F GUARANA.LieAlgebraByTGroupRec( args )
 ##
 ## IN
 ## args[1]=recTGroup .................... T-group record
@@ -773,7 +773,7 @@ fi;
 
 GUARANA.Test_ExpOfLog := function(  recLieAlg, noTests,range )
     local i,dim,domain,exp,x,exp2;
-    dim := HirschLength( recLieAlg.dim );
+    dim := recLieAlg.dim;
     domain := [-range..range];
     for i in [1..noTests] do
         exp := List( [1..dim], x -> Random( domain ) );
@@ -792,53 +792,19 @@ if false then
     recLieAlgs := GUARANA.Get_FNG_LieAlgRecords( 2, 5 );
 
     recLieAlg := recLieAlgs[5];
-    GUARANA.Test_ExpOfLog( recLieAlg, 10 );
+    GUARANA.Test_ExpOfLog( recLieAlg, 10, 100 );
     recLieAlg.malcevBasisInfo := "gen";
-    GUARANA.Test_ExpOfLog( recLieAlg, 10 );
+    GUARANA.Test_ExpOfLog( recLieAlg, 10, 100 );
 
     recLieAlgs := GUARANA.Get_Unitriangular_LieAlgRecords( 6, 2 );
     for i in [1..Length( recLieAlgs )] do
 	recLieAlg := recLieAlgs[i];
-	GUARANA.Test_ExpOfLog( recLieAlg, 10 );
+	GUARANA.Test_ExpOfLog( recLieAlg, 10, 100 );
 	recLieAlg.malcevBasisInfo := "gen";
-	GUARANA.Test_ExpOfLog( recLieAlg, 10 );
+	GUARANA.Test_ExpOfLog( recLieAlg, 10, 100 );
     od;
 
 fi;
-
-GUARANA.Test := function( n )
-    local P,F,G,elm,string,A,ll,lie,kk,kk2;        
- 
-    P := PolynomialRing( Rationals, n );
-    F := GUARANA.Compute_F( n );;
-    G := GUARANA.Compute_G( n, P );;
-    elm := GUARANA.Logarithm( F*G )[1][n+1];
-    string := String( elm );
-    A := FreeAlgebraWithOne( Rationals, 2 );
-    ll := GUARANA.SumOfSigmaExpresions2List( n, string );
-    lie := GUARANA.MonomialList2LieBracketList( ll );
-    Length( ll );
-    Length( lie );
-    kk := List( lie, x->x[2] );
-    kk2 := AsSet( kk );
-    return [ Length( lie ), Length( AsSet( kk ) )];
-end;
-
-
-GUARANA.List2Number := function( base, ll )
-    local n,l,numb,i;
-    n := Length( ll );
-    #throw away the first two entries 1 and 0
-    l := ll{[3..n]};
-
-    numb := 0;
-    for i in Reversed( [3..n]) do
-        if ll[i]<>0 then
-            numb := numb + base^(n-i);
-        fi;
-    od;
-    return numb;
-end;
 
 # produce random element of Tr_0(dim,Q)
 GUARANA.RandomNilpotentMat := function( dim )
@@ -866,6 +832,7 @@ GUARANA.RandomNilpotentMat := function( dim )
     return g;
 end;
 
+# n ....... dim of matrices that are used.
 GUARANA.TestBchSeriesOrdered := function(  n )
     local no_tests,i,x,y,wx,wy,x_star_y,exp_x_star_y,exp_x,exp_y;
 
@@ -894,8 +861,26 @@ GUARANA.TestBchSeriesOrdered := function(  n )
     return 0;
 end;
 
-# recComSers as computed by GUARANA.ComputeCommutatorSeries
-# recComSers := GUARANA.ComputeCommutatorSeries( 6, 3 );
+#############################################################################
+##
+#F GUARANA.Test_ComputeCommutatorSeries( recComSers, n, kappa )
+##
+## IN 
+## recComSers ...............as computed by GUARANA.ComputeCommutatorSeries
+## n ....................... dimension of matrices that are going to be used
+## kappa ................... commutator given as list. for example
+##                           [1,2,1,1]
+##
+## Tests if the computation of kappa(x,y), where x,y are two random
+## matrices in Tr_0(n,Q), using a BCH like formula is correct.
+##
+## Example
+## compute all terms of the commutator bch series up to weights 6 (wSers)
+## of all commutators up to weight 3 (wCom)
+## Note that n should be bigger wSers.
+## recComSers := GUARANA.ComputeCommutatorSeries( 6, 3 );
+## GUARANA.Test_ComputeCommutatorSeries( recComSers, 4, [1,2,1] );
+##
 GUARANA.Test_ComputeCommutatorSeries := function( recComSers, n, kappa )
     local  no_tests,i,x,y,wx,wy,exp_x,exp_y,exp_z,r,class,
           sers,com,a,term,exp_z_bch,weight, pos;
@@ -929,14 +914,14 @@ GUARANA.Test_ComputeCommutatorSeries := function( recComSers, n, kappa )
                 r := r + term[1]*a;
                 #        Print( "log_a ", log_a, "\n" );
                 #        Print( "r ", r, "\n\n" );
-            fi;
-        od;
+             fi;
+        od; 
         exp_z_bch := GUARANA.Exponential( Rationals, r );
 
         # compare
         if not exp_z_bch = exp_z then 
             Error( "Mist\n" );
-        fi;
+        fi; 
     od;
     return 0;
 end;
@@ -997,3 +982,7 @@ GUARANA.TestSeriesLieBracketInTermsOfLogs := function(  n )
     od;
     return 0;
 end;
+
+#############################################################################
+##
+#E
