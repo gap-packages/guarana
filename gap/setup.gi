@@ -759,7 +759,7 @@ if false then
     recLieAlg := recLieAlgs[5];
     GUARANA.Test_LogOfExp( recLieAlg, 10 );
     recLieAlg.malcevBasisInfo := "gen";
-    GUARANA.Test_LogOfExp( recLieAlg, 10 );
+    GUARANA.Test_ExpOfLog( recLieAlg, 10 );
 
     recLieAlgs := GUARANA.Get_Unitriangular_LieAlgRecords( 6, 2 );
     for i in [1..Length( recLieAlgs )] do
@@ -772,11 +772,11 @@ if false then
 fi;
 
 GUARANA.Test_ExpOfLog := function(  recLieAlg, noTests,range )
-    local i,hl,domain,exp,x,exp2;
-    hl := HirschLength( recLieAlg.recTGroup.NN );
+    local i,dim,domain,exp,x,exp2;
+    dim := HirschLength( recLieAlg.dim );
     domain := [-range..range];
     for i in [1..noTests] do
-        exp := List( [1..hl], x -> Random( domain ) );
+        exp := List( [1..dim], x -> Random( domain ) );
         x := GUARANA.AbstractLog_Simple_ByExponent( recLieAlg,  exp );
         exp2 := GUARANA.Abstract_Exponential_ByElm(  recLieAlg, x );
         if not exp = exp2 then
@@ -786,6 +786,25 @@ GUARANA.Test_ExpOfLog := function(  recLieAlg, noTests,range )
     return 0;
 end;
 
+
+# Testing some examples 
+if false then
+    recLieAlgs := GUARANA.Get_FNG_LieAlgRecords( 2, 5 );
+
+    recLieAlg := recLieAlgs[5];
+    GUARANA.Test_ExpOfLog( recLieAlg, 10 );
+    recLieAlg.malcevBasisInfo := "gen";
+    GUARANA.Test_ExpOfLog( recLieAlg, 10 );
+
+    recLieAlgs := GUARANA.Get_Unitriangular_LieAlgRecords( 6, 2 );
+    for i in [1..Length( recLieAlgs )] do
+	recLieAlg := recLieAlgs[i];
+	GUARANA.Test_ExpOfLog( recLieAlg, 10 );
+	recLieAlg.malcevBasisInfo := "gen";
+	GUARANA.Test_ExpOfLog( recLieAlg, 10 );
+    od;
+
+fi;
 
 GUARANA.Test := function( n )
     local P,F,G,elm,string,A,ll,lie,kk,kk2;        
