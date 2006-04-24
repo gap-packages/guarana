@@ -302,9 +302,12 @@ end;
 ## OUT
 ## com( x,y) evaluated symbolically.
 ##
-GUARANA.EvaluateLongLieBracket_Symbolic_old 
+GUARANA.EvaluateLongLieBracket_Symbolic 
 := function( list_x, list_y, com, recLieAlg )
     local r,l,tmp,i;
+    Print( "com: ", com, "\n" );
+    Print( "x :", list_x, "\n" );
+    Print( "y :", list_y, "\n" );
     tmp := [list_x,list_y];
     r := tmp[com[1]];
 
@@ -313,95 +316,8 @@ GUARANA.EvaluateLongLieBracket_Symbolic_old
             r := GUARANA.EvaluateLieBracket_Symbolic( r, tmp[com[i]], 
 						      recLieAlg.scTable );
     od;
+    Print( "r :", r, "\n" );
     return r;
-end;
-
-## IN
-## com ................ commutator containing symbolic elements
-## recLieAlg .......... Lie Algebra record
-## 
-## OUT 
-## Coeff vector com with to the basis of Lie Algebra.
-## This vector contains polynomials.
-##
-GUARANA.EvaluateLongLieBracket_Symbolic_explicit := function( com, recLieAlg )
-    local l, sym_elm, l_elm, sym_elm_1, sym_elm_2, com1, com2, vec_1, 
-          vec_2, basis, lie_elm, scalar, coeffs, i;
-
-    l := Length( com );
-    for i in Reversed([1..l]) do
- 	sym_elm := com[i];
-	l_elm := Length( sym_elm[1] );
-	if l_elm > 1 then 
- 	    # split sym_elm
-	    sym_elm_1 := [ sym_elm[1]{[1]}, sym_elm[2]{[1]} ];
-	    sym_elm_2 := [ sym_elm[1]{[2..l_elm]}, sym_elm[2]{[2..l_elm]} ];
-	    # split commutator 
-	    com1 := StructuralCopy( com );
-	    com1[i] := sym_elm_1;
-	    com2 := StructuralCopy( com );
-	    com2[i] := sym_elm_2;
-	    # recurse    
-	    vec_1 := GUARANA.EvaluateLongLieBracket_Symbolic_explicit( com1,
-	                                                           recLieAlg);
-	    vec_2 := GUARANA.EvaluateLongLieBracket_Symbolic_explicit( com2,
-	                                                           recLieAlg);
-	    return vec_1 + vec_2;
-	fi;
-    od;
-    # now we are in the case that com = [a_i*x_i,a_j*x_j,a_k*x_k, ...]
-    basis := Basis( recLieAlg.L );
-    lie_elm := basis[com[1][1][1]];
-    scalar := com[1][2][1];
-    for i in [2..l] do
-	lie_elm := lie_elm * basis[ com[i][1][1] ];
-	scalar := scalar * com[i][2][1];
-    od;
-    coeffs := Coefficients( basis, lie_elm );
-    return scalar*coeffs;
-end;
-    
-
-# returned is a vector whose length is the dimension of the Lie Algebra
-GUARANA.EvaluateLongLieBracket_Symbolic_new
-                           := function( list_x, list_y, com, recLieAlg )
-    local tmp, com_explicit, i;
-    # catch trivial case 
-    if Length( list_x[1] )=0 then
-        return [[],[]];
-    fi;
-    if Length( list_y[1] )=0 then
-        return [[],[]];
-    fi;
-
-    # build explicit commutator 
-    tmp := [list_x,list_y];
-    com_explicit := [];
-    for i in [1..Length( com )] do
-	Add( com_explicit, tmp[com[i]] );
-    od;
-    return
-    GUARANA.EvaluateLongLieBracket_Symbolic_explicit( com_explicit, recLieAlg); 
-end;
-
-GUARANA.EvaluateLongLieBracket_Symbolic 
-                            := function( list_x,list_y,com,recLieAlg )
-    local method;
-    Print( "com: ", com, "\n" );
-    Print( "x :", list_x, "\n" );
-    Print( "y :", list_y, "\n" );
-    method := "old";
-    if method = "new" then
-	return GUARANA.EvaluateLongLieBracket_Symbolic_new( list_x,
-	                                                    list_y,
-							    com,
-							    recLieAlg );
-    else 
-	return GUARANA.EvaluateLongLieBracket_Symbolic_old( list_x,
-	                                                    list_y,
-							    com,
-							    recLieAlg );
-    fi;
 end;
 
 #############################################################################
@@ -426,9 +342,8 @@ GUARANA.ComputeStarPolys
     bchSers := GUARANA.recBCH.bchSers;
     
     # start with terms which are not given by Lie brackets
-    #r := GUARANA.Sum_Symbolic( list_x, list_y );
-    # TODO this has to be corrected
-    r := List( [1..recLieAlg.dim], x-> 0 );
+    r := GUARANA.Sum_Symbolic( list_x, list_y );
+
     # trivial check 
     if Length( list_x[1] ) = 0  or Length( list_y[1] ) =  0 then
         return r;
@@ -450,8 +365,8 @@ GUARANA.ComputeStarPolys
             if GUARANA.CheckWeightOfCommutator( com, wx, wy, class ) then
                 a := GUARANA.EvaluateLongLieBracket_Symbolic( 
 		     list_x, list_y, com, recLieAlg );
-                #r := GUARANA.Sum_Symbolic( r,[a[1],term[1]*a[2]] );
-                r := r + term[1]*a; 
+                r := GUARANA.Sum_Symbolic( r,[a[1],term[1]*a[2]] );
+                #r := r + term[1]*a; 
             fi;
          od;
     od;
