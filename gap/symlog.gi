@@ -185,11 +185,6 @@ end;
 ## OUT
 ## The lie bracket [x,y] evaluated symbolically
 ## 
-## TODO
-## Try to call Sum_Symbolic not so often. Maybe write result
-## into a big vector (with lenth the dimension of the Lie algebra) 
-## and add to this vector. 
-## 
 GUARANA.EvaluateLieBracket_Symbolic_recursive := 
                                          function( list_x, list_y, scTable )
     local index_x,index_y,coeff_x,coeff_y,prod,list_x1,list_x2,
@@ -236,8 +231,8 @@ GUARANA.EvaluateLieBracket_Symbolic_recursive :=
 end;
 
 GUARANA.EvaluateLieBracket_Symbolic_iter := function( list_x, list_y, scTable )
-    local res,length_x,length_y,i_x,i_y,index_x,index_y,coeff_x,coeff_y,prod;
-
+    local res,length_x,length_y,i_x,i_y,index_x,index_y,coeff_x,coeff_y,prod,
+          dim,vec,i;
     # catch trivial case 
     if Length( list_x[1] )=0 then
         return [[],[]];
@@ -246,9 +241,12 @@ GUARANA.EvaluateLieBracket_Symbolic_iter := function( list_x, list_y, scTable )
         return [[],[]];
     fi;
 
-    res := [[],[]];
+    # setup 
     length_x := Length( list_x[1] );
     length_y := Length( list_y[1] );
+    # construct long vector that will be used for summing up
+    dim := Length( scTable - 2 );
+    vec := List( [1..dim], x-> 0 );
 
     for i_x in [1..length_x] do
 	for i_y in [1..length_y] do
@@ -259,9 +257,21 @@ GUARANA.EvaluateLieBracket_Symbolic_iter := function( list_x, list_y, scTable )
 	        coeff_y := list_y[2][i_y];
 		prod := GUARANA.CopyVectorList( scTable[index_x][index_y] );
 		prod[2] := coeff_x*coeff_y*prod[2];
-		res := GUARANA.Sum_Symbolic( res, prod );
-	    fi;
-	od;
+		# sum up 
+		for i in [1..Length(prod[1])] do
+		    vec[prod[1][i]] := vec[prod[1][i]] + prod[2][i];
+		od;
+	     fi;
+	od; 
+    od;
+    
+    # transfrom vec to [indezes,pols] form
+    res := [[],[]];
+    for i in [1..dim] do 
+        if vec[i] <> 0 then 
+	    Add( res[1], i );
+	    Add( res[2], vec[i] );
+	fi; 
     od;
     return res;
 end;
@@ -287,27 +297,116 @@ end;
 ## IN 
 ## list_x,list_y ........... symbolic elements represented as lists
 ## com ..................... commutator, for example [1,2,1] 
-## scTable ................. structure constant table
+## recLieAlg ............... lie algebra record
 ##
 ## OUT
 ## com( x,y) evaluated symbolically.
 ##
-GUARANA.EvaluateLongLieBracket_Symbolic 
-                              := function( list_x, list_y, com, scTable )
+GUARANA.EvaluateLongLieBracket_Symbolic_old 
+:= function( list_x, list_y, com, recLieAlg )
     local r,l,tmp,i;
     tmp := [list_x,list_y];
     r := tmp[com[1]];
 
     l := Length( com );
     for i in [2..l] do
-            r := GUARANA.EvaluateLieBracket_Symbolic( r, tmp[com[i]], scTable );
+            r := GUARANA.EvaluateLieBracket_Symbolic( r, tmp[com[i]], 
+						      recLieAlg.scTable );
     od;
     return r;
 end;
 
+## IN
+## com ................ commutator containing symbolic elements
+## recLieAlg .......... Lie Algebra record
+## 
+## OUT 
+## Coeff vector com with to the basis of Lie Algebra.
+## This vector contains polynomials.
+##
+GUARANA.EvaluateLongLieBracket_Symbolic_explicit := function( com, recLieAlg )
+    local l, sym_elm, l_elm, sym_elm_1, sym_elm_2, com1, com2, vec_1, 
+          vec_2, basis, lie_elm, scalar, coeffs, i;
+
+    l := Length( com );
+    for i in Reversed([1..l]) do
+ 	sym_elm := com[i];
+	l_elm := Length( sym_elm[1] );
+	if l_elm > 1 then 
+ 	    # split sym_elm
+	    sym_elm_1 := [ sym_elm[1]{[1]}, sym_elm[2]{[1]} ];
+	    sym_elm_2 := [ sym_elm[1]{[2..l_elm]}, sym_elm[2]{[2..l_elm]} ];
+	    # split commutator 
+	    com1 := StructuralCopy( com );
+	    com1[i] := sym_elm_1;
+	    com2 := StructuralCopy( com );
+	    com2[i] := sym_elm_2;
+	    # recurse    
+	    vec_1 := GUARANA.EvaluateLongLieBracket_Symbolic_explicit( com1,
+	                                                           recLieAlg);
+	    vec_2 := GUARANA.EvaluateLongLieBracket_Symbolic_explicit( com2,
+	                                                           recLieAlg);
+	    return vec_1 + vec_2;
+	fi;
+    od;
+    # now we are in the case that com = [a_i*x_i,a_j*x_j,a_k*x_k, ...]
+    basis := Basis( recLieAlg.L );
+    lie_elm := basis[com[1][1][1]];
+    scalar := com[1][2][1];
+    for i in [2..l] do
+	lie_elm := lie_elm * basis[ com[i][1][1] ];
+	scalar := scalar * com[i][2][1];
+    od;
+    coeffs := Coefficients( basis, lie_elm );
+    return scalar*coeffs;
+end;
+    
+
+# returned is a vector whose length is the dimension of the Lie Algebra
+GUARANA.EvaluateLongLieBracket_Symbolic_new
+                           := function( list_x, list_y, com, recLieAlg )
+    local tmp, com_explicit, i;
+    # catch trivial case 
+    if Length( list_x[1] )=0 then
+        return [[],[]];
+    fi;
+    if Length( list_y[1] )=0 then
+        return [[],[]];
+    fi;
+
+    # build explicit commutator 
+    tmp := [list_x,list_y];
+    com_explicit := [];
+    for i in [1..Length( com )] do
+	Add( com_explicit, tmp[com[i]] );
+    od;
+    return
+    GUARANA.EvaluateLongLieBracket_Symbolic_explicit( com_explicit, recLieAlg); 
+end;
+
+GUARANA.EvaluateLongLieBracket_Symbolic 
+                            := function( list_x,list_y,com,recLieAlg )
+    local method;
+    Print( "com: ", com, "\n" );
+    Print( "x :", list_x, "\n" );
+    Print( "y :", list_y, "\n" );
+    method := "old";
+    if method = "new" then
+	return GUARANA.EvaluateLongLieBracket_Symbolic_new( list_x,
+	                                                    list_y,
+							    com,
+							    recLieAlg );
+    else 
+	return GUARANA.EvaluateLongLieBracket_Symbolic_old( list_x,
+	                                                    list_y,
+							    com,
+							    recLieAlg );
+    fi;
+end;
+
 #############################################################################
 ##
-#F GUARANA.ComputeStarPolys( list_x, list_y, w_x, w_y, class, scTable )
+#F GUARANA.ComputeStarPolys( list_x, list_y, w_x, w_y, class, recLieAlg )
 ##
 ## IN 
 ## list_x .... a list describing the lie algebra element x
@@ -316,19 +415,20 @@ end;
 ##             [ [i,j],[alpha_i,alpha_j] ], etc...
 ## wx,wy ..... weight of x,y 
 ## class ..... nilpotency class of the Lie algebra
-## scTable ... structure constant table
+## recLieAlg.. structure constant table
 ##
 ## OUT 
 ## x * y evaluated symbolically
 ## 
 GUARANA.ComputeStarPolys 
-                := function( list_x, list_y, wx, wy, class, scTable )
+:= function( list_x, list_y, wx, wy, class, recLieAlg )
     local i,r,bchSers,com,a,term,max,min,bound;
     bchSers := GUARANA.recBCH.bchSers;
     
     # start with terms which are not given by Lie brackets
-    r := GUARANA.Sum_Symbolic( list_x, list_y );
-
+    #r := GUARANA.Sum_Symbolic( list_x, list_y );
+    # TODO this has to be corrected
+    r := List( [1..recLieAlg.dim], x-> 0 );
     # trivial check 
     if Length( list_x[1] ) = 0  or Length( list_y[1] ) =  0 then
         return r;
@@ -349,11 +449,11 @@ GUARANA.ComputeStarPolys
             # check if weight of commutator is not to big
             if GUARANA.CheckWeightOfCommutator( com, wx, wy, class ) then
                 a := GUARANA.EvaluateLongLieBracket_Symbolic( 
-                                            list_x, list_y, com, scTable );
-                r := GUARANA.Sum_Symbolic( r,[a[1],term[1]*a[2]] );
-                #r := r + term[1]*a; 
+		     list_x, list_y, com, recLieAlg );
+                #r := GUARANA.Sum_Symbolic( r,[a[1],term[1]*a[2]] );
+                r := r + term[1]*a; 
             fi;
-        od;
+         od;
     od;
     return r;
 end;
@@ -365,7 +465,7 @@ end;
 ## IN
 ## recLieAlg .............. lie algebra record
 ## 
-## OUT
+## EFFECT
 ## recStarPols is added to the Lie algebra record
 ##
 ## For Log and Exp I just need 
@@ -397,7 +497,7 @@ GUARANA.AddStarPolynomialsToRecLieAlg := function( recLieAlg )
         wx := recLieAlg.weights[i];
         wy := recLieAlg.weights[i];
         star_pols[i] := GUARANA.ComputeStarPolys( 
-                  x_i, elm_y,  wx, wy, c, recLieAlg.scTable );
+                  x_i, elm_y,  wx, wy, c, recLieAlg );
     od;
 
     recStarPols := rec( vars_x := vars_x,
@@ -407,6 +507,28 @@ GUARANA.AddStarPolynomialsToRecLieAlg := function( recLieAlg )
     return 0;                  
 end;
 
+# profiling the computation of star pols.
+GUARANA.Profile := function( func, input,  subfuncs )
+    local res;
+    ProfileFunctions( subfuncs );
+    ClearProfile();
+    res := func( input );
+    DisplayProfile();
+    ClearProfile();
+    return 0;
+end;
+
+if false then
+    recLieAlgs_bch_F2c := GUARANA.Get_FNG_LieAlgRecords( 2, 9 );;
+    input :=  recLieAlgs_bch_F2c[8];;
+    func := GUARANA.AddStarPolynomialsToRecLieAlg;
+    subfuncs := [ GUARANA.Sum_Symbolic, 
+		  GUARANA.CopyVectorList,
+		  GUARANA.EvaluateLieBracket_Symbolic ,
+		  GUARANA.EvaluateLongLieBracket_Symbolic ];
+    GUARANA.Profile( func, input, subfuncs );
+    
+fi;
 #############################################################################
 ##
 #F GUARANA.Star_Symbolic_SingleVersusGeneric( recLieAlg, x, y )
@@ -485,7 +607,7 @@ GUARANA.ComputeSymbolicLogPolynomials := function( recLieAlg )
         w_x_i := recLieAlg.weights[i];
         w_tail := recLieAlg.weights[i+1];
         tail := GUARANA.ComputeStarPolys(  x_i, tail,  w_x_i, 
-                                      w_tail, c, recLieAlg.scTable );
+                                      w_tail, c, recLieAlg );
     od;
     return rec( pols := tail, vars_e := vars_e );
 end;
@@ -672,14 +794,20 @@ GUARANA.Exponential_Symbolic := function( args )
     return exp;
 end;
 
-# Example usage:
-# exams_unitr_2 := GUARANA.Get_Unitriangular_TGroupRecords( 10, 2 ); 
-# recLieAlgs_bch_unitr_2 := List( [2..Length( exams_unitr_2 )], x-> GUARANA.LieAlgebraByTGroupRec( recBCH9,exams_unitr_2[x] ));;
-# GUARANA.AddStarLogAndExpPols( [recLieAlgs_bch_unitr_2[5], recBCH9] );
-# 
-# exams_unitr_3 := GUARANA.Get_Unitriangular_TGroupRecords( 8, 3 ); 
-# recLieAlgs_bch_unitr_3 := List( [2..Length( exams_unitr_3 )], x-> GUARANA.LieAlgebraByTGroupRec( recBCH9,exams_unitr_3[x] ));;
-# GUARANA.AddStarLogAndExpPols( [recLieAlgs_bch_unitr_3[5], recBCH9] );
+#############################################################################
+##
+#F GUARANA.AddStarLogAndExpPols( recLieAlg )
+##
+## IN
+## recLieAlg ..................  Lie algebra record
+## 
+## EFFECT
+## Star, Log and Exp polynomials are added to the Lie algebra record.
+##
+## Example usage:
+## recLieAlgs_bch_F2c := GUARANA.Get_FNG_LieAlgRecords( 2, 9 );
+## GUARANA.AddStarLogAndExpPols( recLieAlgs_bch_F2c[7] );
+##
 GUARANA.AddStarLogAndExpPols := function( recLieAlg )
     GUARANA.AddStarPolynomialsToRecLieAlg( recLieAlg ); 
     GUARANA.AddLogPolynomialsToLieAlgRecord( recLieAlg ); 
@@ -687,10 +815,6 @@ GUARANA.AddStarLogAndExpPols := function( recLieAlg )
     return 0;
 end;
 
-
-# Next steps:
-# - give Exp and Log an option, with which you can chosse the star operation
-# - give collection an option
-# - test the new collection and compare it with the old method
-
-
+#############################################################################
+##
+#E
