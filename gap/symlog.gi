@@ -19,7 +19,7 @@
 ## st ..... string for example  "x"
 ##
 ## OUT
-## A list of rational n variables, calles for example 
+## A list of rational n variables, called for example 
 ## x1,x2,...
 ##
 GUARANA.RationalVariableList := function( n, st )
@@ -245,7 +245,7 @@ GUARANA.EvaluateLieBracket_Symbolic_iter := function( list_x, list_y, scTable )
     length_x := Length( list_x[1] );
     length_y := Length( list_y[1] );
     # construct long vector that will be used for summing up
-    dim := Length( scTable - 2 );
+    dim := Length( scTable ) -2;
     vec := List( [1..dim], x-> 0 );
 
     for i_x in [1..length_x] do
@@ -305,9 +305,9 @@ end;
 GUARANA.EvaluateLongLieBracket_Symbolic 
 := function( list_x, list_y, com, recLieAlg )
     local r,l,tmp,i;
-    Print( "com: ", com, "\n" );
-    Print( "x :", list_x, "\n" );
-    Print( "y :", list_y, "\n" );
+##      Print( "com: ", com, "\n" );
+##      Print( "x :", list_x, "\n" );
+##      Print( "y :", list_y, "\n" );
     tmp := [list_x,list_y];
     r := tmp[com[1]];
 
@@ -316,9 +316,109 @@ GUARANA.EvaluateLongLieBracket_Symbolic
             r := GUARANA.EvaluateLieBracket_Symbolic( r, tmp[com[i]], 
 						      recLieAlg.scTable );
     od;
-    Print( "r :", r, "\n" );
+##      Print( "r :", r, "\n" );
     return r;
 end;
+
+
+## The following functions are probably not good enought to be used.
+## 
+## start
+
+## IN
+## recLieAlg ................ lie algebra record
+##
+## OUT 
+## A record containing the information to compute [u,v] for 
+## two generic elements u,v.
+##
+GUARANA.LieBracketPols := function( recLieAlg )
+  local n, vars_u, vars_v, u, v, com;
+
+    # get new variables
+    n := recLieAlg.dim;
+    vars_u := GUARANA.RationalVariableList( n, "u" ); 
+    vars_v := GUARANA.RationalVariableList( n, "v" );  
+
+    # get u and v
+    u := GUARANA.GenericElement( n, vars_u );
+    v := GUARANA.GenericElement( n, vars_v );
+
+    # compute symbolic Lie bracket [u,v]
+    com := GUARANA.EvaluateLieBracket_Symbolic( u,v, recLieAlg.scTable ); 
+
+    return rec( vars_u := vars_u,
+                vars_v := vars_v, 
+		com := com );
+end;
+
+##
+## EFFECT
+## Add the record describing a Lie bracket between two generic symbolic 
+## elements to the Lie algebra record.
+##
+GUARANA.AddLieBracketPols := function( recLieAlg )
+  local recLieBracketPols;
+    recLieBracketPols := GUARANA.LieBracketPols( recLieAlg );
+    recLieAlg.recLieBracketPols := recLieBracketPols;
+end;
+
+## IN
+##
+## OUT
+## [x,y] computed symbolically
+##
+## TODO
+## This function does not work correctly if the input 
+## has not the full range
+GUARANA.LieBracket_Symbolic_GenericVersGeneric
+:= function( x, y, recLieAlg )
+  local n, vars_u, vars_v, indets, vals, pols, range_result, result, res, i;
+
+    # setup
+    n := recLieAlg.dim;
+    vars_u := recLieAlg.recLieBracketPols.vars_u;
+    vars_v := recLieAlg.recLieBracketPols.vars_v;
+    indets := Concatenation( vars_u{x[1]}, vars_v{y[1]} );
+    vals := Concatenation( x[2], y[2] );
+
+    # get polynomials
+    pols := recLieAlg.recLieBracketPols.com[2];
+    range_result := StructuralCopy( recLieAlg.recLieBracketPols.com[1] );
+
+    # compute result
+    result := [];
+    for i in [1..Length(range_result)] do
+        res := Value( pols[i], indets, vals );
+        Add( result, res );
+    od;
+    return [ range_result, result ];
+end;
+
+GUARANA.EvaluateLieBracket_Symbolic_UsingPols := function( x,y,recLieAlg )
+
+    end;
+## TODO
+## Not correct yet if input is not generic.
+##
+## This method is a little bit quicker for long lie brackets
+## and two generic elements in L(F_2,8)
+GUARANA.EvaluateLongLieBracket_Symbolic2
+:= function( x,y, com, recLieAlg )
+  local tmp, r, l, i;
+
+    tmp := [x,y];
+    r := tmp[com[1]];
+
+    l := Length( com );
+    for i in [2..l] do
+       r := GUARANA.LieBracket_Symbolic_GenericVersGeneric( r, tmp[com[i]], 
+       						            recLieAlg );
+    od;
+##      Print( "r :", r, "\n" );
+    return r;
+end;
+## end
 
 #############################################################################
 ##
@@ -550,7 +650,7 @@ end;
 ## OUT 
 ## computes the polynomials describing log and stores them in the 
 ## lie algebra record. 
-## For this purpose the already computed star polynomials are computed.
+## For this purpose the already computed star polynomials are used.    
 ## 
 ## TODO
 ## Why is this so quick compared to the computation of the star pols ?
