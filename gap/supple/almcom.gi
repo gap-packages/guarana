@@ -1,14 +1,19 @@
 #############################################################################
+##
+#W almcom.gi              GUARANA package                     Bjoern Assmann
+##
 ## Implementation of Algorithm Almost Complement, Eick habil p. 81
 ## given Group E polycyclic, M free abelian normal subgroup
-#############################################################################
-#
-# TODO: -checke funktionen auf Extremfaelle
-#############################################################################
+##
+#H  @(#)$Id$
+##
+#Y 2006
+##
+##
+## TODO: -checke funktionen auf Extremfaelle
 
-SC_GetSys := function( CR )
+GUARANA.Supple_GetSys := function( CR )
     local sys,c,w;
-
     # add equations for relators
     sys := CRSystem( CR.dim, Length(CR.mats), CR.char );
     for c in CR.enumrels do
@@ -19,18 +24,16 @@ SC_GetSys := function( CR )
             AddEquationsCR( sys, w[1], w[2], true );
         fi;
     od;
-    
     return sys;
 end;
 
-
 # diese funktion ist noch nicht durchdacht bzgl der Extremfaelle,
 # abgeschaut von KernelCR
-SC_GetBeta2AndSolution := function( CR )
+GUARANA.Supple_GetBeta2AndSolution := function( CR )
     local mat, null, sol, vec,sys;
 
     # compute system (related to second cohomology map alpha_2)
-    sys := SC_GetSys( CR );
+    sys := GUARANA.Supple_GetSys( CR );
 
     # case that subgroup is full group, i.e. Length(CR.mats)=0
     if sys.len = 0 then return rec( mat := [], sol := [] ); fi;
@@ -48,8 +51,7 @@ SC_GetBeta2AndSolution := function( CR )
     return rec( mat := mat, sol := sol );
 end;
 
-
-SC_GetBeta2 := function( CR )
+GUARANA.Supple_GetBeta2 := function( CR )
     local sys, c, w,beta2;
   
     # add equations for relators
@@ -68,21 +70,19 @@ SC_GetBeta2 := function( CR )
 end;
 
 # operation on M_Q/M
-SC_OperOnMQFactorM := function( pp, act )
+GUARANA.Supple_OperOnMQFactorM := function( pp, act )
     local p,i,ii,mat,t;
-
     mat := act[1];
     t := act[2];
     p := Representative( pp );
     i := p * mat + t;
     ii := i + Integers^(Length(p));
-
     return ii;
 end;
 
 #############################################################################
 ##
-#F SC_ComputeU( CR, s )
+#F GUARANA.Supple_ComputeU( CR, s )
 ##
 ## IN
 ## CR ... cohomology record for an extension of M by E/M=G
@@ -94,7 +94,7 @@ end;
 ## 
 ## Comments
 ## 
-SC_ComputeU := function( CR, s )
+GUARANA.Supple_ComputeU := function( CR, s )
      local dim,p,pp,n,delta,acts,act,rr,i;
 
      # get trivial element of M_Q/M 
@@ -112,14 +112,14 @@ SC_ComputeU := function( CR, s )
          Add( acts, act );
      od;
 
-     rr := PcpOrbitStabilizer( pp, CR.factor, acts, SC_OperOnMQFactorM );
+     rr := PcpOrbitStabilizer( pp, CR.factor, acts, GUARANA.Supple_OperOnMQFactorM );
     
      return rr;
 end;
 
 #############################################################################
 ##
-#F SC_ImageDerivation( der, w, CR )
+#F GUARANA.Supple_ImageDerivation( der, w, CR )
 ##
 ## IN: 
 ## der ...  derivation on G = < g_1,...,g_n> given by a vector 
@@ -132,7 +132,7 @@ end;
 ##
 ## Comments:
 ## This function can be certainly more effective
-SC_ImageDerivation := function( der, w, CR )
+GUARANA.Supple_ImageDerivation := function( der, w, CR )
     local n,e,i,sum1,sum2,w1,w2;
     
     n := Length( w );
@@ -145,19 +145,19 @@ SC_ImageDerivation := function( der, w, CR )
             return der[i];
         # case g^n
         elif e > 0 then
-            sum1 := SC_ImageDerivation( der, [[i,e-1]], CR )*CR.mats[i];
-            sum2 := SC_ImageDerivation( der, [[i,1]], CR );
+            sum1 := GUARANA.Supple_ImageDerivation( der, [[i,e-1]], CR )*CR.mats[i];
+            sum2 := GUARANA.Supple_ImageDerivation( der, [[i,1]], CR );
             return sum1 + sum2;
         # case g^-n
         else 
             # (h^-1)^der = - (h^der)^(g^-1)
-            return -SC_ImageDerivation( der, [[i,-e]], CR )*(CR.mats[i]^-1);
+            return -GUARANA.Supple_ImageDerivation( der, [[i,-e]], CR )*(CR.mats[i]^-1);
         fi;
     else 
         w1 := w{[1..n-1]};
         w2 := w{[n]};
-        sum1 := SC_ImageDerivation( der, w1, CR )*(CR.mats[i]^e);
-        sum2 := SC_ImageDerivation( der, w2, CR );
+        sum1 := GUARANA.Supple_ImageDerivation( der, w1, CR )*(CR.mats[i]^e);
+        sum2 := GUARANA.Supple_ImageDerivation( der, w2, CR );
         return sum1 + sum2;
     fi; 
 
@@ -165,7 +165,7 @@ end;
 
 #############################################################################
 ##
-#F SC_AlmostComplement( E, M )
+#F GUARANA.Supple_AlmostComplement( E, M )
 ##
 ## IN
 ## E ... polycyclic group
@@ -177,7 +177,7 @@ end;
 ##
 ## Comments:
 ##
-SC_AlmostComplement := function( E, M )
+GUARANA.Supple_AlmostComplement := function( E, M )
     local CR,s,U,der_s,gensU,i,n,gens,g,exp_img_u,img_u;
 
     # get cohomology data
@@ -185,7 +185,7 @@ SC_AlmostComplement := function( E, M )
     
     # get s \in C^1(G,M_Q) whose image under beta_2 is the 2cocylce,
     # which corresponds to the extension M by E/M
-    s := SC_GetBeta2AndSolution( CR ).sol;
+    s := GUARANA.Supple_GetBeta2AndSolution( CR ).sol;
     if s = fail then
         Print( "Extension is not almost split\n" );
         return fail;
@@ -193,7 +193,7 @@ SC_AlmostComplement := function( E, M )
     der_s := CutVector( s, Length( CR.factor ) );
 
     # compute U
-    U := SC_ComputeU( CR, s );
+    U := GUARANA.Supple_ComputeU( CR, s );
 
     # get generators of almost complement
     gensU := U.stab;
@@ -201,7 +201,7 @@ SC_AlmostComplement := function( E, M )
     gens := [];
     for i in [1..n] do
         # compute image of u under derivation der_s
-        exp_img_u := SC_ImageDerivation( der_s, U.word[i], CR );
+        exp_img_u := GUARANA.Supple_ImageDerivation( der_s, U.word[i], CR );
         img_u := MappedVector( exp_img_u, CR.normal ); 
         # get new generator of almost complement
         g := gensU[i]* img_u;

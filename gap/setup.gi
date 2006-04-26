@@ -16,7 +16,7 @@
 #Y 2006
 ##
 ##
-
+ 
 #############################################################################
 ##
 #F GUARANA.SetUpLieAlgebraRecordByMalcevbasis( recTGroup )

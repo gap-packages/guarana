@@ -1,7 +1,32 @@
 To do:
 
+- In which form should the groups G,C,N be given ? 
+  Investigate how the assumption that we need:
+  1. N given by Mal'cev basis 
+  2. C given by Mal'cev basis whose first part contains the
+     representative for CN/N. 
+  3. CN/N free abelian
+  4. G/CN finite 
+  and so on 
+  
+  can be represented in GAP.   
+
+- clean up code in gap/supple
+
 - integrate code from symbolic.g
   How can we speed up the computation of the star polynomials ? 
+
+- investigate why the computation of the log,exp polynomials
+  is so  fast, once we have the star polys. 
+  For example in F_2,8 using the symbolic Lie bracket is very slow. 
+  But it seems that using the star pols for computing log and exp
+  does not take much more time.
+
+- Idea for efficient star: 
+  save information about already computed lie brackets. 
+  We know a priori which lie brackets are going to be computed in 
+  which order. This can be used to build an efficient data  
+  structure(tree) for the computation of star. 
   
 - Go step for step through the paper and implement everything
   that is mentionend. For example:

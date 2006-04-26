@@ -1,4 +1,14 @@
 #############################################################################
+##
+#W almsup.gi              GUARANA package                     Bjoern Assmann
+##
+## Methods for computing nilpotent almost supplements
+##
+#H  @(#)$Id$
+##
+#Y 2006
+
+#############################################################################
 #
 # In: A abelian group, A < G, A given as Pcp group, A normal in G
 #     U < G
@@ -6,16 +16,14 @@
 #
 # Out: C_A(U)
 #
-SC_CentralizerAbelianGroup := function( A, U, G )
+GUARANA.Supple_CentralizerAbelianGroup := function( A, U, G )
     local C,g,pcp,rel,mat,fix,i,elms;
-    
     # setup
     C := A;
     elms := GeneratorsOfGroup( U );
 
     # find iterated centralizers under the action of elms
     for g in  elms  do
-
         # get pcp and its relation matrix
         # This step applies only if we have finite relative orders.
         pcp := Pcp( C );
@@ -38,7 +46,6 @@ SC_CentralizerAbelianGroup := function( A, U, G )
         C := Subgroup( G, fix );
     od;
     return C;
-
 end;
 
 #############################################################################
@@ -48,17 +55,16 @@ end;
 # Out: C_K(U) 
 #       which is the intersection of Z(U) and K
 #
-SC_CentralizerSubgroup := function( K, U )
+GUARANA.Supple_CentralizerSubgroup := function( K, U )
     local A; 
 
     # centre of K is normal in U, since Z(K) is charac. in K and
     # K normal in U (thus conj. by u is an autom.)
     A := Centre( K );
-    return SC_CentralizerAbelianGroup( A, U, U );
-
+    return GUARANA.Supple_CentralizerAbelianGroup( A, U, U );
 end;
 
-SC_NaturalHomomorphismByPcpNC := function ( pcp )
+GUARANA.Supple_NaturalHomomorphismByPcpNC := function ( pcp )
     local  G, F, N, gens, imgs, hom;
     G := GroupOfPcp( pcp );
     N := SubgroupByIgs( G, DenominatorOfPcp( pcp ) );
@@ -76,13 +82,12 @@ SC_NaturalHomomorphismByPcpNC := function ( pcp )
 end;
 
 
-SC_NaturalHomomorphismNC := function ( G, N )
+GUARANA.Supple_NaturalHomomorphismNC := function ( G, N )
     if Size( N ) = 1  then
         return IdentityMapping( G );
     fi;
-    return SC_NaturalHomomorphismByPcpNC( Pcp( G, N ) );
+    return GUARANA.Supple_NaturalHomomorphismByPcpNC( Pcp( G, N ) );
 end;
-
 
 #############################################################################
 #
@@ -91,19 +96,19 @@ end;
 # Out: upper U-central series of K, which may terminate a proper subgroup
 #      of K
 # 
-SC_UpperU_CentralSeries := function( K, U )
+GUARANA.Supple_UpperU_CentralSeries := function( K, U )
     local C, upp, N, nat, U_img, K_img, C_img;
 
     C := TrivialSubgroup( U );
     upp := [C];
-    N := SC_CentralizerSubgroup( K, U );
+    N := GUARANA.Supple_CentralizerSubgroup( K, U );
     while IndexNC( N, C ) > 1 do
         C := N;
         Add( upp, C );
-        nat := SC_NaturalHomomorphismNC( U, C );
+        nat := GUARANA.Supple_NaturalHomomorphismNC( U, C );
         U_img := Image( nat  );
         K_img := Image( nat, K );
-        C_img := SC_CentralizerSubgroup( K_img, U_img );
+        C_img := GUARANA.Supple_CentralizerSubgroup( K_img, U_img );
         N := PreImage( nat, C_img );
     od;
     return Reversed( upp );
@@ -118,7 +123,7 @@ end;
 # gens .... elements of parent group G
 # pcp  .... pcp of A/L
 # nat  .... hom from A to A/L
-SS_LinearActionOnFactorPcp := function ( gens, pcp, nat )
+GUARANA.Supple_LinearActionOnFactorPcp := function ( gens, pcp, nat )
     local result, x, act, y,y1,y2,y3;
 
     result := [];
@@ -135,7 +140,7 @@ SS_LinearActionOnFactorPcp := function ( gens, pcp, nat )
     return result;
 end;
 
-UHyperCentre := function( U, A )
+GUARANA.Supple_UHyperCentre := function( U, A )
     local pcpU, gensU,L,nat,AL,g,pcp,rel,mat,fix,i,C,m,l,Matt,Mat;
 
     pcpU  := Pcp( U );
@@ -158,7 +163,7 @@ UHyperCentre := function( U, A )
           # compute action by gensU on pcp
           Mat := [];
           for g in gensU do
-              mat := SS_LinearActionOnFactorPcp( [g], pcp, nat )[1];
+              mat := GUARANA.Supple_LinearActionOnFactorPcp( [g], pcp, nat )[1];
               mat := mat - mat^0;
               Append( mat, rel );
               Add( Mat, mat );
@@ -189,7 +194,7 @@ end;
 
 #############################################################################
 ##
-#F SC_RefinedLowerCentralSeries( <G> )
+#F GUARANA.Supple_RefinedLowerCentralSeries( <G> )
 ##
 ## IN
 ## G ... nilpotent polycyclic group
@@ -198,13 +203,12 @@ end;
 ## efa series of G which refines the lower central series by
 ## finite - by - (torsion-free) factors.
 ##
-SC_RefinedLowerCentralSeries := function( G )
+GUARANA.Supple_RefinedLowerCentralSeries := function( G )
     local ser, ref, i, A, B, pcp, gens, rels, n, free, fini, U, s, t, f;
 
     ser := LowerCentralSeries( G );
     ref := [G];
     for i in [1..Length( ser ) - 1] do
-
         # refine abelian factor A/B
         A := ser[i];
         B := ser[i+1];
@@ -241,7 +245,7 @@ end;
 
 #############################################################################
 ##
-#F SC_NilpAlmSup( G, N, H )
+#F GUARANA.Supple_NilpAlmSup( G, N, H )
 ##
 ## IN
 ## G ... polycyclic group
@@ -254,23 +258,23 @@ end;
 ## TODO: Ueberlege ob ich immer mit den Homomorphismen rechnen muss.
 ## z.B. beim U-hyper centre
 ##
-SC_NilpAlmSup := function( G, N, H )
+GUARANA.Supple_NilpAlmSup := function( G, N, H )
     local sers,U,l,i,nat,A,sers2,L,nat_L,N_i_img,U_img,CR,s,K_img;
 
     # determine H-invariant linear abelian series of N with central factors 
-    sers := SC_RefinedLowerCentralSeries( N );
+    sers := GUARANA.Supple_RefinedLowerCentralSeries( N );
 
     U := H;
     l := Length( sers ) - 1;
 
     for i in [1..l] do
         # hom U -> U/N_i+1
-        nat := SC_NaturalHomomorphismNC( U, sers[i+1] );
+        nat := GUARANA.Supple_NaturalHomomorphismNC( U, sers[i+1] );
         
         # compute ascending U central series of A = N_i/N_i+1
         A := Image( nat, sers[i] );
         U_img := Image( nat );
-        sers2 := SC_UpperU_CentralSeries( A, U_img );
+        sers2 := GUARANA.Supple_UpperU_CentralSeries( A, U_img );
           
         # proceed only if series does not reach A, since
         # if A = U-hpercentre, U/N_i+1 is nilpotent
@@ -279,7 +283,7 @@ SC_NilpAlmSup := function( G, N, H )
             L := PreImage( nat, sers2[1]);
 
             # hom U -> U/L
-            nat_L := SC_NaturalHomomorphismNC( U, L );
+            nat_L := GUARANA.Supple_NaturalHomomorphismNC( U, L );
             # N_i/L and U/L
             N_i_img := Image( nat_L, sers[i] );
             U_img := Image( nat_L ); 
@@ -290,20 +294,18 @@ SC_NilpAlmSup := function( G, N, H )
                 K_img := ComplementCR( CR, s );
             else 
                 # compute almost complement K/L to N_i/L in U/L
-                K_img := SC_AlmostComplement( U_img , N_i_img );
+                K_img := GUARANA.Supple_AlmostComplement( U_img , N_i_img );
             fi;
             U := PreImage( nat_L, K_img );
         fi;
     od;
     return U;
-
 end;
 
-
-SC_ComputeHAndN := function( G )
+GUARANA.Supple_ComputeHAndN := function( G )
     local N, nat, G_img, G_img_fit, H_img;
     N := FittingSubgroup( G );
-    nat := SC_NaturalHomomorphismNC( G, N );
+    nat := GUARANA.Supple_NaturalHomomorphismNC( G, N );
     G_img := Image( nat );
     G_img_fit := FittingSubgroup( G_img );
     H_img := Centre( G_img_fit );
