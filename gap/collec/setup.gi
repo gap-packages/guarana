@@ -43,7 +43,7 @@ end;
 ##                       almost nilpotent supplement to N in G. 
 ##                       CN/N is free abelian.
 ##                       G/CN is finite.
-## indezes ............. list containing three lists l1,l2,l3
+## indeces ............. list containing three lists l1,l2,l3
 ##                       l1 = [1...r]
 ##                       l2 = [r+1,...,r+s]
 ##                       l3 = [r+s+1,...,r+s+t]
@@ -61,17 +61,41 @@ end;
 ##                       CC and C. 
 ## 
 GUARANA.SetupCollecRecord := function( args )
-  local G, indezes, N, NN, C, CC;
+  local G, indeces, N, NN, C, CC;
     G := args[1];
-    indezes := args[2];
+    indeces := args[2];
     N := args[3];
     NN := args[4];
     C := args[5];
     CC := args[6];
-    return rec( G = G, indezes = indezes, N = N, NN = NN, 
-                C = C, CC = CC );
+    return rec( G := G, indeces := indeces, N := N, NN := NN, 
+                C := C, CC := CC );
 end;
-    
+
+# TODO
+# setup functions
+# -funktion for computing the malcev correspondence for C and N. 
+# -funktion for storing the matrices of auts of action of G on N.
+# -function for storing the images of the tails in C in N
+# -multiplication table of finite part on top. 
+# 
+# 
+# collection functions
+# -idea represent internally elments only as vectors
+#  (maybe splitted in three parts ? )
+# -computations with powers of autom of N. 
+#  Two possibilities, n given by group exponent vector or by 
+#  Lie algebra coeff vector
+# -computations with consecutive powers of automorphisms. 
+#  again n given in two ways. 
+# -Powering in C. 
+# -Inversion in CN
+# -Powering in CN
+# -Collection in G
+#
+# construct more examples
+# 
+
 #############################################################################
 ##
 #E

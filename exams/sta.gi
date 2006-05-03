@@ -132,7 +132,7 @@ end;
 ## OUT 
 ## Pcp of a nilpotent by free abelian group.
 ##
-GUARANA.NilpotentByFreeAbelianExmas := function( n )
+GUARANA.NilpotentByFreeAbelianExams := function( n )
     local x,pol,R,G,m,ll,N,n1,n2,N2,F,F_nc,hl,auts,T,a;
 
     x := Indeterminate( Rationals );

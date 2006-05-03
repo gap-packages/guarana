@@ -16,8 +16,7 @@
 ## Examples that can be used to test Malcev collection. 
 ##
 GUARANA.SomePolyMalcevExams := function( n )
-  local T, H, ll, pcs, G, indeces, N, NN, C, CC, h1, h2, h3, h4, f1, f2, f3, g1, g2, g3, g4, i;
-
+  local T, H, ll, pcs, G, indeces, N, NN, C, CC, h1, h2, h3, h4, f1, f2, f3, g1, g2, g3, g4, i, pcpH;
     if n=1 then 
 	T := GUARANA.NilpotentByFreeAbelianExams(1);
 	H := T.G;
@@ -46,6 +45,7 @@ GUARANA.SomePolyMalcevExams := function( n )
 	# in this example C and N have non trivial intersection
 	T := GUARANA.NilpotentByFreeAbelianExams(2);
 	H := T.G;
+	pcpH := Pcp( H );
 	h1 := pcpH[4]*pcpH[19];
 	h2 := pcpH[6]*pcpH[19];
 	h3 := pcpH[19];
