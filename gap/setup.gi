@@ -17,7 +17,6 @@
 ##
 ##
  
-
 ############################################################################
 ##
 #F GUARANA.TGroupRec_UCS( N )
@@ -36,13 +35,14 @@
 ## Pcp-group with orders [ 0, 0, 0, 0, 0, 0 ]
 ## gap> GUARANA.TGroupRec( N );
 ##
-## TODO
-## - weights should be computed in a different way.
-## - it should also be possible to start with a given Mal'cev basis
-## - the current weights are not correct. 
-## 
+## Note:
+## This function is not so nice it because it changes the
+## underlying pcs of N.
+## This should not happen at this stage. 
+## Therefore this function we will be only used for test purposes. 
+##
 GUARANA.TGroupRec_UCS := function( N )
-    local sers,i, NN,l,leFactors,s,indices,class,
+    local sers,i, NN,l,leFactors,s,indices,max_weight,
     wei, weights,a, largestAbelian;
     sers := UpperCentralSeries( N );
     NN := PcpGroupBySeries( sers ); 
@@ -64,9 +64,6 @@ GUARANA.TGroupRec_UCS := function( N )
 	s := s + leFactors[i];
     od;
 
-    # nilpotency class of group
-    class := Length( leFactors );
-
     # weights of generators
     wei := 1;
     weights := [];
@@ -77,7 +74,10 @@ GUARANA.TGroupRec_UCS := function( N )
 	wei := wei + 1;
     od;
 
-    # get larges abelian group in the upper central series
+    # max_weight of elms of the Malcev basis 
+    max_weight := Length( leFactors );
+
+    # get largest abelian group in the upper central series
     for i in [1..Length(sers)] do
 	if IsAbelian( sers[i] ) then
 	    largestAbelian := i;
@@ -88,36 +88,53 @@ GUARANA.TGroupRec_UCS := function( N )
     return rec( N := N, #basisN := basisN, 
                 NN := NN,
 	        sers := sers, indices := indices,
-	        class := class, weights := weights,
+	        max_weight := max_weight, weights := weights,
 	        largestAbelian := largestAbelian,
 		# information about how the Mal'cev basis was computed
 	        malcevBasisInfo := "ucs" );
 end;
 
+
 ############################################################################
 ##
-#F GUARANA.TGroupRec( N )
+#F GUARANA.TGroupRec( args )
+#F GUARANA.TGroupRec_GEN( N )
 ## 
 ## IN
 ## args[1]=N ................ a T-group given by a pcp
 ## args[2] .................  an optional string, that determines
 ##                            how the Mal'cev basis should be obtained.
+##                            "gen" means that the Malcev basis is 
+##                            assumed to be given. 
+##                            "ucs" means that a Mal'cev basis going
+##                            through the upper central series is computed
 ##
 ## OUT
-## a record containing some information about N. 
-## For example it contains a Mal'cev basis of N and 
-## pcp with respect to that basis. 
+## a record containing some information about N.
+## For example weights of the elms of a Mal'cev basis of N.
 ## 
 ## Example of usage
-## gap> N := GUARANA.Examples_Unitriangular( 4, 2 );
-## Pcp-group with orders [ 0, 0, 0, 0, 0, 0 ]
-## gap> GUARANA.TGroupRec( N );
+## gap> ll:= GUARANA.SomePolyMalcevExams( 2 );
+## gap> R := GUARANA.SetupCollecRecord( ll );
+## gap> GUARANA.TGroupRec_GEN( R.NN );
 ##
-## TODO
-## - weights should be computed in a different way.
-## - it should also be possible to start with a given Mal'cev basis
-## - the current weights are not correct. 
-## 
+GUARANA.TGroupRec_GEN := function( N )
+  local coll, weights, max_weight;
+
+    # get weights 
+    coll := Collector( N );
+    if FromTheLeftCollector_SetWeights( coll ) <> fail then 
+	weights := coll![PC_WEIGHTS];
+    else
+	Error( "Can not compute weights of Malcev basis of N" );
+    fi;
+    max_weight := Maximum( weights );
+
+    return rec( N := N, NN := N, weights := weights, 
+                max_weight := max_weight,
+                malcevBasisInfo := "gen" );
+end;
+
 GUARANA.TGroupRec := function( args )
     local N,malcevBasisInfo;
 
@@ -127,15 +144,16 @@ GUARANA.TGroupRec := function( args )
     if IsBound( args[2] ) then 
 	malcevBasisInfo := args[2];
     else
-	#use default, in the moment "ucs"
-	malcevBasisInfo := "ucs";
+	#use default, i.e. the general method
+	malcevBasisInfo := "gen";
     fi;
 
-    if malcevBasisInfo = "ucs" then 
+    if malcevBasisInfo = "gen" then
+	return GUARANA.TGroupRec_GEN( N );
+    elif malcevBasisInfo = "ucs" then 
         return GUARANA.TGroupRec_UCS( N );
     else
-	# TODO alternative ways to get a Mal'cev basis
-	return 0;
+	Error( "wrong malcevBasisInfo specified" );
     fi;
 end;
 #############################################################################
@@ -177,7 +195,7 @@ GUARANA.SetUpLieAlgebraRecordByMalcevbasis := function( recTGroup )
                 recTGroup := recTGroup, 
 		scTable := T,
 	        weights := recTGroup.weights,
-		class := recTGroup.class,
+		max_weight := recTGroup.max_weight,
 	        malcevBasisInfo := malcevBasisInfo );
 end;
 
@@ -269,10 +287,10 @@ end;
 #############################################################################
 ##
 ##
-GUARANA.CheckWeightOfCommutator := function( com, wx, wy, class )
+GUARANA.CheckWeightOfCommutator := function( com, wx, wy, max_weight )
     local w;
     w := GUARANA.WeightOfCommutator( com, wx, wy );
-    if w > class then
+    if w > max_weight then
         return false;
     else
         return true;
@@ -281,13 +299,13 @@ end;
 
 #############################################################################
 ##
-#F GUARANA.Star_Simple( x, y, wx, wy, class, info )
+#F GUARANA.Star_Simple( x, y, wx, wy, max_weight, info )
 ##
 ## IN
 ## x,y ................... elements of a Lie algebra.
-##                         so brackets of Length class + 1 are always 0.
+##                         Brackets of Length max_weight + 1 are always 0.
 ## wx,wy ................. their weights. 
-## class ................  nilpotency class of the Lie algebra. 
+## max_weight .............max_weight of the basis elms of the Lie algebra. 
 ## info .................  strings which determines how lie brackets
 ##                         are evaluated
 ##
@@ -299,7 +317,7 @@ end;
 ## Can this be done in a better way ? Maybe with a nice data 
 ## structure containing the information about the Bch-formula. 
 ## 
-GUARANA.Star_Simple := function( x, y, wx, wy, class, info  )
+GUARANA.Star_Simple := function( x, y, wx, wy, max_weight, info  )
     local i,r,bchSers,com,a,term,max,min,bound;
     bchSers := GUARANA.recBCH.bchSers;
     
@@ -315,8 +333,8 @@ GUARANA.Star_Simple := function( x, y, wx, wy, class, info  )
     # can be involved
     max := Maximum( wx,wy );
     min := Minimum( wx,wy );
-    # max + min* (bound-1 ) <= class
-    bound := Int( (class-max)/min + 1 );
+    # max + min* (bound-1 ) <= max_weight
+    bound := Int( (max_weight-max)/min + 1 );
 
     # up to bound  compute the commutators and add them.
     # Note that the list contains commutators of length i at position i-1.
@@ -324,7 +342,7 @@ GUARANA.Star_Simple := function( x, y, wx, wy, class, info  )
         for term in bchSers[i] do
             com := term[2];
             # check if weight of commutator is not to big
-            if GUARANA.CheckWeightOfCommutator( com, wx, wy, class ) then
+            if GUARANA.CheckWeightOfCommutator( com, wx, wy, max_weight ) then
                 a := GUARANA.EvaluateLieBracket( x, y, com, info );
                 r := r + term[1]*a; 
             fi;
@@ -346,7 +364,7 @@ GUARANA.WeightOfLieAlgElm := function( recLieAlg, elm )
             return recLieAlg.weights[i];
         fi;
     od;
-    return recLieAlg.class;
+    return recLieAlg.max_weight;
 end;
 
 #############################################################################
@@ -361,11 +379,11 @@ end;
 ## Log( g )
 ##
 GUARANA.AbstractLog_Simple_ByExponent := function( recLieAlg, exp )
-    local  gensL,r,i,e,x,y,wx,wy,class;
+    local  gensL,r,i,e,x,y,wx,wy,max_weight;
 
     # setup
     gensL := GeneratorsOfAlgebra( recLieAlg.L );
-    class := recLieAlg.class;
+    max_weight := recLieAlg.max_weight;
 
     r := Zero( recLieAlg.L );
     # go backwards through exponents. 
@@ -382,7 +400,7 @@ GUARANA.AbstractLog_Simple_ByExponent := function( recLieAlg, exp )
                 # compute weights of x,y
                 wx := recLieAlg.weights[i];
                 wy := GUARANA.WeightOfLieAlgElm( recLieAlg, y );
-                r := GUARANA.Star_Simple( x,y,wx,wy,class, "strucConst" );
+                r := GUARANA.Star_Simple( x,y,wx,wy,max_weight, "strucConst" );
             fi;
         fi;
     od;
@@ -464,18 +482,18 @@ end;
 ##
 GUARANA.EvaluateLieBracketsInTermsOfLogarithmsSers 
                             := function(  recLieAlg, g,h,wg,wh )
-    local bchLBITOL,r,max,min,bound,class,i,term,com,a,log_a;
+    local bchLBITOL,r,max,min,bound,max_weight,i,term,com,a,log_a;
     bchLBITOL := GUARANA.recBCH.bchLBITOL;
   
     r := Zero( recLieAlg.L );
 
     # compute upper bound for the Length of commutators, which 
     # can be involved
-    class := recLieAlg.class;
+    max_weight := recLieAlg.max_weight;
     max := Maximum( wg,wh );
     min := Minimum( wg,wh );
-    # max + min* (bound-1 ) <= class
-    bound := Int( (class-max)/min + 1 );
+    # max + min* (bound-1 ) <= max_weight
+    bound := Int( (max_weight-max)/min + 1 );
 
     # up to bound  compute the commutators and add them.
     # Note that the list contains commutators of length i at position i-1.
@@ -483,7 +501,7 @@ GUARANA.EvaluateLieBracketsInTermsOfLogarithmsSers
         for term in bchLBITOL[i] do
             com := term[2];
             # check if weight of commutator is not to big
-            if GUARANA.CheckWeightOfCommutator( com, wg, wh, class ) then
+            if GUARANA.CheckWeightOfCommutator( com, wg, wh, max_weight ) then
                 # evaluate commutator in the group
                 a := GUARANA.EvaluateGroupCommutator( g, h, com );
                 # map to the Lie algebra
@@ -681,12 +699,12 @@ fi;
 ## the upper central series.
 ##
 GUARANA.Abstract_Exponential_ByElm_UCS := function(  recLieAlg, x )
-    local indices,basis,class,tail,coeffs,largestAbelian,exp_x,i,factor,
+    local indices,basis,max_weight,tail,coeffs,largestAbelian,exp_x,i,factor,
           divider,w_divider,w_tail,l,exp_x_2ndPart,j;
 
     indices := recLieAlg.recTGroup.indices;
     basis := Basis( recLieAlg.L );
-    class := recLieAlg.class;
+    max_weight := recLieAlg.max_weight;
 
     # divide some exponents untill the remaining element lies in an
     # abelian group.
@@ -707,7 +725,7 @@ GUARANA.Abstract_Exponential_ByElm_UCS := function(  recLieAlg, x )
             w_divider := GUARANA.WeightOfLieAlgElm ( recLieAlg, divider );
             w_tail := GUARANA.WeightOfLieAlgElm ( recLieAlg, tail );
             tail := GUARANA.Star_Simple(  divider, tail, w_divider, 
-                                     w_tail, class, "strucConst"  );
+                                     w_tail, max_weight, "strucConst"  );
         
             # set up coefficient vector
             coeffs := Coefficients( basis, tail );
@@ -740,11 +758,11 @@ end;
 ## GENeral method.
 ##
 GUARANA.Abstract_Exponential_ByElm_GEN := function(  recLieAlg, x )
-    local basis, class, tail, coeffs, largestAbelian, exp_x, divider, 
+    local basis, max_weight, tail, coeffs, largestAbelian, exp_x, divider, 
           w_divider, w_tail, l, exp_x_2ndPart, j;
 
     basis := Basis( recLieAlg.L );
-    class := recLieAlg.class;
+    max_weight := recLieAlg.max_weight;
 
     # divide some exponents untill the remaining element lies in an
     # abelian group.
@@ -765,7 +783,7 @@ GUARANA.Abstract_Exponential_ByElm_GEN := function(  recLieAlg, x )
         w_divider := GUARANA.WeightOfLieAlgElm ( recLieAlg, divider );
         w_tail := GUARANA.WeightOfLieAlgElm ( recLieAlg, tail );
         tail := GUARANA.Star_Simple(  divider, tail, w_divider, 
-                                     w_tail, class, "strucConst"  );
+                                     w_tail, max_weight, "strucConst"  );
         
         # set up coefficient vector
         coeffs := Coefficients( basis, tail );
@@ -1003,7 +1021,7 @@ end;
 ## GUARANA.Test_ComputeCommutatorSeries( recComSers, 4, [1,2,1] );
 ##
 GUARANA.Test_ComputeCommutatorSeries := function( recComSers, n, kappa )
-    local  no_tests,i,x,y,wx,wy,exp_x,exp_y,exp_z,r,class,
+    local  no_tests,i,x,y,wx,wy,exp_x,exp_y,exp_z,r,max_weight,
           sers,com,a,term,exp_z_bch,weight, pos;
 
     no_tests := 10;
@@ -1021,7 +1039,7 @@ GUARANA.Test_ComputeCommutatorSeries := function( recComSers, n, kappa )
 
         # compute z where exp(z)= kappa( exp(x),exp(y) ) with extended BCH
         r := NullMat( n,n );
-        class := n-1;
+        max_weight := n-1;
         weight := Length( kappa );
         pos := Position( recComSers.coms[weight], kappa );
         sers := recComSers.lie[weight][pos];
@@ -1029,7 +1047,7 @@ GUARANA.Test_ComputeCommutatorSeries := function( recComSers, n, kappa )
             com := term[2];
             #Print( "term ", term, "\n" );
             # check if weight of commutator is not to big
-            if GUARANA.CheckWeightOfCommutator( com, wx, wy, class ) then
+            if GUARANA.CheckWeightOfCommutator( com, wx, wy, max_weight ) then
                 # evaluate commutator in the lie algebra
                 a := GUARANA.EvaluateLieBracket( x, y, com, "matrix" );
                 r := r + term[1]*a;
@@ -1048,7 +1066,7 @@ GUARANA.Test_ComputeCommutatorSeries := function( recComSers, n, kappa )
 end;
 
 GUARANA.TestSeriesLieBracketInTermsOfLogs := function(  n )
-    local no_tests,i,x,y,x_bracket_y,g,h,wg,wh,r,class,max,min,bound,j,
+    local no_tests,i,x,y,x_bracket_y,g,h,wg,wh,r,max_weight,max,min,bound,j,
           term,a,log_a,x_bracket_y_2,bchLBITOL,com;
 
     no_tests := 10;
@@ -1070,11 +1088,11 @@ GUARANA.TestSeriesLieBracketInTermsOfLogs := function(  n )
             r := NullMat( n,n );
             # compute upper bound for the Length of commutators, which 
             # can be involved
-            class := n-1;
+            max_weight := n-1;
             max := Maximum( wg,wh );
             min := Minimum( wg,wh );
-            # max + min* (bound-1 ) <= class
-            bound := Int( (class-max)/min + 1 );
+            # max + min* (bound-1 ) <= max_weight
+            bound := Int( (max_weight-max)/min + 1 );
 
             # up to bound  compute the commutators and add them.
             # Note that the list contains comms of length i at position i-1.
@@ -1083,7 +1101,8 @@ GUARANA.TestSeriesLieBracketInTermsOfLogs := function(  n )
                     com := term[2];
                     #Print( "term ", term, "\n" );
                     # check if weight of commutator is not to big
-                    if GUARANA.CheckWeightOfCommutator( com, wg, wh, class ) then
+                    if GUARANA.CheckWeightOfCommutator( com, wg, wh,        
+			max_weight ) then
                         # evaluate commutator in the group
                         a := GUARANA.EvaluateGroupCommutator( g, h, com );
                         # map to the Lie algebra
