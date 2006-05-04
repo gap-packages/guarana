@@ -18,14 +18,13 @@ BindGlobal("GUARANA", rec());
 ##
 ReadPackage( "guarana", "gap/help.gi" );
 ReadPackage( "guarana", "data/bchdat.g" );
-ReadPackage( "guarana", "gap/bch.gi" );
+ReadPackage( "guarana", "gap/malcor/bch.gi" );
 ReadPackage( "guarana", "exams/triang.gi" );
 ReadPackage( "guarana", "exams/tgrps.gi" );
-ReadPackage( "guarana", "gap/pcs.gi" );
 ReadPackage( "guarana", "exams/sta.gi" );
-ReadPackage( "guarana", "gap/setup.gi" );
+ReadPackage( "guarana", "gap/malcor/setup.gi" );
 ReadPackage( "guarana", "exams/recs.gi" );
-ReadPackage( "guarana", "gap/symlog.gi" );
+ReadPackage( "guarana", "gap/malcor/symlog.gi" );
 ReadPackage( "guarana", "gap/supple/almcom.gi" );
 ReadPackage( "guarana", "gap/supple/almsup.gi" );
 ReadPackage( "guarana", "exams/supple.gi" );

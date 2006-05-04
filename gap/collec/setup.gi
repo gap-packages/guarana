@@ -81,10 +81,15 @@ GUARANA.AddTGroupRecs := function( malcevRec )
     malcevRec.recCC := GUARANA.TGroupRec( [malcevRec.CC] );
 end;
 
+GUARANA.AddLieAlgRecs := function( malcevRec )
+    malcevRec.recL_NN := GUARANA.LieAlgebraByTGroupRec( [malcevRec.recNN,
+                                                        "gen"] );
+    malcevRec.recL_CC := GUARANA.LieAlgebraByTGroupRec( [malcevRec.recCC,
+                                                        "gen"] );
+end;
+
 # TODO
 # setup functions
-# -function for computing the T group rec.
-# -funktion for computing the malcev correspondence for C and N. 
 # -funktion for storing the matrices of auts of action of G on N.
 # -function for storing the images of the tails in C in N
 # -multiplication table of finite part on top. 
