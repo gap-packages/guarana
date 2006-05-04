@@ -59,7 +59,11 @@ end;
 ##                       starting with (c_{r+s},...,c_{r+s}).
 ##                       CC!.bijection must be a bijection between 
 ##                       CC and C. 
-## 
+##
+## Example
+## ll := GUARANA.SomePolyMalcevExmas( 2 );
+## R := GUARANA.SetupCollecRecord( ll );
+##
 GUARANA.SetupCollecRecord := function( args )
   local G, indeces, N, NN, C, CC;
     G := args[1];
@@ -74,6 +78,9 @@ end;
 
 # TODO
 # setup functions
+# -function for computing the weights of a given Mal'cev basis.
+#  Give also an optin where you can choose the weights.
+# -function for computing the T group rec.
 # -funktion for computing the malcev correspondence for C and N. 
 # -funktion for storing the matrices of auts of action of G on N.
 # -function for storing the images of the tails in C in N
