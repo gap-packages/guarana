@@ -191,7 +191,8 @@ GUARANA.SetUpLieAlgebraRecordByMalcevbasis := function( recTGroup )
 		scTable := T,
 	        weights := recTGroup.weights,
 		max_weight := recTGroup.max_weight,
-	        malcevBasisInfo := malcevBasisInfo );
+	        malcevBasisInfo := malcevBasisInfo,
+	        log_method := "simple" );
 end;
 
 #############################################################################
