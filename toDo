@@ -4,16 +4,9 @@ To do:
   Use for example random subgrups of the triangular 
   groups.
 
-- In which form should the groups G,C,N be given ? 
-  Investigate how the assumption that we need:
-  1. N given by Mal'cev basis 
-  2. C given by Mal'cev basis whose first part contains the
-     representative for CN/N. 
-  3. CN/N free abelian
-  4. G/CN finite 
-  and so on 
-  
-  can be represented in GAP.   
+- add general logarithm function that depeding if 
+  of an entry in recLieAlg uses the simple log or 
+  the symbolic log. 
 
 - clean up code in gap/supple
 

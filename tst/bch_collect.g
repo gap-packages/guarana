@@ -5,32 +5,6 @@
 
 #############################################################################
 #
-# IN: g ........ element of parent group GG (new presentation of G )
-#     NN ....... new presentation of T-group N
-#     liealg ... liealgebra record of N
-# OUT: Automorphism of L(NN) corresponding to the conjugation action
-#      of g
-#
-BCH_LieAutMatrix := function( g, NN, recLieAlg, recBCH )
-    local AutMat,pcp,exps,n,i,coeff;
-    
-    AutMat := [];
-    pcp := Pcp( NN );
-    exps := LinearActionOnPcp( [g], pcp )[1];
-    n := Length( exps );
-    for i in [1..n] do
-        # compute coefficients of log n_i^g
-        coeff := BCH_AbstractLogCoeff_Simple_ByExponent( 
-                                            recLieAlg, recBCH, exps[i] ); 
-        Add( AutMat, coeff );
-    od;
-    return AutMat;
-   
-end;
-
-
-#############################################################################
-#
 # IN: G ..... pc-group
 #     N ..... T-group which is normal in G
 #

@@ -55,7 +55,7 @@ GUARANA.SomePolyMalcevExams := function( n )
 	f3 := pcpH[5]*pcpH[14];
         pcs := [f1,f2,f3,h1,h2];
 	for i in [1..Length( Pcp(T.N)) ] do 
-	    Add( pcs, Pcp(N)[i] );
+	    Add( pcs, Pcp(T.N)[i] );
 	od;
 	G := GUARANA.PcpGroupByPcs( H, pcs );
 	indeces := [[1..3],[4,5],[6..17]];
