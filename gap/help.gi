@@ -48,3 +48,25 @@ GUARANA.Random_IntegralExpVector := function( recLieAlg, range )
     return vec;
 end;
 
+#############################################################################
+##
+#F GUARANA.GrpElmByExpsAndPcs( pcs, exp )
+## 
+## IN
+## pcs ............................ polycyclic sequence
+## exp ............................ exponent vector 
+##
+## OUT
+## pcs^exp
+##
+## Note that exp is allowed to be shorter then pcs 
+##
+GUARANA.GrpElmByExpsAndPcs := function( pcs, exp )
+    local elm, i;
+    
+    elm := pcs[1]^exp[1];
+    for i in [2..Length(exp)] do
+	elm := elm * pcs[i]^exp[i];
+    od;
+    return elm;
+end;
