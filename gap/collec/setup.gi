@@ -237,11 +237,187 @@ GUARANA.AddImgsOf_LCcapN_in_LN := function( malcevRec )
     malcevRec.imgs_LCapN_in_LN := imgs_LCapN_in_LN;
 end;
 
+#############################################################################
+##
+#F GUARANA.MapFromLCcapNtoLN( malcevRec, l_cc )
+##
+## IN
+## malcevRec .................... malcev record
+## l_cc ......................... lie algebra element of L(C)
+##                                (in fact L(CC)) given by 
+##                                coefficient vector.
+##
+## OUT
+## Coefficient vector of the corresponding in element in L(NN)
+## if l_cc in L(C\cap N ). Ohterwise fail is returned.
+##
+GUARANA.MapFromLCcapNtoLN := function( malcevRec, l_cc )
+    local hl_fa, coeffs_1, hl_C, coeffs_2, imgs;
+    
+    # test wheter l_cc in L(C\cap N ) by checking whether the first 
+    # hl(CN/N) coordinates of l_cc are equal to zero.
+    hl_fa := Length( malcevRec.indeces[2] );# hirsch lenght of CN/N
+    coeffs_1 := l_cc{[1..hl_fa]};
+    if coeffs_1 <> coeffs_1*0 then
+        return fail;	
+    fi;
+
+    # map it to L(N)
+    hl_C := Length( l_cc );
+    coeffs_2 := l_cc{[hl_fa+1..hl_C]};
+    imgs := malcevRec.imgs_LCapN_in_LN;
+    if Length( coeffs_2 ) <> Length( imgs ) then
+	Error( " " );
+    fi;
+    return LinearCombination( imgs, coeffs_2 );
+end;
+
+#############################################################################
+##
+#F GUARANA.G_CN_WeightVector( rels )
+##
+## IN
+## rels ....................... relative orders of G/CN
+##
+## OUT
+## A weight vector that can be used to associate a number
+## to the exponent vector of a group element of G/CN
+## and vice versa.
+##
+GUARANA.G_CN_WeightVector := function( rels )
+    local vec, n, i;
+
+    # catch trivial case
+    if Length( rels ) = 0 then
+	return [];
+    fi;
+    
+    vec := [1];
+    n := Length( rels );
+    for i in [1..n-1] do
+	Add( vec, vec[i]*rels[n-i+1] );
+    od;
+    return Reversed( vec );
+end;
+
+#############################################################################
+##
+#F GUARANA.G_CN_ExpVectorToNumber( exp, w_vec )
+#F GUARANA.G_CN_NumberToExpVector( num, w_vec )
+##
+## IN
+## exp .................... exponent vector of an element of G/CN
+## n ...................... number of an element of G/CN
+## w_vec .................. a weight vector 
+##
+## OUT
+## The number corresponding to exp, or the exponent vector corresponding to n
+##
+GUARANA.G_CN_ExpVectorToNumber := function( exp, w_vec )
+    local num;
+    num := ScalarProduct( exp, w_vec );
+    return num+1;
+end;
+    
+GUARANA.G_CN_NumberToExpVector := function( num, w_vec )
+    local exp, n, div, i, num2;
+   
+    num2 := num -1;
+    exp := [];
+    n := Length( w_vec );
+    for i in [1..n] do
+	div := Int( num2/w_vec[i] );
+	Add( exp, div );
+	num2 := num2 - div*w_vec[i];
+    od;
+    return exp;
+end;
+
+#############################################################################
+##
+#F GUARANA.G_CN_InitialSetup( malcevRec )
+#F GUARANA.G_CN_AddMultTable( malcevRec )
+#F GUARANA.G_CN_Setup( malcevRec )
+##
+## IN
+## malcevRec ......................... malcevRecord
+## 
+## EFFECT
+## The multiplication table of G/CN is added to malcevRec 
+##
+GUARANA.G_CN_InitialSetup := function( malcevRec )
+    local rels_G, rels, w_vec, order;
+
+    # compute weight vector 
+    rels_G := RelativeOrdersOfPcp( Pcp(malcevRec.G ) );
+    rels := rels_G{ malcevRec.indeces[1] };
+    w_vec := GUARANA.G_CN_WeightVector( rels );
+
+    # compute order of the finite quotient G/CN 
+    order := Product( rels );
+
+    # add info record
+    malcevRec.G_CN := rec( w_vec := w_vec, 
+                           order := order,
+		           rels := rels );
+end;
+
+GUARANA.G_CN_AddMultTable := function( malcevRec )
+    local prods, pcpG, order, w_vec, exp_g, exp_h, g, h, k, i, j;
+
+    prods := [];
+    pcpG := Pcp( malcevRec.G );
+    
+    # catch trivial case 
+    if Length( malcevRec.G_CN.rels ) = 0 then 
+	return prods;
+    fi;
+    
+    # go through all possible products and store their normal form
+    order := malcevRec.G_CN.order;
+    w_vec := malcevRec.G_CN.w_vec;
+    for i in [1..order] do
+	Add( prods, [] );
+	for j in [1..order] do 
+	    exp_g := GUARANA.G_CN_NumberToExpVector( i, w_vec );
+	    exp_h := GUARANA.G_CN_NumberToExpVector( j, w_vec );
+	    g := GUARANA.GrpElmByExpsAndPcs( pcpG, exp_g );
+	    h := GUARANA.GrpElmByExpsAndPcs( pcpG, exp_h );
+	    k := g*h;
+	    Add( prods[i], Exponents( k ) );
+	od;
+    od;
+    
+    malcevRec.G_CN.multTable := prods;
+end;
+
+GUARANA.G_CN_Setup := function( malcevRec )
+    GUARANA.G_CN_InitialSetup( malcevRec );
+    GUARANA.G_CN_AddMultTable( malcevRec );
+end;
+
+#############################################################################
+##
+#F GUARANA.G_CN_LookUpProduct( malcevRec, exp1, exp2 )
+##
+## IN
+## malcevRec ....................... malcev record
+## exp1, exp2 ...................... exponent vector of two elments g1,g2
+##                                   of G/CN
+##
+## OUT 
+## Exponent vector ( with respect to the pcs of G ) of g1*g2
+##
+GUARANA.G_CN_LookUpProduct := function( malcevRec, exp1, exp2 )
+    local w_vec, num1, num2;
+    w_vec := malcevRec.G_CN.w_vec;
+    num1 := GUARANA.G_CN_ExpVectorToNumber( exp1, w_vec );
+    num2 := GUARANA.G_CN_ExpVectorToNumber( exp2, w_vec );
+    return malcevRec.G_CN.multTable[num1][num2];
+end;
+
 # TODO
 # setup functions
-# -function for mapping elms from C\capN < C to 
-#  and more importantly for the elms of the Lie algebra. 
-# -multiplication table of finite part on top. 
 # -function for the full setup. 
 # 
 
@@ -254,6 +430,7 @@ GUARANA.AddCompleteMalcevInfo := function( malcevRec )
     GUARANA.AddTGroupRecs( malcevRec );
     GUARANA.AddLieAlgRecs( malcevRec );
     GUARANA.AddLieAuts( malcevRec );
+    GUARANA.AddImgsOf_LCcapN_in_LN( malcevRec );
 end;
 # 
 # collection functions
