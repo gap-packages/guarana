@@ -76,6 +76,9 @@ end;
 ## ll := GUARANA.SomePolyMalcevExams( 3 );
 ## R := GUARANA.InitialSetupCollecRecord( ll );
 ##
+## TODO
+## Maybe add some tests to check whether the input is correct.
+##
 GUARANA.InitialSetupCollecRecord := function( args )
     local G, indeces, N, NN, C, CC;
     G := args[1];
@@ -416,11 +419,17 @@ GUARANA.G_CN_LookUpProduct := function( malcevRec, exp1, exp2 )
     return malcevRec.G_CN.multTable[num1][num2];
 end;
 
-# TODO
-# setup functions
-# -function for the full setup. 
-# 
-
+#############################################################################
+##
+#F GUARANA.AddCompleteMalcevInfo( malcevRec )
+##
+## IN
+## malcevRec ................. malcev record as given by 
+##                             InitialSetupCollecRecord.
+## EFFECT
+## All information/data structures that are needed to do the 
+## Malcev collection are added.
+## 
 ## Example
 ## ll := GUARANA.SomePolyMalcevExams( 3 );
 ## R := GUARANA.InitialSetupCollecRecord( ll );
@@ -431,23 +440,8 @@ GUARANA.AddCompleteMalcevInfo := function( malcevRec )
     GUARANA.AddLieAlgRecs( malcevRec );
     GUARANA.AddLieAuts( malcevRec );
     GUARANA.AddImgsOf_LCcapN_in_LN( malcevRec );
+    GUARANA.G_CN_Setup( malcevRec );
 end;
-# 
-# collection functions
-# -idea represent internally elments only as vectors
-#  (maybe splitted in three parts ? )
-# -computations with powers of autom of N. 
-#  Two possibilities, n given by group exponent vector or by 
-#  Lie algebra coeff vector
-# -computations with consecutive powers of automorphisms. 
-#  again n given in two ways. 
-# -Powering in C. 
-# -Inversion in CN
-# -Powering in CN
-# -Collection in G
-#
-# construct more examples
-# 
 
 #############################################################################
 ##

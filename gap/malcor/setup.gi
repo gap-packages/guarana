@@ -192,7 +192,9 @@ GUARANA.SetUpLieAlgebraRecordByMalcevbasis := function( recTGroup )
 	        weights := recTGroup.weights,
 		max_weight := recTGroup.max_weight,
 	        malcevBasisInfo := malcevBasisInfo,
-	        log_method := "simple" );
+	        log_method := "simple",
+		exp_method := "simple",
+		star_method := "simple" );
 end;
 
 #############################################################################
@@ -804,7 +806,7 @@ end;
 
 #############################################################################
 ##
-#F GUARANA.Abstract_Exponential_ByElm_UCS( recLieAlg, x )
+#F GUARANA.Abstract_Exponential_ByElm( recLieAlg, x )
 ##
 ## IN 
 ## recLieAlg ................. Lie algebra record
@@ -868,6 +870,7 @@ GUARANA.LieAlgebraByTGroupRec := function( args )
 	recLieAlg.malcevBasisInfo := args[2];
     fi;
     GUARANA.ComputeStructureConstants(  recLieAlg );
+
     return recLieAlg;
 end;
 

@@ -422,7 +422,7 @@ end;
 
 #############################################################################
 ##
-#F GUARANA.ComputeStarPolys( list_x, list_y, w_x, w_y, class, recLieAlg )
+#F GUARANA.ComputeStarPolys( list_x, list_y, w_x, w_y, max_weight, recLieAlg )
 ##
 ## IN 
 ## list_x .... a list describing the lie algebra element x
@@ -430,14 +430,14 @@ end;
 ##             alpha_i log(n_i) + alpha_j log(n_j) is represented as
 ##             [ [i,j],[alpha_i,alpha_j] ], etc...
 ## wx,wy ..... weight of x,y 
-## class ..... nilpotency class of the Lie algebra
+## max_weight ..... maximal weight of basis elms of the Lie algebra
 ## recLieAlg.. structure constant table
 ##
 ## OUT 
 ## x * y evaluated symbolically
 ## 
 GUARANA.ComputeStarPolys 
-:= function( list_x, list_y, wx, wy, class, recLieAlg )
+:= function( list_x, list_y, wx, wy, max_weight, recLieAlg )
     local i,r,bchSers,com,a,term,max,min,bound;
     bchSers := GUARANA.recBCH.bchSers;
     
@@ -453,8 +453,8 @@ GUARANA.ComputeStarPolys
     # can be involved
     max := Maximum( wx,wy );
     min := Minimum( wx,wy );
-    # max + min* (bound-1 ) <= class
-    bound := Int( (class-max)/min + 1 );
+    # max + min* (bound-1 ) <= max_weight
+    bound := Int( (max_weight-max)/min + 1 );
 
     # up to bound  compute the commutators and add them.
     # Note that the list contains commutators of length i at position i-1.
@@ -462,7 +462,7 @@ GUARANA.ComputeStarPolys
         for term in bchSers[i] do
             com := term[2];
             # check if weight of commutator is not to big
-            if GUARANA.CheckWeightOfCommutator( com, wx, wy, class ) then
+            if GUARANA.CheckWeightOfCommutator( com, wx, wy, max_weight ) then
                 a := GUARANA.EvaluateLongLieBracket_Symbolic( 
 		     list_x, list_y, com, recLieAlg );
                 r := GUARANA.Sum_Symbolic( r,[a[1],term[1]*a[2]] );
@@ -504,7 +504,7 @@ GUARANA.AddStarPolynomialsToRecLieAlg := function( recLieAlg )
     vars_y := GUARANA.RationalVariableList( n, "y" );  
 
     # compute polynomials
-    c := recLieAlg.recTGroup.class;
+    c := recLieAlg.max_weight;
     star_pols := [];
     for i in [1..n] do 
         x_i := GUARANA.GenericBasisElement( i, vars_x );
@@ -614,7 +614,7 @@ GUARANA.ComputeSymbolicLogPolynomials := function( recLieAlg )
     # compute recursively polynomials as follows
     # log( g_1^e_1...g_n^e_n ) = log( g_1^e_1 )*(log( g_2^e_2...g_n^e_n ))
     #                          = e_1 log g_1 *  tail  
-    c := recLieAlg.recTGroup.class;
+    c := recLieAlg.max_weight;
     log_pols := [];
     tail := GUARANA.GenericBasisElement( n, vars_e );
     for i in Reversed( [1..(n-1)] ) do 
@@ -665,7 +665,7 @@ GUARANA.ComputeSymbolicLogPolynomialsByStarPols := function( recLieAlg )
     # compute recursively polynomials as follows
     # log( g_1^e_1...g_n^e_n ) = log( g_1^e_1 )*(log( g_2^e_2...g_n^e_n ))
     #                          = e_1 log g_1 *  tail  
-    c := recLieAlg.recTGroup.class;
+    c := recLieAlg.max_weight;
     tail := GUARANA.GenericBasisElement( n, vars_e );
     for i in Reversed( [1..(n-1)] ) do 
         x_i := GUARANA.GenericBasisElement( i, vars_e );
@@ -680,6 +680,7 @@ GUARANA.AddLogPolynomialsToLieAlgRecord := function( recLieAlg )
     recLogPols := GUARANA.ComputeSymbolicLogPolynomialsByStarPols( 
                                                       recLieAlg );
     recLieAlg.recLogPols := recLogPols;
+    recLieAlg.log_method := "symbolic";
     return 0;
 end;
 
@@ -748,7 +749,7 @@ GUARANA.ComputeSymbolicExpPolynomialsByStarPols := function( recLieAlg )
     #                               exp( a_1 log g_1 + ... + a_n log g_n )
     # = g_1^a_1 * exp( -a_1 log g_1 ) * exp( a_1 log g_1 + ... + a_n log g_n )
     # and then recurse
-    c := recLieAlg.recTGroup.class;
+    c := recLieAlg.max_weight;
     exp_pols := [];
     tail := GUARANA.GenericElement( n , vars_a  );
     for i in [1..n]  do 
@@ -767,6 +768,8 @@ GUARANA.AddExpPolynomialsToLieAlgRecord := function( recLieAlg )
     local pols, recExpPols;
     recExpPols := GUARANA.ComputeSymbolicExpPolynomialsByStarPols( recLieAlg );
     recLieAlg.recExpPols := recExpPols;
+
+    recLieAlg.exp_method := "symbolic";
     return 0;
 end;
 
