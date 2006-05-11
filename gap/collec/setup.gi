@@ -80,15 +80,19 @@ end;
 ## Maybe add some tests to check whether the input is correct.
 ##
 GUARANA.InitialSetupCollecRecord := function( args )
-    local G, indeces, N, NN, C, CC;
+    local G, indeces, N, NN, C, CC,lengths;
     G := args[1];
     indeces := args[2];
     N := args[3];
     NN := args[4];
     C := args[5];
     CC := args[6];
-    return rec( G := G, indeces := indeces, N := N, NN := NN, 
-                C := C, CC := CC );
+    lengths := [ Length(indeces[1]), Length( indeces[2] ),
+	         Length( indeces[3] ) ];
+    return rec( G := G, indeces := indeces, lengths := lengths,
+                N := N, NN := NN, 
+                C := C, CC := CC,
+		collCN_method := "star" );
 end;
 
 #############################################################################

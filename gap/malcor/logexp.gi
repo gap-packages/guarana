@@ -39,6 +39,9 @@
 ## Log( g ) either given as coefficient vector or as an elment of 
 ## a Lie algebra. 
 ##
+## EXAMPLE
+## GUARANA.AbstractLog( [malcevRec.recL_NN, g, "vecByVec"] ); 
+##
 GUARANA.AbstractLog := function( args )
     local recLieAlg, g, rep_info, log_method;
 

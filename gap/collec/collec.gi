@@ -107,8 +107,15 @@ end;
 ## ll := GUARANA.SomePolyMalcevExams( 3 );
 ## R := GUARANA.InitialSetupCollecRecord( ll );
 ## GUARANA.AddCompleteMalcevInfo( R );
+## g := GUARANA.RandomGrpElm( [R,10, "CN"] );
+## h := GUARANA.RandomGrpElm( [R,10, "CN"] );
 
-
+#############################################################################
+##
+#F GUARANA.Collection_CN( malcevRec, exp_g, exp_h )
+#F GUARANA.Collection_CN_Star( malcevRec, exp_g, exp_h )
+#F GUARANA.Collection_CN_DT( malcevRec, exp_g, exp_h )
+##
 ## IN
 ## malcevRec ........................ malcev record
 ## exp_g,exp_h  ..................... exponent vectors of group elements
@@ -117,20 +124,97 @@ end;
 ## OUT 
 ## The exponent vector of g*h
 ##
-GUARANA.Collection_CN := function( malcevRec, exp_g, exp_h )
+## COMMENT
+## g h = c(g)n(g) c(h)n(h)
+##     = c(g)c(h) n(g)^c(h) n(h)
+##     = c(gh) t n(g)^c(h) n(h)
+##
+## In Collection_CN_Star the computation in N are done in L(N) 
+## via the operation star. 
+## TODO 
+## Explore alternatives to this.
+## - We could use Deep Thought for this purpose as well.
+## - A mixed strategy (do a part of the computation in N and another
+##   part in L(N). 
+## - Maybe it might be useful to use the trick of Exp of Star prdouct.
+## 
+GUARANA.Collection_CN_Star := function( malcevRec, exp_g, exp_h )
+    local exp_g_cut, exp_h_cut, c_g, c_h, n_g, n_h, log, log_c_g, 
+          log_c_h, log_c_g_c_h, log_t_LC, log_t, log_n_h, y, z, 
+	  n_gh, c_gh, exp_gh, i, f_gh;
 
     # test whether g,h in CN
+    exp_g_cut := GUARANA.CutExpVector( malcevRec, exp_g );
+    exp_h_cut := GUARANA.CutExpVector( malcevRec, exp_h );
+    if exp_g_cut[1] <> exp_g_cut[1]*0 then
+	Error( "g is not in CN" );
+    elif exp_h_cut[1] <> exp_h_cut[1]*0 then
+	Error( "h is not in CN" );
+    fi;
 
+    c_g := exp_g_cut[2];
+    c_h := exp_h_cut[2];
+    n_g := exp_g_cut[3];
+    n_h := exp_h_cut[3];
+
+    # map n(g) to L(N) and apply the automorphism corresponding to c(h)
+    log := GUARANA.AbstractLog( [malcevRec.recL_NN, n_g, "vecByVec"] );
+    for i in malcevRec.indeces[2] do
+        log := log*malcevRec.lieAuts[i]^exp_h[i];
+    od;
+
+    # compute log(t) with respect to the basis of L(C)
+    log_c_g := GUARANA.AbstractLog( [malcevRec.recL_CC, c_g, "vecByVec"] );
+    log_c_h := GUARANA.AbstractLog( [malcevRec.recL_CC, c_h, "vecByVec"] );
+    log_c_g_c_h := GUARANA.Star( [malcevRec.recL_CC, log_c_g, log_c_h,
+                                  "vec" ] );
+    log_t_LC := ShallowCopy( log_c_g_c_h );
+    for i in [1..malcevRec.lengths[2]] do 
+	log_t_LC[i] := 0;
+    od;
+
+    # compute log(t) with respect to the basis of L(N)
+    log_t := GUARANA.MapFromLCcapNtoLN( malcevRec, log_t_LC );
+
+    # compute log( n(h) )
+    log_n_h := GUARANA.AbstractLog( [malcevRec.recL_NN, n_h, "vecByVec"] );
+
+    # compute z=log(t)*log(n(g)^c(h))*log(n(h))
+    y := GUARANA.Star( [malcevRec.recL_NN, log_t, log, "vec" ] );
+    z := GUARANA.Star( [malcevRec.recL_NN, y, log_n_h, "vec" ] );
     
+    # compute n(gh)
+    n_gh := GUARANA.AbstractExp( [malcevRec.recL_NN, z, "vecByVec"] );
 
+    # get c(gh)
+    c_gh := c_g + c_h;
+
+    # get exp of finite part
+    f_gh := List( [1..malcevRec.lengths[1]], x-> 0 );
+
+    exp_gh := Concatenation( f_gh,c_gh, n_gh );
+    return exp_gh;
+end;
+
+GUARANA.Collection_CN_DT := function( malcevRec, exp_g, exp_h )
+
+end;
+
+GUARANA.Collection_CN := function( malcevRec, exp_g, exp_h )
+    local method;
+
+    method := malcevRec.collCN_method;
+    if method = "star" then 
+	return GUARANA.Collection_CN_Star( malcevRec, exp_g, exp_h );
+    elif method = "deepThought" then 
+	Error( "Sorry not implemented yet" );
+    else
+	Error( " " );
+    fi;
 end;
 
 # 
 # collection functions
-# -computations with powers of autom of N. 
-#  Two possibilities, n given by group exponent vector or by 
-#  Lie algebra coeff vector
-# -collection in CN
 # -computations with consecutive powers of automorphisms. 
 #  again n given in two ways. 
 # -Powering in C. 
