@@ -98,6 +98,16 @@ GUARANA.ConPow_Compute_pi_q := function( recLieAlg, g, Phi, q )
     return pi_q;
 end;
 
+#############################################################################
+##
+#F GUARANA.CN_Inversion( malcevRec, exp_g )
+##
+## malcevRec ............................... Malcev record
+## exp_g ................................... exponent vector of g in CN
+##
+## OUT
+## Exponent vector of g^-1
+##
 ## COMMENT
 ## g^-1 = ( c(g) n(g) )^-1
 ##      =  c(g)^-1  ( n(g)^-1 )^-1
@@ -105,7 +115,7 @@ end;
 GUARANA.CN_Inversion := function( malcevRec, exp_g )
     local exp_g_cut, c_g, n_g, id_C, c_g_C, log_c_g, log_inv_c_g, 
           log_n_g, log_inv_n_g, log, c_inv_g_C, log_c_inv_g, log_t_LC, 
-	  log_t, log_n_inv_g, n_inv_g, c_inv_g, i;
+	  log_t, log_n_inv_g, n_inv_g, c_inv_g, i, f_inv_g;
 
     # test whether g in CN
     exp_g_cut := GUARANA.CutExpVector( malcevRec, exp_g );
@@ -138,8 +148,9 @@ GUARANA.CN_Inversion := function( malcevRec, exp_g )
     c_inv_g_C := - c_g_C;  # c(g^-1) with respect to pcs of CC
     log_c_inv_g := GUARANA.AbstractLog( [malcevRec.recL_CC, c_inv_g_C,
                                            "vecByVec" ] );
-    log_t_LC := GUARANA.Star( [malcevRec.recL_CC, log_c_inv_g, log_inv_c_g,
+    log_t_LC := GUARANA.Star( [malcevRec.recL_CC, -log_c_inv_g, log_inv_c_g,
                                "vec" ] );
+
     # check wheter log(t) has the right form
     if log_t_LC{[1..malcevRec.lengths[2]]} <> 
        0*log_t_LC{[1..malcevRec.lengths[2]]} then 
@@ -150,7 +161,7 @@ GUARANA.CN_Inversion := function( malcevRec, exp_g )
     log_t := GUARANA.MapFromLCcapNtoLN( malcevRec, log_t_LC );
      
     # compute log( n(g^-1) )
-    log_n_inv_g := GUARANA.Star( [malcevRec.recL_NN, log_t, log, "vecByVec"] );
+    log_n_inv_g := GUARANA.Star( [malcevRec.recL_NN, log_t, log, "vec"] );
     
     # compute n(g^-1)
     n_inv_g := GUARANA.AbstractExp( [malcevRec.recL_NN, log_n_inv_g, 
@@ -159,13 +170,203 @@ GUARANA.CN_Inversion := function( malcevRec, exp_g )
     # get exp of c(g^-1)
     c_inv_g := -c_g;
 
-    return Concatenation( c_inv_g, n_inv_g );
+    # get exp of finite part
+    f_inv_g := List( [1..malcevRec.lengths[1]], x-> 0 );
+
+    return Concatenation( f_inv_g, c_inv_g, n_inv_g );
 end;
 
-## Test function for computing inverses
+#############################################################################
+##
+#F GUARANA.CN_PositivePower( malcevRec, exp_g, q )
+##
+## IN
+## malcevRec ...................... Malcev record
+## exp_g  ......................... exponent vector of g in CN
+## q .............................. natural number ge 0
+##
+## OUT
+## Exponent vector of g^q.
+##
+## COMMENT
+## g^q = ( c(g)n(g) )^q = c(g)^q  pi_q
+##
+GUARANA.CN_PositivePower := function( malcevRec, exp_g, q )
+    local exp_g_cut, c_g, n_g, id_C, c_g_C, log_c_g, log_c_g_q, divider, 
+          log_divider, log_t_LC, log_t, Phi, log_n, Pi_q, log_n_g_q, 
+	  n_g_q, c_g_q, f_g_q, i;
 
-GUARANA.CN_Power := function( malcevRec, g, pow )
-    
+    # test input and catch trivial case
+    if q < 0 then 
+	Error( "Power q has to positive" );
+    elif q = 0 then 
+	return 0*exp_g;
+    elif q = 1 then 
+	return exp_g;
+    fi;
+
+    # test whether g in CN
+    exp_g_cut := GUARANA.CutExpVector( malcevRec, exp_g );
+    if exp_g_cut[1] <> exp_g_cut[1]*0 then
+	Error( "g is not in CN" );
+    fi;
+
+    c_g := exp_g_cut[2];
+    n_g := exp_g_cut[3];
+
+    # get exponents of c(g) with respect to the pcp of CC
+    id_C := List( [1..malcevRec.recL_CC.dim], x-> 0 );
+    c_g_C := id_C + c_g;
+
+    # map c(g) to L(C) and power it, i.e. compute log( c^q )
+    log_c_g := GUARANA.AbstractLog( [malcevRec.recL_CC, c_g_C, "vecByVec"] );
+    log_c_g_q := q * log_c_g;
+
+    # compute tail of log( c^q) with respect to basis of L(C)
+    # i.e. we divide off in the lie algebra the part that belongs to CN/N
+    divider := q* c_g_C;  # c(g^q) with respect to pcs of CC
+    log_divider := GUARANA.AbstractLog( [malcevRec.recL_CC, divider,
+                                           "vecByVec" ] );
+    log_t_LC := GUARANA.Star( [malcevRec.recL_CC, -log_divider, log_c_g_q,
+                               "vec" ] );
+
+    # check wheter log(t) has the right form
+    if log_t_LC{[1..malcevRec.lengths[2]]} <> 
+       0*log_t_LC{[1..malcevRec.lengths[2]]} then 
+        Error( "log(t) does not have the correct form" );
+    fi;
+ 
+    # compute log(t) with respect to the basis of L(N)
+    log_t := GUARANA.MapFromLCcapNtoLN( malcevRec, log_t_LC );
+
+    # compute Phi
+    Phi := IdentityMat( malcevRec.recL_NN.dim );
+    for i in malcevRec.indeces[2] do
+	Phi := Phi*malcevRec.lieAuts[i]^(exp_g[i]);
+    od;
+
+    # compute log( n(g) )
+    log_n := GUARANA.AbstractLog( [malcevRec.recL_NN, n_g, "vecByVec" ] );   
+
+    # compute Pi_q
+    Pi_q := GUARANA.ConPow_Compute_Pi_q( malcevRec.recL_NN, log_n, Phi, q );
+
+    # compute n( g^q ) 
+    log_n_g_q := GUARANA.Star( [malcevRec.recL_NN, log_t, Pi_q, "vec" ] );
+    n_g_q := GUARANA.AbstractExp( [malcevRec.recL_NN, log_n_g_q, "vecByVec"]);
+
+    # get c(g^q)
+    c_g_q := q * c_g;
+
+    # get exp of finite part
+    f_g_q := List( [1..malcevRec.lengths[1]], x-> 0 );
+
+    return Concatenation( f_g_q, c_g_q , n_g_q );
+end;
+
+#############################################################################
+##
+#F GUARANA.CN_Power( malcevRec, exp_g, q )
+##
+## IN
+## malcevRec ...................... Malcev record
+## exp_g  ......................... exponent vector of g in CN
+## q .............................. integer 
+##
+## OUT
+## Exponent vector of g^q.
+##
+GUARANA.CN_Power := function( malcevRec, exp_g, q )
+    local exp_inv_g;
+
+    if q >= 0 then 
+	return GUARANA.CN_PositivePower( malcevRec, exp_g, q );
+    else 
+	exp_inv_g := GUARANA.CN_Inversion( malcevRec, exp_g );
+	return GUARANA.CN_PositivePower( malcevRec, exp_inv_g, -q );
+    fi;
+end;
+
+#############################################################################
+##
+## Test functions
+##
+if false then 
+    ll := GUARANA.SomePolyMalcevExams( 3 );
+    R := GUARANA.InitialSetupCollecRecord( ll );
+    GUARANA.AddCompleteMalcevInfo( R );
+    g := GUARANA.RandomGrpElm( [R,10, "CN"] );
+    h := GUARANA.RandomGrpElm( [R,10, "CN"] );
+fi;
+GUARANA.Test_CN_Inversion := function( malcevRec, range )
+    local g, exp_g, exp_inv_g, inv_g;
+
+    # get random element in CN
+    g := GUARANA.RandomGrpElm( [malcevRec, range, "CN", "elm" ]);
+    exp_g := Exponents( g );
+
+    # invert it with Mal'cev
+    exp_inv_g := GUARANA.CN_Inversion( malcevRec, exp_g );
+
+    # invert it in the group 
+    inv_g := g^-1;
+
+    # compare
+    return Exponents( inv_g ) = exp_inv_g;
+end;
+
+GUARANA.Test_CN_Inversion2 := function( malcevRec, range )
+    local exp_g, exp_inv_g, exp_inv_inv_g;
+
+    # get random element in CN
+    exp_g := GUARANA.RandomGrpElm( [malcevRec, range, "CN", "exp" ]);
+
+    # invert it with Mal'cev
+    exp_inv_g := GUARANA.CN_Inversion( malcevRec, exp_g );
+
+    # invert it again 
+    exp_inv_inv_g := GUARANA.CN_Inversion( malcevRec, exp_inv_g );
+
+    # compare
+    return  exp_inv_inv_g =  exp_g;
+end;
+
+GUARANA.Test_CN_PositivePower := function( malcevRec, range, q )
+    local g, exp_g, exp_g_q, g_q;
+
+    # get random element in CN
+    g := GUARANA.RandomGrpElm( [malcevRec, range, "CN", "elm" ]);
+    exp_g := Exponents( g );
+
+    # power it with Mal'cev
+    exp_g_q := GUARANA.CN_PositivePower( malcevRec, exp_g, q );
+    Print( exp_g_q, "\n"  );
+
+    # power it in the group 
+    g_q  := g^q;
+    Print( Exponents( g_q ), "\n" );
+
+    # compare
+    return Exponents( g_q ) = exp_g_q;
+end;
+
+GUARANA.Test_CN_Power := function( malcevRec, range, q )
+    local g, exp_g, exp_g_q, g_q;
+
+    # get random element in CN
+    g := GUARANA.RandomGrpElm( [malcevRec, range, "CN", "elm" ]);
+    exp_g := Exponents( g );
+
+    # power it with Mal'cev
+    exp_g_q := GUARANA.CN_Power( malcevRec, exp_g, q );
+    Print( exp_g_q, "\n"  );
+
+    # power it in the group 
+    g_q  := g^q;
+    Print( Exponents( g_q ), "\n" );
+
+    # compare
+    return Exponents( g_q ) = exp_g_q;
 end;
 
 #############################################################################

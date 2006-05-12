@@ -71,7 +71,7 @@ BCH_FastConjugation := function( FCR, n, c, recBCH )
 
     return expl;
 end;
-
+ 
 
 #############################################################################
 #

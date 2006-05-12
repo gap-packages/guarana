@@ -1,0 +1,13 @@
+- Since we do lots of computation with elements in CN it migh be useful 
+  to represent them in the form [ c, log(n) ].
+  This way, the tail in C\cap N has only to be computed when we
+  switch back to the group represenetation. 
+  Computations in C would be done via Deep Thought.
+- Maybe it might be useful to use the trick of Exp of Star prdouct.
+
+# 
+# collection functions
+# -Collection in G
+#
+# construct more examples
+# 

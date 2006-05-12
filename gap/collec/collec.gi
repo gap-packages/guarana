@@ -43,13 +43,13 @@ end;
 ## IN
 ## args[1]=malcevRec ............... malcev record
 ## args[2]=range ................... range of random element
+## args[3]=grp ..................... optional string specifying whether
+##                                   and elment in G,CN or N should be given.
+##                                   Default is "G".
 ## args[4]=form .................... string that is either 
 ##                                   "exp" or "elm" depending on 
 ##                                   how the random element should be
 ##                                   given. 
-## args[3]=grp ..................... optional string specifying whether
-##                                   and elment in G,CN or N should be given.
-##                                   Default is "G".
 ##
 ## OUT
 ## Random group elment of N,CN or G given by a exponent vector or 
@@ -99,7 +99,7 @@ GUARANA.RandomGrpElm := function( args )
     if form = "exp" then 
 	return exp;
     else 
-	return GUARANA.GrpElmByExpsAndPcs( exp );
+	return GUARANA.GrpElmByExpsAndPcs( Pcp( malcevRec.G ), exp );
     fi;
 end;
 
@@ -158,7 +158,7 @@ GUARANA.CN_Collection_Star := function( malcevRec, exp_g, exp_h )
     od;
 
     # get exp vector of c(g), c(h), c(gh) with repsect to the pcp of CC
-    id_C := List( [1..malcevRec.recL_CC.dim, x-> 0 );
+    id_C := List( [1..malcevRec.recL_CC.dim], x-> 0 );
     c_g_C := id_C + c_g;
     c_h_C := id_C + c_h;
     c_gh := c_g + c_h;
@@ -170,12 +170,12 @@ GUARANA.CN_Collection_Star := function( malcevRec, exp_g, exp_h )
     log_c_g_c_h := GUARANA.Star( [malcevRec.recL_CC, log_c_g, log_c_h,
                                   "vec" ] );
     log_c_gh := GUARANA.AbstractLog( [malcevRec.recL_CC, c_gh_C, "vecByVec"] );
-    log_t_LC := GUARANA.Star( [malcevRec.recL_CC, -log_c_gh, log_c_g_ch,
+    log_t_LC := GUARANA.Star( [malcevRec.recL_CC, -log_c_gh, log_c_g_c_h,
                                "vec" ] );
 
     # check wheter log(t) has the right form
     if log_t_LC{[1..malcevRec.lengths[2]]} <> 
-       0*log_t_LC{[1..malcevRec.lengths[2]} then 
+       0*log_t_LC{[1..malcevRec.lengths[2]]} then 
         Error( "log(t) does not have the correct form" );
     fi;
     
