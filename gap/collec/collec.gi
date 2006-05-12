@@ -131,17 +131,11 @@ end;
 ##
 ## In Collection_CN_Star the computation in N are done in L(N) 
 ## via the operation star. 
-## TODO 
-## Explore alternatives to this.
-## - We could use Deep Thought for this purpose as well.
-## - A mixed strategy (do a part of the computation in N and another
-##   part in L(N). 
-## - Maybe it might be useful to use the trick of Exp of Star prdouct.
 ## 
-GUARANA.Collection_CN_Star := function( malcevRec, exp_g, exp_h )
-    local exp_g_cut, exp_h_cut, c_g, c_h, n_g, n_h, log, log_c_g, 
-          log_c_h, log_c_g_c_h, log_t_LC, log_t, log_n_h, y, z, 
-	  n_gh, c_gh, exp_gh, i, f_gh;
+GUARANA.CN_Collection_Star := function( malcevRec, exp_g, exp_h )
+    local exp_g_cut, exp_h_cut, c_g, c_h, n_g, n_h, log, id_C, c_g_C, 
+          c_h_C, c_gh, c_gh_C, log_c_g, log_c_h, log_c_g_c_h, log_c_gh, 
+	  log_t_LC, log_t, log_n_h, y, z, n_gh, f_gh, exp_gh, i;
 
     # test whether g,h in CN
     exp_g_cut := GUARANA.CutExpVector( malcevRec, exp_g );
@@ -163,16 +157,28 @@ GUARANA.Collection_CN_Star := function( malcevRec, exp_g, exp_h )
         log := log*malcevRec.lieAuts[i]^exp_h[i];
     od;
 
+    # get exp vector of c(g), c(h), c(gh) with repsect to the pcp of CC
+    id_C := List( [1..malcevRec.recL_CC.dim, x-> 0 );
+    c_g_C := id_C + c_g;
+    c_h_C := id_C + c_h;
+    c_gh := c_g + c_h;
+    c_gh_C := id_C + c_gh_C;
+
     # compute log(t) with respect to the basis of L(C)
-    log_c_g := GUARANA.AbstractLog( [malcevRec.recL_CC, c_g, "vecByVec"] );
-    log_c_h := GUARANA.AbstractLog( [malcevRec.recL_CC, c_h, "vecByVec"] );
+    log_c_g := GUARANA.AbstractLog( [malcevRec.recL_CC, c_g_C, "vecByVec"] );
+    log_c_h := GUARANA.AbstractLog( [malcevRec.recL_CC, c_h_C, "vecByVec"] );
     log_c_g_c_h := GUARANA.Star( [malcevRec.recL_CC, log_c_g, log_c_h,
                                   "vec" ] );
-    log_t_LC := ShallowCopy( log_c_g_c_h );
-    for i in [1..malcevRec.lengths[2]] do 
-	log_t_LC[i] := 0;
-    od;
+    log_c_gh := GUARANA.AbstractLog( [malcevRec.recL_CC, c_gh_C, "vecByVec"] );
+    log_t_LC := GUARANA.Star( [malcevRec.recL_CC, -log_c_gh, log_c_g_ch,
+                               "vec" ] );
 
+    # check wheter log(t) has the right form
+    if log_t_LC{[1..malcevRec.lengths[2]]} <> 
+       0*log_t_LC{[1..malcevRec.lengths[2]} then 
+        Error( "log(t) does not have the correct form" );
+    fi;
+    
     # compute log(t) with respect to the basis of L(N)
     log_t := GUARANA.MapFromLCcapNtoLN( malcevRec, log_t_LC );
 
@@ -186,9 +192,6 @@ GUARANA.Collection_CN_Star := function( malcevRec, exp_g, exp_h )
     # compute n(gh)
     n_gh := GUARANA.AbstractExp( [malcevRec.recL_NN, z, "vecByVec"] );
 
-    # get c(gh)
-    c_gh := c_g + c_h;
-
     # get exp of finite part
     f_gh := List( [1..malcevRec.lengths[1]], x-> 0 );
 
@@ -196,11 +199,11 @@ GUARANA.Collection_CN_Star := function( malcevRec, exp_g, exp_h )
     return exp_gh;
 end;
 
-GUARANA.Collection_CN_DT := function( malcevRec, exp_g, exp_h )
+GUARANA.CN_Collection_DT := function( malcevRec, exp_g, exp_h )
 
 end;
 
-GUARANA.Collection_CN := function( malcevRec, exp_g, exp_h )
+GUARANA.CN_Collection := function( malcevRec, exp_g, exp_h )
     local method;
 
     method := malcevRec.collCN_method;
@@ -212,18 +215,6 @@ GUARANA.Collection_CN := function( malcevRec, exp_g, exp_h )
 	Error( " " );
     fi;
 end;
-
-# 
-# collection functions
-# -computations with consecutive powers of automorphisms. 
-#  again n given in two ways. 
-# -Powering in C. 
-# -Inversion in CN
-# -Powering in CN
-# -Collection in G
-#
-# construct more examples
-# 
 
 #############################################################################
 ##
