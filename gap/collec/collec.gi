@@ -103,13 +103,6 @@ GUARANA.RandomGrpElm := function( args )
     fi;
 end;
 
-## Example
-## ll := GUARANA.SomePolyMalcevExams( 3 );
-## R := GUARANA.InitialSetupCollecRecord( ll );
-## GUARANA.AddCompleteMalcevInfo( R );
-## g := GUARANA.RandomGrpElm( [R,10, "CN"] );
-## h := GUARANA.RandomGrpElm( [R,10, "CN"] );
-
 #############################################################################
 ##
 #F GUARANA.Collection_CN( malcevRec, exp_g, exp_h )
@@ -162,7 +155,7 @@ GUARANA.CN_Collection_Star := function( malcevRec, exp_g, exp_h )
     c_g_C := id_C + c_g;
     c_h_C := id_C + c_h;
     c_gh := c_g + c_h;
-    c_gh_C := id_C + c_gh_C;
+    c_gh_C := id_C + c_gh;
 
     # compute log(t) with respect to the basis of L(C)
     log_c_g := GUARANA.AbstractLog( [malcevRec.recL_CC, c_g_C, "vecByVec"] );
@@ -208,12 +201,298 @@ GUARANA.CN_Collection := function( malcevRec, exp_g, exp_h )
 
     method := malcevRec.collCN_method;
     if method = "star" then 
-	return GUARANA.Collection_CN_Star( malcevRec, exp_g, exp_h );
+	return GUARANA.CN_Collection_Star( malcevRec, exp_g, exp_h );
     elif method = "deepThought" then 
 	Error( "Sorry not implemented yet" );
     else
 	Error( " " );
     fi;
+end;
+
+#############################################################################
+##
+#F GUARANA.CconjF_SingleElmConjByFiniteElm( malcevRec, i,x_i, exp_f )
+##
+## IN
+## malcevRec .......................... Malcev record
+## i .................................. index of c_i, which is a part
+##                                      of the pcs of CN/N. 
+##                                      Note that i is the position of 
+##                                      the c_i in the pcs of G 
+##                                      (and not in the pcs of CN/N ).
+## x_i ................................ integer
+## exp_f  ................................ short expvector (with respect 
+##                                         to the pcs of G/CN ) of an elment
+##                                         f in G, that is a product of 
+##                                         generators of the finite part of 
+##                                         the pcs. 
+## OUT
+## Exponent vector of ( c_i^x_i )^f
+## 
+GUARANA.CconjF_SingleElmConjByFiniteElm := function( malcevRec, i,x_i,exp_f)
+    local c_i_f, c_i_f_x_i;
+
+    # look up c_i^f
+    c_i_f := GUARANA.CconjF_LookUp( malcevRec, i, exp_f );
+
+    # power it by x_i
+    c_i_f_x_i := GUARANA.CN_Power( malcevRec, c_i_f, x_i );
+
+    return c_i_f_x_i;
+end;
+
+#############################################################################
+##
+#F GUARANA.CconjF_ElmConjByFiniteElm( malcevRec, exp_c, exp_f )
+##
+## IN
+## malcevRec ........................ Malcev record
+## exp_c ............................ short exponent vector (with respect 
+##                                    to pcs of CN/N) of an element 
+##                                    in C.
+##                                    c = c_1^x_1 ... c_k^x_k 
+##                                    where k is the rank of CN/N.
+## exp_f  ................................ short expvector (with respect 
+##                                         to the pcs of G/CN ) of an elment
+##                                         f in G, that is a product of 
+##                                         generators of the finite part of the
+##                                         pcs. 
+## OUT
+## Exponent vector of c^f
+##
+## COMMENT
+## c^f = (c_1^x_1 ... c_k^x_k )^f
+##     = (c_1^x_1)^f ... (c_k^x_k)^f
+## 
+GUARANA.CconjF_ElmConjByFiniteElm := function( malcevRec, exp_c, exp_f )
+    local hl, res, x_i, ii, c_i_x_i_f, i;
+   
+    res := List( [1..Length(Pcp(malcevRec.G))], x-> 0 );
+
+    for i in [1..Length( exp_c )] do
+	x_i := exp_c[i];
+	if x_i <> 0 then 
+	    ii := i + malcevRec.lengths[1];
+	    # comput (c_i^x_i)^f
+	    c_i_x_i_f := GUARANA.CconjF_SingleElmConjByFiniteElm( malcevRec,
+	                                                          ii, x_i,
+								  exp_f );
+	    res := GUARANA.CN_Collection( malcevRec, res, c_i_x_i_f );
+	fi;
+    od;
+    return res;
+end;
+
+## IN
+## malcevRec ............................. Malcev record
+## exp_g  ................................ exponent vector of g in CN
+## exp_f  ................................ short expvector (with respect 
+##                                         to the pcs of G/CN ) of an elment
+##                                         f in G, that is a product of 
+##                                         generators of the finite part of the
+##                                         pcs. 
+##
+## OUT
+## Exponent vector of the normal form g^f
+##
+## COMMENT
+## g^f = ( c(g) n(g) )^f
+##     =  c(g)^f n(g)^f
+##
+GUARANA.CN_ConjugationByFiniteElm := function( malcevRec, exp_g, exp_f )
+    local exp_g_cut, c_g, n_g, c_g_f, log, c_g_f_cut, c_c_g_f, n_c_g_f, 
+          log2, log3, n_g_f, i,f;
+
+    # check whether g is in CN
+    exp_g_cut := GUARANA.CutExpVector( malcevRec, exp_g );
+    if exp_g_cut[1] <> exp_g_cut[1]*0 then
+	Error( "g is not in CN" );
+    fi; 
+    c_g := exp_g_cut[2];
+    n_g := exp_g_cut[3];
+
+    # compute c(g)^f
+    c_g_f := GUARANA.CconjF_ElmConjByFiniteElm( malcevRec, c_g, exp_f );
+
+    # map n(g) to L(N) and apply the automorphism corresponding to f
+    log := GUARANA.AbstractLog( [malcevRec.recL_NN, n_g, "vecByVec"] );
+    for i in malcevRec.indeces[1] do
+	if exp_f[i] <> 0 then 
+            log := log*malcevRec.lieAuts[i]^exp_f[i];
+	fi;
+    od;
+
+    # compute the product of  n( c(g)^f) and n(g)^f which is equal to 
+    # n( g^f )
+    c_g_f_cut := GUARANA.CutExpVector( malcevRec, c_g_f );
+    c_c_g_f := c_g_f_cut[2];
+    n_c_g_f := c_g_f_cut[3];
+    log2 := GUARANA.AbstractLog( [malcevRec.recL_NN, n_c_g_f, "vecByVec"] );
+    log3 := GUARANA.Star( [malcevRec.recL_NN, log2, log, "vec" ] );
+    n_g_f := GUARANA.AbstractExp( [malcevRec.recL_NN, log3, "vecByVec"] );
+    
+    # get exp of finite part
+    f := List( [1..malcevRec.lengths[1]], x-> 0 );
+
+    return Concatenation( f, c_c_g_f, n_g_f );
+end;
+
+#############################################################################
+##
+## Test functions
+##
+if false then 
+   ll := GUARANA.SomePolyMalcevExams( 3 );
+   R := GUARANA.InitialSetupCollecRecord( ll );
+   GUARANA.AddCompleteMalcevInfo( R );
+   g := GUARANA.RandomGrpElm( [R,10, "CN"] );
+   h := GUARANA.RandomGrpElm( [R,10, "CN"] );
+fi;
+
+GUARANA.Test_CconjF_SingleElmConjByFiniteElm := function( malcevRec, pow,
+                                                range )
+    local i, n, exp_h, exp_f, malcev, c_i, f, cftl;
+							  
+    # get random index
+    i := Random( malcevRec.indeces[2] );
+
+    # get random exp vector of finite part 
+    n := Length( malcevRec.G_CN.rels );
+    exp_h := GUARANA.RandomGrpElm( [malcevRec, range, "G", "exp" ]);
+    exp_f := exp_h{[1..n]}; 
+    Print( exp_f, "\n" );
+
+    # compute (c_i^x_i)^f with Malcev
+    malcev :=GUARANA.CconjF_SingleElmConjByFiniteElm( malcevRec, i,pow,exp_f);
+    Print( malcev, "\n" );
+
+    # compute it with Cftl
+    c_i := Pcp( malcevRec.G )[i];
+    f := GUARANA.GrpElmByExpsAndPcs( Pcp(malcevRec.G), exp_f );
+    cftl := (c_i^pow)^f;
+    Print( Exponents( cftl ), "\n" );
+
+    return Exponents( cftl ) = malcev;
+
+end;
+
+# Problem with:
+# exp_c := [-4,6];
+# exp_f := [0,1,0]; 
+# 
+# (g_5^f)^6 is the problem !
+#
+# JUMP
+# Try exp_g := [ 0, 0, 0, 0, 1, 0, 0, 3, -1, 0, 0, 0, 0, 0, 0, 0, 0 ];
+# and the power 6 
+# 
+GUARANA.Test_CconjF_ElmConjByFiniteElm := function( malcevRec, range )
+    local g, exp_g, exp_g_cut, exp_c, n, exp_h, exp_f, exp_c_f, f, c, c_f;
+
+    # get random element in C
+    g := GUARANA.RandomGrpElm( [malcevRec, range, "CN", "elm" ]);
+    exp_g := Exponents( g );
+    exp_g_cut := GUARANA.CutExpVector( malcevRec, exp_g );
+    exp_c := exp_g_cut[2];
+
+    # get random exp vector of finite part 
+    n := Length( malcevRec.G_CN.rels );
+    exp_h := GUARANA.RandomGrpElm( [malcevRec, range, "G", "exp" ]);
+    exp_f := exp_h{[1..n]}; 
+    Print( exp_f, "\n" );
+
+    # compute c^f with Malcev 
+    exp_c_f := GUARANA.CconjF_ElmConjByFiniteElm( malcevRec, exp_c, exp_f );
+    Print( exp_c_f, "\n" );
+
+    # comput c^f with Cftl
+    f := GUARANA.GrpElmByExpsAndPcs( Pcp(malcevRec.G), exp_f );
+    c := GUARANA.GrpElmByExpsAndPcs( Pcp(malcevRec.G){malcevRec.indeces[2]}, 
+	                             exp_c );
+    c_f := c^f;
+    Print( Exponents( c_f ), "\n" );
+
+    return Exponents( c_f ) = exp_c_f;
+end;
+
+GUARANA.Tests_CconjF_ElmConjByFiniteElm := function( malcevRec, range )
+    local no, test, i;
+
+    no := 100;
+    for i in [1..no] do 
+	test := GUARANA.Test_CconjF_ElmConjByFiniteElm( malcevRec, range );
+        if test = true then
+	    Print( "yeah" );
+	else
+	    Error( " " );
+	fi;
+    od;
+end;
+	    
+    
+# Problem with 
+# exp_g := [ 0, 0, 0, -4, 6, -7, -4, -4, 6, -2, 4, 6, -7, -5, -2, 0, -4 ];
+# exp_f := [0,1,0];
+
+GUARANA.Test_CN_ConjugationByFiniteElm := function( malcevRec, range )
+    local g, exp_g, n, exp_h, exp_f, exp_g_f, f, g_f;
+
+    # get random element in CN
+    g := GUARANA.RandomGrpElm( [malcevRec, range, "CN", "elm" ]);
+    exp_g := Exponents( g );
+
+    # get random exp vector of finite part 
+    n := Length( malcevRec.G_CN.rels );
+    exp_h := GUARANA.RandomGrpElm( [malcevRec, range, "G", "exp" ]);
+    exp_f := exp_h{[1..n]}; 
+    Print( exp_f, "\n" );
+
+    # compute g^f with Malcev 
+    exp_g_f := GUARANA.CN_ConjugationByFiniteElm( malcevRec, exp_g, exp_f );
+    Print( exp_g_f, "\n" );
+
+    # comput g^f with Cftl
+    f := GUARANA.GrpElmByExpsAndPcs( Pcp(malcevRec.G), exp_f );
+    g_f := g^f;
+    Print( Exponents( g_f ), "\n" );
+
+    if Exponents( g_f ) <> exp_g_f then
+	Error( "hallo" );
+    fi;
+
+    return Exponents( g_f) = exp_g_f;
+end;
+
+GUARANA.Test_CN_Collection_Star := function( malcevRec, range )
+    local g, exp_g, h, exp_h, exp_gh, gh;
+   
+    # get random elements in CN
+    g := GUARANA.RandomGrpElm( [malcevRec, range, "CN", "elm" ]);
+    exp_g := Exponents( g );
+    h := GUARANA.RandomGrpElm( [malcevRec, range, "CN", "elm" ]);
+    exp_h := Exponents( h );
+
+    # comput gh with Malcev
+    exp_gh := GUARANA.CN_Collection_Star( malcevRec, exp_g, exp_h );
+
+    # comput gh with Cfts
+    gh := g*h;
+
+    return Exponents( gh ) = exp_gh;
+end;
+
+GUARANA.Tests_CN_Collection_Star := function( malcevRec, range )
+    local no, test, i;
+    
+    no := 100;
+    for i in [1..no] do
+	test := GUARANA.Test_CN_Collection_Star( malcevRec, range );
+	if test = true then
+	    Print( "yeah" );
+	else 
+	    Error( " " );
+	fi;
+    od;
 end;
 
 #############################################################################

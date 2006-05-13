@@ -425,6 +425,81 @@ end;
 
 #############################################################################
 ##
+#F GUARANA.CconjF_AddInfo( malcevRec )
+##
+## IN
+## malcevRec ...................... Malcev record
+## 
+## EFFECT
+## Let (f_1,...,f_r,c_1,...,c_s,n_1,...,n_t ) be a pcs suitable
+## for Malcev collection. This function stores
+## all normal forms of the type 
+## c_i^f where f is product of the f_j
+## in the Malcev record.
+##
+GUARANA.CconjF_AddInfo := function( malcevRec )
+    local CconjF, pcpG, order, w_vec, ind_C, exp_f, c_i, f, k, i, j,cconjF;
+
+    CconjF := [];
+    pcpG := Pcp( malcevRec.G );
+
+    # catch trivial case 
+    if Length( malcevRec.G_CN.rels ) = 0 then 
+        malcevRec.CconjF := CconjF;
+	return 0;
+    fi;
+    
+    order := malcevRec.G_CN.order;
+    w_vec := malcevRec.G_CN.w_vec;
+    ind_C := malcevRec.indeces[2];
+   
+    # go through all c_i
+    for i in ind_C do 
+	cconjF := [];
+	exp_f := GUARANA.G_CN_NumberToExpVector( i, w_vec );
+	# go through all elms of finite part
+	for j in [1..order] do 
+	    exp_f := GUARANA.G_CN_NumberToExpVector( j, w_vec );
+	    c_i := pcpG[i]; 
+	    f := GUARANA.GrpElmByExpsAndPcs( pcpG, exp_f );
+	    k := c_i^f;
+	    Add( cconjF, Exponents( k ) );
+	od;
+	Add( CconjF, cconjF );
+    od;
+
+    malcevRec.CconjF := CconjF;
+end;
+
+#############################################################################
+##
+#F GUARANA.CconjF_LookUp( malcevRec, i, exp_f )
+##
+## IN
+## malcevRec ....................... Malcev record
+## i ............................... index of c_i, which is a part 
+##                                   of the pcs of CN/N.
+##                                   i determines the position of c_i in 
+##                                   the pcs of G.
+## exp_f ........................... short exponent vector (with respect 
+##                                   to G/CN) of an element of the finite 
+##                                   part.
+## 
+## OUT
+## Exponent vector of (c_i)^f as stored in the Malcev record.
+GUARANA.CconjF_LookUp := function( malcevRec, i, exp_f )
+    local w_vec, num_f, ii;
+    
+    # get number that corresponds to f
+    w_vec := malcevRec.G_CN.w_vec;
+    num_f := GUARANA.G_CN_ExpVectorToNumber( exp_f, w_vec ); 
+
+    ii := i - malcevRec.lengths[1];
+    return malcevRec.CconjF[ii][num_f]; 
+end;
+
+#############################################################################
+##
 #F GUARANA.AddCompleteMalcevInfo( malcevRec )
 ##
 ## IN
@@ -445,6 +520,7 @@ GUARANA.AddCompleteMalcevInfo := function( malcevRec )
     GUARANA.AddLieAuts( malcevRec );
     GUARANA.AddImgsOf_LCcapN_in_LN( malcevRec );
     GUARANA.G_CN_Setup( malcevRec );
+    GUARANA.CconjF_AddInfo( malcevRec );
 end;
 
 #############################################################################
