@@ -283,6 +283,10 @@ GUARANA.CconjF_ElmConjByFiniteElm := function( malcevRec, exp_c, exp_f )
     return res;
 end;
 
+#############################################################################
+##
+#F GUARANA.CN_ConjugationByFiniteElm( malcevRec, exp_g, exp_f )
+##
 ## IN
 ## malcevRec ............................. Malcev record
 ## exp_g  ................................ exponent vector of g in CN
@@ -376,16 +380,6 @@ GUARANA.Test_CconjF_SingleElmConjByFiniteElm := function( malcevRec, pow,
 
 end;
 
-# Problem with:
-# exp_c := [-4,6];
-# exp_f := [0,1,0]; 
-# 
-# (g_5^f)^6 is the problem !
-#
-# JUMP
-# Try exp_g := [ 0, 0, 0, 0, 1, 0, 0, 3, -1, 0, 0, 0, 0, 0, 0, 0, 0 ];
-# and the power 6 
-# 
 GUARANA.Test_CconjF_ElmConjByFiniteElm := function( malcevRec, range )
     local g, exp_g, exp_g_cut, exp_c, n, exp_h, exp_f, exp_c_f, f, c, c_f;
 
@@ -429,11 +423,6 @@ GUARANA.Tests_CconjF_ElmConjByFiniteElm := function( malcevRec, range )
     od;
 end;
 	    
-    
-# Problem with 
-# exp_g := [ 0, 0, 0, -4, 6, -7, -4, -4, 6, -2, 4, 6, -7, -5, -2, 0, -4 ];
-# exp_f := [0,1,0];
-
 GUARANA.Test_CN_ConjugationByFiniteElm := function( malcevRec, range )
     local g, exp_g, n, exp_h, exp_f, exp_g_f, f, g_f;
 
