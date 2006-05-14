@@ -13,22 +13,22 @@
 
 #############################################################################
 ##
-#F GUARANA.ConPow_Compute_Pi_q( recLieAlg, x, Phi, q )
+#F GUARANA.ConPow_Compute_Pi_q( recLieAlg, x, myPhi, q )
 ##
 ## IN
 ## recLieAlg ............................ lie algebra record of a Lie algebra
 ##                                        L
 ## x .................................... element of the Lie algebra
 ##                                        given as coefficient vector
-## Phi .................................. autmorphisms of the lie algebra
+## myPhi .................................. autmorphisms of the lie algebra
 ## q .................................... natural number ge 0
 ##
 ## OUT
 ## The coefficients of Pi_q where
 ## Pi_q = x^(Phi^(q-1)) * x^(Phi^(q-2)) * ... * x
 ##
-GUARANA.ConPow_Compute_Pi_q := function( recLieAlg, x, Phi, q )
-    local dim, bin, Phi_p, Pi_p, k, b_i, left, right, i;
+GUARANA.ConPow_Compute_Pi_q := function( recLieAlg, x, myPhi, q )
+    local dim, bin, myPhi_p, Pi_p, k, b_i, left, right, i;
 
     dim := recLieAlg.dim;
 
@@ -46,22 +46,25 @@ GUARANA.ConPow_Compute_Pi_q := function( recLieAlg, x, Phi, q )
 
     # compute Pi_p by variation of repeated squaring.
     # We use repeated squaring for Pi_p and for Phi_p = Phi^p
-    Phi_p := Phi;
+    myPhi_p := myPhi;
     Pi_p := x;
     k := Length( bin );
     for i in [2..k] do 
 	b_i := bin[i];
 	# use Pi_2p =( Pi_p Phi^p) * Pi_p 
-	left := Pi_p*Phi_p;
+	left := Pi_p*myPhi_p;
 	right := Pi_p;
 	Pi_p := GUARANA.Star( [recLieAlg, left, right, "vec" ] );
-	Phi_p := Phi_p * Phi_p;
+	# use Phi_2p = ( Phi_p )^2
+	myPhi_p := myPhi_p * myPhi_p;
 	
 	if b_i = 1 then 
-	    ## use Pi_2p+1 = (Pi_2p Phi)* x 
-	    left := Pi_p*Phi;
+	    # use Pi_2p+1 = (Pi_2p Phi)* x 
+	    left := Pi_p*myPhi;
 	    right := x;
 	    Pi_p := GUARANA.Star( [recLieAlg, left,right, "vec"] );
+	    # use Phi_2p+1 =  Phi_2p  * Phi
+	    myPhi_p := myPhi_p * myPhi;
 	fi;
     od;
 
@@ -70,12 +73,12 @@ end;
 
 #############################################################################
 ##
-#F GUARANA.ConPow_Compute_pi_q( recLieAlg, g, Phi, q )
+#F GUARANA.ConPow_Compute_pi_q( recLieAlg, g, myPhi, q )
 ##
 ## recLieAlg ........................ record of a Lie algebra L
 ## g ................................ group element of Exp( L ) given 
 ##                                    by exp vector.
-## Phi .............................. Lie algebra automorphism of L
+## myPhi .............................. Lie algebra automorphism of L
 ## q ................................ natural number ge 0
 ## 
 ## OUT 
@@ -83,14 +86,14 @@ end;
 ## pi_q = n^(phi^(q-1)) * .... * n^phi * n 
 ## where phi is the group aut corresponding to Phi.
 ##
-GUARANA.ConPow_Compute_pi_q := function( recLieAlg, g, Phi, q )
+GUARANA.ConPow_Compute_pi_q := function( recLieAlg, g, myPhi, q )
     local x, Pi_q, pi_q;
 
     # comput lie elment 
     x := GUARANA.AbstractLog( [recLieAlg, g, "vecByVec"] );
 
     # deal with the consectuive powers there
-    Pi_q := GUARANA.ConPow_Compute_Pi_q( recLieAlg, x, Phi, q );
+    Pi_q := GUARANA.ConPow_Compute_Pi_q( recLieAlg, x, myPhi, q );
 
     # compute corresponding group elm
     pi_q := GUARANA.AbstractExp( [recLieAlg, Pi_q, "vecByVec"] );
@@ -193,7 +196,7 @@ end;
 ##
 GUARANA.CN_PositivePower := function( malcevRec, exp_g, q )
     local exp_g_cut, c_g, n_g, id_C, c_g_C, log_c_g, log_c_g_q, divider, 
-          log_divider, log_t_LC, log_t, Phi, log_n, Pi_q, log_n_g_q, 
+          log_divider, log_t_LC, log_t, myPhi, log_n, Pi_q, log_n_g_q, 
 	  n_g_q, c_g_q, f_g_q, i;
 
     # test input and catch trivial case
@@ -240,16 +243,16 @@ GUARANA.CN_PositivePower := function( malcevRec, exp_g, q )
     log_t := GUARANA.MapFromLCcapNtoLN( malcevRec, log_t_LC );
 
     # compute Phi
-    Phi := IdentityMat( malcevRec.recL_NN.dim );
+    myPhi := IdentityMat( malcevRec.recL_NN.dim );
     for i in malcevRec.indeces[2] do
-	Phi := Phi*malcevRec.lieAuts[i]^(exp_g[i]);
+	myPhi := myPhi*malcevRec.lieAuts[i]^(exp_g[i]);
     od;
 
     # compute log( n(g) )
     log_n := GUARANA.AbstractLog( [malcevRec.recL_NN, n_g, "vecByVec" ] );   
 
     # compute Pi_q
-    Pi_q := GUARANA.ConPow_Compute_Pi_q( malcevRec.recL_NN, log_n, Phi, q );
+    Pi_q := GUARANA.ConPow_Compute_Pi_q( malcevRec.recL_NN, log_n, myPhi, q );
 
     # compute n( g^q ) 
     log_n_g_q := GUARANA.Star( [malcevRec.recL_NN, log_t, Pi_q, "vec" ] );
@@ -293,7 +296,7 @@ end;
 ##
 if false then 
     ll := GUARANA.SomePolyMalcevExams( 3 );
-    R := GUARANA.InitialSetupCollecRecord( ll );
+    R := GUARANA.InitialSetupCollecRecord( ll );;
     GUARANA.AddCompleteMalcevInfo( R );
     g := GUARANA.RandomGrpElm( [R,10, "CN"] );
     h := GUARANA.RandomGrpElm( [R,10, "CN"] );
@@ -330,6 +333,13 @@ GUARANA.Test_CN_Inversion2 := function( malcevRec, range )
     # compare
     return  exp_inv_inv_g =  exp_g;
 end;
+
+if false then 
+   exp_g := [ 0, 0, 0, 0, 1, 0, 0, 3, -1, 0, 0, 0, 0, 0, 0, 0, 0 ];
+   g := GUARANA.GrpElmByExpsAndPcs( Pcp( R.G ), exp_g );
+   q := 6;
+   malcevRec := R;
+fi;
 
 GUARANA.Test_CN_PositivePower := function( malcevRec, range, q )
     local g, exp_g, exp_g_q, g_q;
