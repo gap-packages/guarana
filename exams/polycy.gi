@@ -11,6 +11,68 @@
 ##
 ##
 
+GUARANA.Tr_n_O := function( n, pol )
+    local R, H, pcpH, pol_deg, ind_f, counter, ind_diag, ind_c, 
+          ind_n, ind, new_pcs, G, indeces, N, NN, C, CC, i;
+
+    R := GUARANA.Triang_PresentTriang( n, pol );
+    H := R.Tr;
+    pcpH := Pcp( H );
+    pol_deg := Degree( pol );
+
+    # get indeces of elms of finite order 
+    ind_f := [];
+    counter := 1;
+    for i in [1..n] do 
+	Add( ind_f, counter );
+	counter := counter + pol_deg;
+    od;
+
+    # get indeces of elms on diagonal of infinite order 
+    ind_diag := [1..n*pol_deg];
+    ind_c := Difference( ind_diag, ind_f );
+
+    # get indeces of elms of upper triangular part
+    ind_n := [n*pol_deg+1..Length(pcpH)];
+
+    ind := Concatenation( ind_f, ind_c, ind_n );
+    new_pcs := pcpH{ind};
+
+    # change collector
+    G := GUARANA.PcpGroupByPcs( H, new_pcs ); 
+
+    indeces := [ [1..n], [n+1..n*pol_deg], [n*pol_deg+1..Length(pcpH)]];
+    N := Subgroup( G, Pcp(G){indeces[3]} );
+    NN := GUARANA.PcpGroupByPcs( G, Pcp(G){indeces[3]} );
+    C := Subgroup( G, Pcp(G){indeces[2]} );
+    CC := GUARANA.PcpGroupByPcs( G, Pcp(G){indeces[2]} );
+    return [G,indeces,N,NN,C,CC];
+end;
+
+GUARANA.Tr_n_O1 := function( n )
+    local x, pol;
+    x := Indeterminate( Rationals );
+    pol := x^2 - 3;
+    return GUARANA.Tr_n_O( n, pol );
+end;
+
+GUARANA.Tr_n_O2 := function( n )
+    local x, pol;
+    x := Indeterminate( Rationals );
+    pol := x^3 - x^2 + 4;
+    return GUARANA.Tr_n_O( n, pol );
+end;
+
+GUARANA.Tr_n_O3 := function( n )
+    local x, pol;
+    x := Indeterminate( Rationals );
+    pol := x_1^4+5*x_1^3-x_1^2+x_1+3;
+    return GUARANA.Tr_n_O( n, pol );
+end;
+
+# - function for triang examples 
+# - function for free-nilpotent-by automorphism examples.
+
 ## 
 ## OUT
 ## Examples that can be used to test Malcev collection. 
@@ -70,6 +132,8 @@ GUARANA.SomePolyMalcevExams := function( n )
 	return [G,indeces,N,NN,C,CC];
     fi;
 end;
+
+
 
 #############################################################################
 ##
