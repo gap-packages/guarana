@@ -341,6 +341,58 @@ GUARANA.CN_ConjugationByFiniteElm := function( malcevRec, exp_g, exp_f )
     return Concatenation( f, c_c_g_f, n_g_f );
 end;
 
+## IN
+## malcevRec ............................ Malcev record
+## exp_g     .............................exponent vector of a group element
+##                                        g in G
+##
+## OUT
+## Exponent vector of c(g)n(g) with respect to the full pcs of G.
+##
+GUARANA.GetCNPart := function( malcevRec, exp_g )
+    local exp_cn;
+    exp_cn := ShallowCopy( exp_g );
+    exp_cn{malcevRec.indeces[1]} := 0*exp_cn{malcevRec.indeces[1]};
+    return exp_cn;
+end;
+
+## COMMENT
+## g h = f(g)c(g)n(g) f(h)c(h)n(h) 
+##     = f(g)f(h)        (c(g)n(g))^f(h)    c(h)n(h)
+##     = f(gh) u         v                  w
+## 
+GUARANA.G_Collection := function( malcevRec, exp_g, exp_h )
+    local exp_g_cut, exp_h_cut, f_g, f_h, a, f_gh, u, b, v, w, uv, 
+          uvw, exp_gh;
+
+    exp_g_cut := GUARANA.CutExpVector( malcevRec, exp_g );
+    exp_h_cut := GUARANA.CutExpVector( malcevRec, exp_h );
+
+    f_g := exp_g_cut[1];
+    f_h := exp_h_cut[1];
+
+    # get f(gh) and u
+    a := GUARANA.G_CN_LookUpProduct( malcevRec, f_g, f_h );
+    f_gh := a{malcevRec.indeces[1]};
+    u := GUARANA.GetCNPart( malcevRec, a ); 
+
+    # compute v
+    b := GUARANA.GetCNPart( malcevRec, exp_g );
+    v := GUARANA.CN_ConjugationByFiniteElm( malcevRec, b, f_h );
+    
+    # compute w
+    w := GUARANA.GetCNPart( malcevRec, exp_h );
+
+    # compute normal form of uvw.
+    uv := GUARANA.CN_Collection( malcevRec, u, v );
+    uvw := GUARANA.CN_Collection( malcevRec, uv, w );
+
+    exp_gh := uvw;
+    exp_gh{malcevRec.indeces[1]} := f_gh;
+
+    return exp_gh;
+end;
+
 #############################################################################
 ##
 ## Test functions
@@ -484,6 +536,40 @@ GUARANA.Tests_CN_Collection_Star := function( malcevRec, range )
     od;
 end;
 
+GUARANA.Test_G_Collection := function( malcevRec, range )
+    local g, exp_g, h, exp_h, exp_gh, gh, exp_gh2;
+   
+    # get random elements in G
+    g := GUARANA.RandomGrpElm( [malcevRec, range, "G", "elm" ]);
+    exp_g := Exponents( g );
+    h := GUARANA.RandomGrpElm( [malcevRec, range, "G", "elm" ]);
+    exp_h := Exponents( h );
+
+    # comput gh with Malcev
+    exp_gh := GUARANA.G_Collection( malcevRec, exp_g, exp_h );
+    #Print( exp_gh, "\n" );
+
+    # comput gh with Cfts
+    gh := g*h;
+    exp_gh2 := Exponents( gh );
+    #Print( exp_gh2, "\n" );
+
+    return exp_gh2 = exp_gh;
+end;
+
+GUARANA.Tests_G_Collection := function( malcevRec, range )
+    local no, test, i;
+    
+    no := 100;
+    for i in [1..no] do
+	test := GUARANA.Test_G_Collection( malcevRec, range );
+	if test = true then
+	    Print( i );
+	else 
+	    Error( " " );
+	fi;
+    od;
+end;
 #############################################################################
 ##
 #E
