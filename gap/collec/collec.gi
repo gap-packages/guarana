@@ -144,6 +144,11 @@ GUARANA.CN_Collection_Star := function( malcevRec, exp_g, exp_h )
     n_g := exp_g_cut[3];
     n_h := exp_h_cut[3];
 
+    # catch the trivial case N = 1
+    if Length( n_g ) = 0 then 
+	return exp_g + exp_h;
+    fi;
+
     # map n(g) to L(N) and apply the automorphism corresponding to c(h)
     log := GUARANA.AbstractLog( [malcevRec.recL_NN, n_g, "vecByVec"] );
     for i in malcevRec.indeces[2] do
@@ -318,6 +323,11 @@ GUARANA.CN_ConjugationByFiniteElm := function( malcevRec, exp_g, exp_f )
     # compute c(g)^f
     c_g_f := GUARANA.CconjF_ElmConjByFiniteElm( malcevRec, c_g, exp_f );
 
+    # catch trivial case N = 1
+    if Length( n_g ) = 0 then 
+        return c_g_f;
+    fi;
+
     # map n(g) to L(N) and apply the automorphism corresponding to f
     log := GUARANA.AbstractLog( [malcevRec.recL_NN, n_g, "vecByVec"] );
     for i in malcevRec.indeces[1] do
@@ -341,6 +351,10 @@ GUARANA.CN_ConjugationByFiniteElm := function( malcevRec, exp_g, exp_f )
     return Concatenation( f, c_c_g_f, n_g_f );
 end;
 
+#############################################################################
+##
+#F GUARANA.GetCNPart( malcevRec, exp_g )
+##
 ## IN
 ## malcevRec ............................ Malcev record
 ## exp_g     .............................exponent vector of a group element
@@ -356,6 +370,10 @@ GUARANA.GetCNPart := function( malcevRec, exp_g )
     return exp_cn;
 end;
 
+#############################################################################
+##
+#F GUARANA.G_Collection( malcevRec, exp_g, exp_h )
+##
 ## COMMENT
 ## g h = f(g)c(g)n(g) f(h)c(h)n(h) 
 ##     = f(g)f(h)        (c(g)n(g))^f(h)    c(h)n(h)
@@ -391,6 +409,42 @@ GUARANA.G_Collection := function( malcevRec, exp_g, exp_h )
     exp_gh{malcevRec.indeces[1]} := f_gh;
 
     return exp_gh;
+end;
+
+#############################################################################
+##
+#F GUARANA.G_Inversion( malcevRec, exp_g )
+##
+## IN
+## malcevRec ......................... Mal'cev record
+## exp_g     .............................exponent vector of a group element
+##                                        g in G
+##
+## OUT
+## Exponent vector of g^-1 
+##
+## COMMENT
+## g^-1 = (fcn)^-1 
+##      = (cn)^-1 f^-1
+##
+## f^-1 can be precomputed.
+##
+GUARANA.G_Inversion := function( malcevRec, exp_g )
+    local cn_inv, exp_g_cut, f_g, f_inv, g_inv, cn;
+
+    # compute (cn)^-1
+    cn := GUARANA.GetCNPart( malcevRec, exp_g );
+    cn_inv := GUARANA.CN_Inversion( malcevRec, cn );
+
+    # get f^-1
+    exp_g_cut := GUARANA.CutExpVector( malcevRec, exp_g );
+    f_g := exp_g_cut[1];
+    f_inv := GUARANA.F_LookupInverse( malcevRec, f_g ); 
+
+    # compute (cn)^-1 f^-1
+    g_inv := GUARANA.G_Collection( malcevRec, cn_inv, f_inv );
+
+    return g_inv;
 end;
 
 #############################################################################
@@ -564,12 +618,113 @@ GUARANA.Tests_G_Collection := function( malcevRec, range )
     for i in [1..no] do
 	test := GUARANA.Test_G_Collection( malcevRec, range );
 	if test = true then
-	    Print( i );
+	    Print( i, " " );
 	else 
 	    Error( " " );
 	fi;
     od;
 end;
+
+GUARANA.Test_G_Inversion := function( malcevRec, range )
+    local exp_g, g_inv, g_inv_inv;
+   
+    # get random element in G
+    exp_g := GUARANA.RandomGrpElm( [malcevRec, range, "G", "exp" ]);
+
+    # comput g^-1
+    g_inv := GUARANA.G_Inversion( malcevRec, exp_g );
+
+    # compute g^-1^-1
+    g_inv_inv := GUARANA.G_Inversion( malcevRec, g_inv );
+
+    return exp_g = g_inv_inv;
+end;
+
+GUARANA.Tests_G_Inversion := function( malcevRec, range )
+    local no, test, i;
+    
+    no := 100;
+    for i in [1..no] do
+	test := GUARANA.Test_G_Inversion( malcevRec, range );
+	if test = true then
+	    Print( i, " " );
+	else 
+	    Error( " " );
+	fi;
+    od;
+end;
+
+GUARANA.Test_SmallExams := function()
+    local ind, exams, malRec, rangeCftl, rangeInv, i;
+
+    # get indeces malcev records 
+    ind := Concatenation( [1..5], [9] );
+    exams := [];
+    for i in ind do 
+	exams[i] := GUARANA.SomePolyMalcevExams( i );
+    od;
+    exams[10] := GUARANA.Tr_n_O1( 1 );
+    exams[11] := GUARANA.Tr_n_O2( 1 );
+    Add( ind, 10 );
+    Add( ind, 11 );
+
+    for i in ind do  
+	Print( "Testing example ", i, "\n" );
+	# get malcev record
+	malRec := GUARANA.SetupMalcevRecord( exams[i] );
+
+        # compare Malcev collection with collection from the left
+	Print( "Comparing with Cftl \n" );
+	rangeCftl := 2;
+	GUARANA.Tests_G_Collection( malRec, rangeCftl );
+	Print( "\n" );
+
+        # check inversion 
+	Print( "Checking Inversion \n" );
+	rangeInv := 20;
+	GUARANA.Tests_G_Inversion( malRec, rangeInv );
+	Print( "\n" );
+    od;
+    return 0;
+end;
+
+GUARANA.Test_BigExams := function()
+    local ind_Tr_n_O1, ind_Tr_n_O2, exam, malRec, rangeInv, i;
+    
+    # get indeces of examples 
+    ind_Tr_n_O1 := [1..9];
+    ind_Tr_n_O2 := [1..9];
+    
+    for i in ind_Tr_n_O1 do  
+	Print( "Testing Tr_n_O1 with n = ", i, "\n" );
+	# get malcev record
+	exam := GUARANA.Tr_n_O1( i );
+	malRec := GUARANA.SetupMalcevRecord( exam );
+
+        # check inversion 
+	Print( "Checking Inversion \n" );
+	rangeInv := 20;
+	GUARANA.Tests_G_Inversion( malRec, rangeInv );
+	Print( "\n" );
+    od;
+
+    for i in ind_Tr_n_O2 do  
+	Print( "Testing Tr_n_O2 with n = ", i, "\n" );
+	# get malcev record
+	exam := GUARANA.Tr_n_O2( i );
+	malRec := GUARANA.SetupMalcevRecord( exam );
+
+        # check inversion 
+	Print( "Checking Inversion \n" );
+	rangeInv := 20;
+	GUARANA.Tests_G_Inversion( malRec, rangeInv );
+	Print( "\n" );
+    od;
+
+    return 0;
+end;
+
+
 #############################################################################
 ##
 #E

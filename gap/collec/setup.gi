@@ -120,6 +120,18 @@ GUARANA.AddLieAlgRecs := function( malcevRec )
                                                         "gen"] );
 end;
 
+GUARANA.G_Identity := function( malcevRec )
+    local n;
+    n := Length( Pcp( malcevRec.G ) );
+    return List( [1..n], x-> 0 );
+end;
+
+GUARANA.N_Identity := function( malcevRec )
+    local n;
+    n := malcevRec.recL_NN.dim;
+    return List( [1..n], x-> 0 );
+end;
+
 #############################################################################
 ##
 #F GUARANA.ComputeLieAutMatrix( malcevRec, g )
@@ -260,6 +272,11 @@ end;
 ##
 GUARANA.MapFromLCcapNtoLN := function( malcevRec, l_cc )
     local hl_fa, coeffs_1, hl_C, coeffs_2, imgs;
+
+    # catch trivial case
+    if l_cc = 0*l_cc then 
+	return GUARANA.N_Identity( malcevRec );
+    fi;
     
     # test wheter l_cc in L(C\cap N ) by checking whether the first 
     # hl(CN/N) coordinates of l_cc are equal to zero.
@@ -487,15 +504,85 @@ end;
 ## 
 ## OUT
 ## Exponent vector of (c_i)^f as stored in the Malcev record.
+##
 GUARANA.CconjF_LookUp := function( malcevRec, i, exp_f )
     local w_vec, num_f, ii;
     
+    # catch trivial case
+    if Length( exp_f )=0 then 
+	return GUARANA.G_Identity( malcevRec );
+    fi;
     # get number that corresponds to f
     w_vec := malcevRec.G_CN.w_vec;
     num_f := GUARANA.G_CN_ExpVectorToNumber( exp_f, w_vec ); 
 
     ii := i - malcevRec.lengths[1];
     return malcevRec.CconjF[ii][num_f]; 
+end;
+
+#############################################################################
+##
+#F GUARANA.F_AddInverseInfo( malcevRec )
+##
+## IN
+## malcevRec ....................... Malcev record 
+##
+## EFFECT
+## Store f^-1 for all representatives f of the finite part G/CN
+##
+GUARANA.F_AddInverseInfo := function( malcevRec )
+    local inversesF, pcpG, order, w_vec, exp_f, f, f_inv, j;
+
+    inversesF := [];
+    pcpG := Pcp( malcevRec.G );
+
+    # catch trivial case 
+    if Length( malcevRec.G_CN.rels ) = 0 then 
+        malcevRec.inversesF := inversesF;
+	return 0;
+    fi;
+    
+    order := malcevRec.G_CN.order;
+    w_vec := malcevRec.G_CN.w_vec;
+
+    # go through all elms of finite part
+    for j in [1..order] do 
+	exp_f := GUARANA.G_CN_NumberToExpVector( j, w_vec );
+	f := GUARANA.GrpElmByExpsAndPcs( pcpG, exp_f );
+	f_inv := f^-1;   
+	Add( inversesF, Exponents( f_inv ) );
+    od;
+    malcevRec.inversesF := inversesF;
+    return 0;
+end;
+
+
+#############################################################################
+##
+#F GUARANA.F_LookupInverse( malcevRec, exp_f )
+##
+## IN
+## malcevRec ........................... malcev Record
+## exp_f ........................... short exponent vector (with respect 
+##                                   to G/CN) of an element of the finite 
+##                                   part.
+## 
+## OUT
+## Exponent vector of f^-1  as stored in the Malcev record.
+##
+GUARANA.F_LookupInverse := function( malcevRec, exp_f )
+    local w_vec, num_f;
+
+    # catch trivial case
+    if Length( exp_f )=0 then 
+	return GUARANA.G_Identity( malcevRec );
+    fi;
+
+    # get number that corresponds to f
+    w_vec := malcevRec.G_CN.w_vec;
+    num_f := GUARANA.G_CN_ExpVectorToNumber( exp_f, w_vec ); 
+
+    return malcevRec.inversesF[num_f];
 end;
 
 #############################################################################
@@ -521,6 +608,56 @@ GUARANA.AddCompleteMalcevInfo := function( malcevRec )
     GUARANA.AddImgsOf_LCcapN_in_LN( malcevRec );
     GUARANA.G_CN_Setup( malcevRec );
     GUARANA.CconjF_AddInfo( malcevRec );
+    GUARANA.F_AddInverseInfo( malcevRec );
+end;
+
+#############################################################################
+##
+#F GUARANA.SetupMalcevRecord( args )
+##
+## IN
+## G ................... polycyclic group whose polycyclic presentation
+##                       is given with respect to a nice polycyclic 
+##                       sequence, that is a sequence that fullfills
+##                       all requirements that are needed for the 
+##                       Malcev collection.
+##         pcs = (f_1,...f_r,c_{r+1},...,c_{r+s},n_{r+s+1},...,n_{r+s+t})
+##         (n_{r+s+1},...,n_{r+s+t}) is a Mal'cev basis of a normal
+##                       T group N. 
+##                       C =< c_{r+1},...,c_{r+s} > is a T-group and an 
+##                       almost nilpotent supplement to N in G. 
+##                       CN/N is free abelian.
+##                       G/CN is finite.
+## indeces ............. list containing three lists l1,l2,l3
+##                       l1 = [1...r]
+##                       l2 = [r+1,...,r+s]
+##                       l3 = [r+s+1,...,r+s+t]
+## N ................... normal T-group of N. 
+## NN .................. pcp group isomorphic to N. 
+##                       Note that in the gap sense NN is not a subgroup 
+##                       of G. N and NN must have the same underlying 
+##                       Mal'cev basis. 
+## C ..................  T-group as described above. 
+## CC .................  pcp group isomorphic to C. 
+##                       The polycyclic presentation of CC must be 
+##                       given with respect to Mal'cev basis 
+##                       starting with (c_{r+s},...,c_{r+s}).
+##                       CC!.bijection must be a bijection between 
+##                       CC and C. 
+##
+## OUT
+## Malcev record that contains all data needed  for Mal'cev collection.
+##
+## Example
+## ll := GUARANA.SomePolyMalcevExams( 3 );
+## R := GUARANA.SetupMalcevRecord( ll );
+##
+##
+GUARANA.SetupMalcevRecord := function( args )
+    local malcevRec;
+    malcevRec := GUARANA.InitialSetupCollecRecord( args );
+    GUARANA.AddCompleteMalcevInfo( malcevRec );
+    return malcevRec;
 end;
 
 #############################################################################

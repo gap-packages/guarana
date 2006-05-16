@@ -12,28 +12,31 @@
 ##
 
 GUARANA.Tr_n_O := function( n, pol )
-    local R, H, pcpH, pol_deg, ind_f, counter, ind_diag, ind_c, 
-          ind_n, ind, new_pcs, G, indeces, N, NN, C, CC, i;
+    local R, H, pcpH, noD, noU, ind_f, counter, ind_diag, ind_c, ind_n, 
+          ind, new_pcs, G, indeces, N, NN, C, CC, i;
 
     R := GUARANA.Triang_PresentTriang( n, pol );
     H := R.Tr;
     pcpH := Pcp( H );
-    pol_deg := Degree( pol );
+    # number of generators on diagoal
+    noD := R.noD;
+    # number of generators of unit group
+    noU := noD/n;
 
     # get indeces of elms of finite order 
     ind_f := [];
     counter := 1;
     for i in [1..n] do 
 	Add( ind_f, counter );
-	counter := counter + pol_deg;
+	counter := counter + noU;
     od;
 
     # get indeces of elms on diagonal of infinite order 
-    ind_diag := [1..n*pol_deg];
+    ind_diag := [1..noD];
     ind_c := Difference( ind_diag, ind_f );
 
     # get indeces of elms of upper triangular part
-    ind_n := [n*pol_deg+1..Length(pcpH)];
+    ind_n := [noD+1..Length(pcpH)];
 
     ind := Concatenation( ind_f, ind_c, ind_n );
     new_pcs := pcpH{ind};
@@ -41,7 +44,7 @@ GUARANA.Tr_n_O := function( n, pol )
     # change collector
     G := GUARANA.PcpGroupByPcs( H, new_pcs ); 
 
-    indeces := [ [1..n], [n+1..n*pol_deg], [n*pol_deg+1..Length(pcpH)]];
+    indeces := [ [1..n], [n+1..noD], [noD+1..Length(pcpH)]];
     N := Subgroup( G, Pcp(G){indeces[3]} );
     NN := GUARANA.PcpGroupByPcs( G, Pcp(G){indeces[3]} );
     C := Subgroup( G, Pcp(G){indeces[2]} );
@@ -66,11 +69,10 @@ end;
 GUARANA.Tr_n_O3 := function( n )
     local x, pol;
     x := Indeterminate( Rationals );
-    pol := x_1^4+5*x_1^3-x_1^2+x_1+3;
+    pol := x^4+5*x^3-x^2+x+3;
     return GUARANA.Tr_n_O( n, pol );
 end;
 
-# - function for triang examples 
 # - function for free-nilpotent-by automorphism examples.
 
 ## 
@@ -78,32 +80,25 @@ end;
 ## Examples that can be used to test Malcev collection. 
 ##
 GUARANA.SomePolyMalcevExams := function( n )
-  local T, H, ll, pcs, G, indeces, N, NN, C, CC, h1, h2, h3, h4, f1, f2, f3, g1, g2, g3, g4, i, pcpH;
-    if n=1 then 
-	T := GUARANA.NilpotentByFreeAbelianExams(1);
-	H := T.G;
-        ll := [1,3,5,2,4,6,7,8,9,10,11,12];
-        pcs := Pcp(H){ll};
-	G := GUARANA.PcpGroupByPcs( H, pcs ); 
-	indeces := [[1,2,3],[4,5,6],[7,8,9,10,11,12]];
-	N := Subgroup( G, Pcp(G){indeces[3]} );
-	NN := GUARANA.PcpGroupByPcs( G, Pcp(G){indeces[3]} );
-	C := Subgroup( G, Pcp(G){indeces[2]} );
-	CC := GUARANA.PcpGroupByPcs( G, Pcp(G){indeces[2]} );
-	return [G,indeces,N,NN,C,CC];
-    elif n=2 then 
-	T := GUARANA.NilpotentByFreeAbelianExams(2);
-	H := T.G;
-	ll := Concatenation( [ [1,3,5,7], [2,4,6,8],[9..20]] ); 
-        pcs := Pcp(H){ll};
-	G := GUARANA.PcpGroupByPcs( H, pcs ); 
-	indeces := [[1..4],[5..8],[9..20]];
-	N := Subgroup( G, Pcp(G){indeces[3]} );
-	NN := GUARANA.PcpGroupByPcs( G, Pcp(G){indeces[3]} );
-	C := Subgroup( G, Pcp(G){indeces[2]} );
-	CC := GUARANA.PcpGroupByPcs( G, Pcp(G){indeces[2]} );
-	return [G,indeces,N,NN,C,CC];
+    local T, H, ll, pcs, G, indeces, N, NN, C, CC, h1, h2, h3, h4, 
+          f1, f2, f3, g1, g2, g3, g4, i, pcpH;
+
+    # first 8 examples as in St Andrews paper 
+    if n = 1 then 
+	return GUARANA.Tr_n_O1( 3 );
+    elif n = 2 then 
+	return GUARANA.Tr_n_O1( 4 );
     elif n = 3 then 
+	return GUARANA.Tr_n_O1( 5 );
+    elif n = 4 then 
+	return GUARANA.Tr_n_O2( 3 );
+    elif n = 5 then 
+	return GUARANA.Tr_n_O2( 4 );
+    fi;
+    if n in [6..8] then
+	# todo 
+    fi;
+    if n = 9 then 
 	# in this example C and N have non trivial intersection
 	T := GUARANA.NilpotentByFreeAbelianExams(2);
 	H := T.G;
@@ -132,8 +127,6 @@ GUARANA.SomePolyMalcevExams := function( n )
 	return [G,indeces,N,NN,C,CC];
     fi;
 end;
-
-
 
 #############################################################################
 ##

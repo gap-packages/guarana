@@ -129,6 +129,11 @@ GUARANA.CN_Inversion := function( malcevRec, exp_g )
     c_g := exp_g_cut[2];
     n_g := exp_g_cut[3];
 
+    # catch trivial case N = 1
+    if Length( n_g ) = 0 then
+	return -exp_g;
+    fi;
+
     # get exp of c(g) with respect to the pcp of CC
     id_C := List( [1..malcevRec.recL_CC.dim], x-> 0 );
     c_g_C := id_C + c_g;
@@ -216,6 +221,11 @@ GUARANA.CN_PositivePower := function( malcevRec, exp_g, q )
 
     c_g := exp_g_cut[2];
     n_g := exp_g_cut[3];
+
+    # catch trivial case N = 1
+    if Length( n_g ) = 0 then 
+	return q * exp_g;
+    fi;
 
     # get exponents of c(g) with respect to the pcp of CC
     id_C := List( [1..malcevRec.recL_CC.dim], x-> 0 );

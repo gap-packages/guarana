@@ -54,6 +54,13 @@ GUARANA.AbstractLog := function( args )
 	log_method := recLieAlg.log_method;
     fi;
 
+    # catch trivial case
+    if rep_info = "vecByVec" then 
+	if Length( g ) = 0 then 
+	    return [];
+	fi;
+    fi;
+
     if log_method = "simple" then 
 	if rep_info = "elmByElm" then 
 	    return GUARANA.AbstractLog_Simple_ByElm( recLieAlg, g );

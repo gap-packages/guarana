@@ -5,7 +5,6 @@
   Computations in C could be done via Deep Thought.
 - Maybe it might be useful to use the trick of Exp of Star prdouct.
 
-# 
-# collection functions
-# -conjugation with an elment of the finite part.
-# -Collection in G
+- catch all the trivial cases ( F trivial, C trivial, N trivial )
+  speed up the computation when a part of the input is trivial.
+  (F part, C part, N part and combinations and so on )
