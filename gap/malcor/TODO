@@ -1,0 +1,7 @@
+- Aim: Log and Exp with new objects.
+ - install method log and exp for them.
+ - lie bracket in terms of log series
+- convert all files in this directory to the new objects.
+  In particular setup.gi and symlog.gi  and logexp.gi
+- Random function for grp and lie elements.
+

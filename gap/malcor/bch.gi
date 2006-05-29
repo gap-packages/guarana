@@ -429,7 +429,6 @@ GUARANA.MonimalInKVariablesList2LieBracketList := function( ll )
     return result;
 end;
 
-
 #############################################################################
 #
 # Calculation of the coefficients of the BCH series of weigt n.
@@ -442,8 +441,14 @@ end;
 # [ [ -1/12, [ 1, 0, 1 ] ], [ 1/12, [ 1, 0, 0 ] ] ]
 #
 GUARANA.ComputeCoefficientsAndBrackets := function( n )
-     local P,F,G,elm,string,ll,lie ;
-     P := PolynomialRing( Rationals, n );
+    local indeces, indets, P, F, G, elm, string, ll, lie, i;
+     # create polynomial ring with indeterminates called x_...
+     indeces := [1..n];
+     indets := [];
+     for i in indeces do 
+	 Add( indets, Concatenation( "x_", String( i ) ));
+     od;
+     P := PolynomialRing( Rationals, indets );
      F := GUARANA.Compute_F( n );;
      G := GUARANA.Compute_G( n, P );;
      elm := GUARANA.Logarithm( F*G )[1][n+1];
@@ -476,7 +481,6 @@ GUARANA.BchSeriesOrdered := function( c )
 end;
 
 
-
 GUARANA.ComputeMonomials := function( n )
      local P,F,G,elm,string,A,ll,lie ;
      P := PolynomialRing( Rationals, n );
@@ -500,8 +504,16 @@ end;
 # Note that word can be any product of e^x,e^y,e^-x,e^-y
 #
 GUARANA.ComputeCoefficientsAndBracketWord := function( n, word )
-     local P,F,G,elm,string,ll,lie,mats,i,prod,l ;
-     P := PolynomialRing( Rationals, n );
+     local P,F,G,elm,string,ll,lie,mats,i,prod,l,indeces,indets;
+
+     # create polynomial ring with indeterminates called x_...
+     indeces := [1..n];
+     indets := [];
+     for i in indeces do 
+	 Add( indets, Concatenation( "x_", String( i ) ));
+     od;
+     P := PolynomialRing( Rationals, indets );
+
      mats := [];
      # the following could be done better for longer words
      # by saving the F,F^-1,G,G^-1
@@ -733,7 +745,7 @@ end;
 #
 # Example:
 # gap> GUARANA.LieBracketInTermsOfLogs( 3 );
-# [ [ [ 1, [ 1, 2 ] ] ], [ [ 1/2, [ 2, 1, 2 ] ], [ 1/2, [ 2, 1, 1 ] ] ] ]
+# [ [ [ -1, [ 2, 1 ] ] ], [ [ 1/2, [ 2, 1, 2 ] ], [ 1/2, [ 2, 1, 1 ] ] ] ]
 #
 #
 GUARANA.LieBracketInTermsOfLogs := function( c )
@@ -743,10 +755,10 @@ GUARANA.LieBracketInTermsOfLogs := function( c )
     sersOfComs := GUARANA.ComputeCommutatorSeries( c, c );
 
     # we know the first term of the logs expressions
-    logs := [ [1,[1,2]] ];
+    logs := [ [-1, [2,1]] ];
     
     # get remaining terms in logx, logy
-    lieTerms := GUARANA.GetTail( [1,2], sersOfComs, 1 );
+    lieTerms := GUARANA.GetTail( [2,1], sersOfComs, -1 );
 
     # replace iteratively all remaining Lie bracktes
     i := 1;

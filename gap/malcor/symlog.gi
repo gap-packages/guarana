@@ -28,6 +28,16 @@ GUARANA.RationalVariableList := function( n, st )
                   x->Indeterminate( Rationals, x : new ) );
 end;
 
+if false then
+    malObjs := GUARANA.Get_FNG_MalcevObjects( 2, 4 );
+    malObj := malObjs[3];
+    dim := malObj!.dim;
+    vars_x := GUARANA.RationalVariableList( dim, "x" ); 
+    vars_y := GUARANA.RationalVariableList( dim, "y" );  
+    x := MalcevLieElementByCoefficients( malObj, vars_x );
+    y := MalcevLieElementByCoefficients( malObj, vars_y );
+    
+fi;
 #############################################################################
 ##
 #F GUARANA.GenericElement( n, vars )
@@ -420,6 +430,9 @@ GUARANA.EvaluateLongLieBracket_Symbolic2
 end;
 ## end
 
+## Creating symbolic objects
+
+
 #############################################################################
 ##
 #F GUARANA.ComputeStarPolys( list_x, list_y, w_x, w_y, max_weight, recLieAlg )
@@ -540,7 +553,8 @@ if false then
     subfuncs := [ GUARANA.Sum_Symbolic, 
 		  GUARANA.CopyVectorList,
 		  GUARANA.EvaluateLieBracket_Symbolic ,
-		  GUARANA.EvaluateLongLieBracket_Symbolic ];
+		  GUARANA.EvaluateLongLieBracket_Symbolic,
+		  GUARANA.AddStarPolynomialsToRecLieAlg ];
     GUARANA.Profile( func, input, subfuncs );
     
 fi;
