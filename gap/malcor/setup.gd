@@ -30,7 +30,7 @@ BindGlobal( "MalcevObjectFamily",
 
 DeclareGlobalFunction( "MalcevObjectConstruction"); 
 
-
+DeclareOperation( "Exp", [IsObject] );
 
 #############################################################################
 ##

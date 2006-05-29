@@ -52,6 +52,7 @@ DeclareProperty( "IsSymbolicElement", IsMalcevElement );
 
 DeclareAttribute( "Weight", IsMalcevElement );
 
+
 #############################################################################
 ##
 #E
