@@ -8,3 +8,6 @@
 - catch all the trivial cases ( F trivial, C trivial, N trivial )
   speed up the computation when a part of the input is trivial.
   (F part, C part, N part and combinations and so on )
+
+- create a Malcev collector, 
+  How can I attache this collector to a pcp group ? 

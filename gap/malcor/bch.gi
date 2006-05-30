@@ -146,7 +146,6 @@ GUARANA.RationalPowerOfUnipotentMat := function( mat, pow )
     return GUARANA.Exponential( Rationals, pow*log ); 
 end;
 
-
 #############################################################################
 #
 # Extension of the code of Reinsch. We do computations with k variables
@@ -176,7 +175,6 @@ GUARANA.Compute_HMatrices := function( n, k, A )
     od;
     return H;
 end;
-
 
 # typical input string = "1/180*x_1*x_2*x_5"
 GUARANA.SigmaExpression2XY := function( n, string, A )
@@ -294,7 +292,6 @@ GUARANA.Monomial2List := function( string )
     od;
     return [ rat, inds ];
 end;
-
 
 #############################################################################
 #
@@ -603,7 +600,6 @@ GUARANA.ComputeCoefficientsAndBracketsExtendedBCH :=  function( n, k )
      return lie;
 end;
 
-
 #############################################################################
 #
 # Compute all terms of the BCH series up to a given weight wCom
@@ -724,7 +720,6 @@ GUARANA.SimplifySers := function( sers )
     return res_without_zeros;
 end;
 
-
 #############################################################################
 #
 # Aim:
@@ -822,4 +817,3 @@ GUARANA.ComputeBchIndentities := function( w )
                 bchLBITOL := bchLBITOL );
 end;
 
-			    

@@ -70,6 +70,12 @@ GUARANA.Get_FNG_LieAlgRecords := function( n, c )
     return ll2;
 end;
 
+GUARANA.Get_FNG_MalcevObjects := function( n, c )
+    local ll,ll2; 
+    ll := GUARANA.Get_FNG_TGroupRecords( n, c );
+    ll2 := List( ll, x-> MalcevObjectConstruction( x ) ); 
+    return ll2;
+end;
 #############################################################################
 ##
 #F GUARANA.Get_Unitriangular_LieAlgRecords( dim , degree )

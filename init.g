@@ -9,8 +9,11 @@
 ##
 #R  Read the declaration files.
 ##
-#ReadPackage( "example", "gap/files.gd" );
+GuaranaPkgName := "guarana";
 
+ReadPackage( GuaranaPkgName, "gap/malcor/setup.gd" );
+ReadPackage( GuaranaPkgName, "gap/malcor/malelm.gd" );
+ReadPackage( GuaranaPkgName, "gap/malcor/tstar.gd" );
 
 ############################################################################
 #R  read other packages
