@@ -15,6 +15,8 @@ DeclareOperation( "SetExpMethod", [IsObject, IsString] );
 DeclareOperation( "LogMethod" , [IsObject] );
 DeclareOperation( "ExpMethod" , [IsObject] );
 
+DeclareGlobalFunction( "AddLogAndExpPolynomials" );
+
 #############################################################################
 ##
 #E

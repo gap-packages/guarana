@@ -14,6 +14,62 @@
 #
 # Test Log, Exp and the computation of structur constants
 #
+InstallMethod( RandomGrpElm, 
+               "for Malcev objects (Guarana)", 
+               true, 
+               [IsMalcevObjectRep], 
+               0,
+function( malcevObject)
+    local n, range, exps;
+    n := malcevObject!.dim;
+    range := 10;
+    exps := List( [1..n], x-> Random( [-10..10] ) );
+    return MalcevGrpElementByExponents( malcevObject, exps );
+end);
+
+InstallOtherMethod( RandomGrpElm, 
+               "for Malcev objects and integers (Guarana)", 
+               true, 
+               [IsMalcevObjectRep, IsInt], 
+               0,
+function( malcevObject, range)
+    local n, exps;
+    n := malcevObject!.dim;
+    exps := List( [1..n], x-> Random( [-10..10] ) );
+    return MalcevGrpElementByExponents( malcevObject, exps );
+end);
+
+GUARANA.MO_Test_ExpOfLog := function(  malcevObject, noTests,range, method )
+    local g, x, gg, i;
+    for i in [1..noTests] do
+	g := RandomGrpElm( malcevObject, range );
+	SetLogMethod( malcevObject, method );
+	SetExpMethod( malcevObject, method );
+	x := Log( g );
+	gg := Exp( x );
+	if not gg = g then 
+	    Error( "Mist \n" );
+	fi;
+    od;
+    return 0;
+end;
+
+if false then 
+    noTests := 100;
+    range := 2^4;
+    malObjs := GUARANA.Get_FNG_MalcevObjects( 2, 9 );
+    for malObj in malObjs do
+	Print( "Testing ", malObj ,"\n" );
+	GUARANA.MO_Test_ExpOfLog( malObj, noTests, range, "simple" );
+    od;
+
+    # big example
+    GUARANA.MO_Test_ExpOfLog( malObj, 100, 2^10, "pols" );
+fi;
+
+#############################################################################
+##
+## old functions
 
 GUARANA.Test_LogOfExp := function(  recLieAlg, noTests )
     local x,exp,x2,i;

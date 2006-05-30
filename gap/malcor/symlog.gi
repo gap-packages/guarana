@@ -22,9 +22,15 @@ function( malcevObject, s)
     local possible_methods;
     possible_methods := [ "pols", "simple" ];
     if s in possible_methods then 
+	if s = "pols" then 
+	    if not IsBound( malcevObject!.recLogPols) then 
+		Print( "Computing Log and Exp Polynomials ...\n" );
+		AddLogAndExpPolynomials( malcevObject );
+	    fi;
+	fi;
 	malcevObject!.log_method := s;
     else
-	Error( "Wrong Log method specified" );
+	Error( "Wrong Log method specified\n" );
     fi;
 end );
 
@@ -46,9 +52,15 @@ function( malcevObject, s)
     local possible_methods;
     possible_methods := [ "pols", "simple" ];
     if s in possible_methods then 
+	if s = "pols" then 
+	    if not IsBound( malcevObject!.recExpPols) then 
+		Print( "Computing Log and Exp Polynomials ...\n" );
+		AddLogAndExpPolynomials( malcevObject );
+	    fi;
+	fi;
 	malcevObject!.exp_method := s;
     else
-	Error( "Wrong Exp method specified" );
+	Error( "Wrong Exp method specified\n" );
     fi;
 end );
 
@@ -81,10 +93,10 @@ end;
 
 #############################################################################
 ##
-#F GUARANA.MO_AddStarPolynomials( malcevObject )
+#F GUARANA.MO_AddStarPolynomialsSingleVersusGeneric( malcevObject )
 ##
 ## EFFECT
-## recStarPols is added to the Malcev object
+## recStarPolsSingVGen is added to the Malcev object
 ##
 ## For Log and Exp I just need 
 ## log x_i * sum_{j=i}^l beta_j log x_j
@@ -100,8 +112,9 @@ end;
 ##     malObj := malObjs[7];
 ##     GUARANA.MO_AddStarPolynomials( malObj );
 ##
-GUARANA.MO_AddStarPolynomials := function( malcevObject )
-    local n, vars_x, vars_y, star_pols, x_i, elm_y, star, recStarPols, i;
+GUARANA.MO_AddStarPolynomialsSingleVersusGeneric := function( malcevObject )
+    local n, vars_x, vars_y, star_pols, x_i, elm_y, star, 
+          recStarPolsSingVGen, i;
 
     # get variable for polynomials
     n := malcevObject!.dim;
@@ -119,11 +132,10 @@ GUARANA.MO_AddStarPolynomials := function( malcevObject )
 	star_pols[i] := Coefficients( star );
     od;
 
-    recStarPols := rec( vars_x := vars_x,
+    recStarPolsSingVGen := rec( vars_x := vars_x,
                         vars_y := vars_y,
                         pols := star_pols );
-    malcevObject!.recStarPols := recStarPols; 
-    SetLogMethod( malcevObject, "pols" );
+    malcevObject!.recStarPolsSingVGen := recStarPolsSingVGen; 
     return 0;                  
 end;
 
@@ -148,8 +160,8 @@ GUARANA.MO_Star_Symbolic_SingleVersusGeneric := function( x, y  )
 
     # some simple tests
     malcevObject := x!.malcevObject;
-    if not IsBound( malcevObject!.recStarPols ) then 
-	Error( "recStarPols has to be computed first" );
+    if not IsBound( malcevObject!.recStarPolsSingVGen ) then 
+	Error( "recStarPolsSingVGen has to be computed first" );
     fi;
     word_x := x!.word;
     word_y := y!.word;
@@ -164,13 +176,13 @@ GUARANA.MO_Star_Symbolic_SingleVersusGeneric := function( x, y  )
     # setup
     n := malcevObject!.dim;
     index_x := word_x[1][1];
-    vars_x := malcevObject!.recStarPols.vars_x;
-    vars_y := malcevObject!.recStarPols.vars_y;
+    vars_x := malcevObject!.recStarPolsSingVGen.vars_x;
+    vars_y := malcevObject!.recStarPolsSingVGen.vars_y;
     indets := Concatenation( vars_x{word_x[1]}, vars_y{[index_x..n]} );
     vals := Concatenation( word_x[2], coeffs_y{[index_x..n]} );
 
     # get polynomials which are going to be used
-    pols := malcevObject!.recStarPols.pols[index_x];
+    pols := malcevObject!.recStarPolsSingVGen.pols[index_x];
 
     # compute result
     coeff_res := [ ];
@@ -216,6 +228,7 @@ GUARANA.MO_AddLogPolynomialsByStarPols:=function( malcevObject )
     od;
     malcevObject!.recLogPols := rec( pols := Coefficients( tail ),
                                      vars_e := vars_e );
+    SetLogMethod( malcevObject, "pols" );
     return 0;
 end;
 
@@ -307,8 +320,21 @@ GUARANA.ExpByPols := function( x )
     fi;
 end;
 
+GUARANA.MO_AddLogAndExpPols := function( malcevObject )
+    GUARANA.MO_AddStarPolynomialsSingleVersusGeneric( malcevObject );
+    GUARANA.MO_AddLogPolynomialsByStarPols( malcevObject );
+    GUARANA.MO_AddExpPolynomialsByStarPols( malcevObject );
+end;
+
+InstallGlobalFunction( AddLogAndExpPolynomials,
+function( malcevObject )
+    GUARANA.MO_AddLogAndExpPols( malcevObject );
+end);
+
 if false then 
-    malObjs := GUARANA.Get_FNG_MalcevObjects( 2, 4 );
+    malObjs := GUARANA.Get_FNG_MalcevObjects( 2, 9 );
+    GUARANA.MO_AddLogAndExpPols( malObjs[7] );
+
     malObj := malObjs[3];
     x := MalcevLieElementByCoefficients( malObj, [1,2,3,4,5] );
     y := MalcevLieElementByCoefficients( malObj, [1,2,3,4,5] );
@@ -337,17 +363,6 @@ fi;
 ## Old code
 ##
 
-
-if false then
-    malObjs := GUARANA.Get_FNG_MalcevObjects( 2, 4 );
-    malObj := malObjs[3];
-    dim := malObj!.dim;
-    vars_x := GUARANA.RationalVariableList( dim, "x" ); 
-    vars_y := GUARANA.RationalVariableList( dim, "y" );  
-    x := MalcevLieElementByCoefficients( malObj, vars_x );
-    y := MalcevLieElementByCoefficients( malObj, vars_y );
-    
-fi;
 #############################################################################
 ##
 #F GUARANA.GenericElement( n, vars )

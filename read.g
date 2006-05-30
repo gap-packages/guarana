@@ -35,6 +35,7 @@ ReadPackage( "guarana", "magma/print.gi" );
 ReadPackage( "guarana", "gap/collec/pow.gi" );
 ReadPackage( "guarana", "gap/collec/collec.gi" );
 ReadPackage( "guarana", "gap/malcor/tstar.gi" );
+ReadPackage( "guarana", "gap/malcor/test.gi" );
 
 #############################################################################
 ##
