@@ -14,6 +14,7 @@ GuaranaPkgName := "guarana";
 ReadPackage( GuaranaPkgName, "gap/malcor/setup.gd" );
 ReadPackage( GuaranaPkgName, "gap/malcor/malelm.gd" );
 ReadPackage( GuaranaPkgName, "gap/malcor/tstar.gd" );
+ReadPackage( GuaranaPkgName, "gap/malcor/symlog.gd" );
 
 ############################################################################
 #R  read other packages

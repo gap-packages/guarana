@@ -41,7 +41,7 @@ GUARANA.Coefficients2Word := function( malcevObject, coeffs  )
     fi;
     word := [[],[]];
     for i in [1..n] do 
-	if coeffs[i] <> 0 then 
+	if coeffs[i] <> 0*coeffs[i] then 
 	    Add( word[1], i );
 	    Add( word[2], coeffs[i] );
 	fi;
@@ -365,12 +365,7 @@ end);
 ##
 #M LieBracket( x, y ) ...................... for symbolic Malcev lie elements
 ##
-InstallOtherMethod( LieBracket, 
-               "for symbolic Malcev Lie elments (Guarana)",
-	       IsIdenticalObj,
-	       [IsMalcevLieElement and IsSymbolicElement, IsMalcevLieElement ],
-		0, 
-function( x, y )
+GUARANA.SymbolicLieBracket := function( x, y )
     local malObj, scTable, word_x, word_y, length_x, length_y, dim, 
           vec, index_x, index_y, coeff_x, coeff_y, prod, i_x, i_y, i;
  
@@ -411,6 +406,24 @@ function( x, y )
 	od; 
     od;
     return MalcevSymbolicLieElementByCoefficients( malObj, vec );
+end;
+
+InstallOtherMethod( LieBracket, 
+               "for symbolic Malcev Lie elments (Guarana)",
+	       IsIdenticalObj,
+	       [IsMalcevLieElement and IsSymbolicElement, IsMalcevLieElement ],
+		0, 
+function( x, y )
+    return GUARANA.SymbolicLieBracket( x,y );
+end);
+
+InstallOtherMethod( LieBracket, 
+               "for symbolic Malcev Lie elments (Guarana)",
+	       IsIdenticalObj,
+	       [IsMalcevLieElement, IsMalcevLieElement and IsSymbolicElement],
+		0, 
+function( x, y )
+    return GUARANA.SymbolicLieBracket( x, y );
 end);
 
 #############################################################################

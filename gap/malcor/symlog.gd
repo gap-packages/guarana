@@ -9,7 +9,11 @@
 #Y 2006
 ##
 ##
+DeclareOperation( "SetLogMethod", [IsObject, IsString] );
+DeclareOperation( "SetExpMethod", [IsObject, IsString] );
 
+DeclareOperation( "LogMethod" , [IsObject] );
+DeclareOperation( "ExpMethod" , [IsObject] );
 
 #############################################################################
 ##

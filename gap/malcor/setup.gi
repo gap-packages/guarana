@@ -253,25 +253,20 @@ fi;
 ##
 #M Log  ............................................. for Malcev grp elments 
 ##
-InstallOtherMethod( Log, 
-               "for Malcev group elments (Guarana)",
-	       true,
-	        [IsMalcevGrpElement ],
-		0, 
-function( g )
+GUARANA.LogByStar := function( g )
     local exp, malcevObject, r, e, x, y, i;
 
     exp := Exponents( g );
     malcevObject := g!.malcevObject;
 
-    # catch trivial case 
-    if Length( exp ) = 0 then 
-	return MalcevLieElementByCoefficients( malcevObject, [] );
-    fi;
-
-    # get zero element of lie algebra
+    # get zero element of lie algebra of correct type (symbolic/not symbolic)
     r := 0*GUARANA.MalcevBasisLieElement( malcevObject, 1, 0 );
-
+    if IsSymbolicElement( g ) then 
+	r := MalcevSymbolicLieElementByWord( malcevObject,  [[],[]] );
+    else
+	r := MalcevLieElementByWord( malcevObject, [[],[]] );
+    fi;
+	
     # go backwards through exponents
     for i in Reversed([1..Length( exp )] ) do
         e := exp[i];
@@ -282,6 +277,19 @@ function( g )
         fi;
     od;
     return r;
+end;
+
+InstallOtherMethod( Log, 
+               "for Malcev group elments (Guarana)",
+	       true,
+	        [IsMalcevGrpElement ],
+		0, 
+function( g )
+    if g!.malcevObject!.log_method = "pols" then 
+	return GUARANA.LogByPols( g );
+    else 
+	return GUARANA.LogByStar( g );
+    fi;
 end);
 
 #############################################################################
@@ -382,7 +390,7 @@ GUARANA.MO_ComputeStructureConstants := function( malcevObject )
 
     # go through generators backwards and compute the 
     # structure constants.  
-    for index_y in Reversed( [1..n-1] ) do 
+    for index_y in Reversed( [1..dim-1] ) do 
 	for index_x in [1..index_y-1]  do
 	    g := GUARANA.MalcevBasisGrpElement( malcevObject, index_x, 1 );
 	    h := GUARANA.MalcevBasisGrpElement( malcevObject, index_y, 1 );
@@ -406,21 +414,13 @@ end;
 ##
 #M Exp  ............................................. for Malcev lie elments 
 ##
-InstallMethod( Exp, 
-               "for Malcev lie elments (Guarana)",
-	       true,
-	        [IsMalcevLieElement ],
-		0, 
-function( x )
+GUARANA.ExpByStar := function( x )
     local malcevObject, coeffs, tail, largestAbelian, exp_x, divider, 
           l, exp_x_2ndPart, exp, j;
 
     # catch trivial case
     malcevObject := x!.malcevObject;
     coeffs := Coefficients( x );
-    if Length( coeffs ) = 0 then 
-	return MalcevGrpElementByExponents( malcevObject, [] );
-    fi;
 
     tail := x;
     # get smallest index i such that n_i,...,n_l generate an abelian group
@@ -452,9 +452,25 @@ function( x )
     exp_x_2ndPart := coeffs{[l+1..Length(coeffs)]};
     
     exp := Concatenation( exp_x, exp_x_2ndPart );
-    return MalcevGrpElementByExponents( malcevObject, exp );
-end);
+    if IsSymbolicElement( x ) then 
+	return MalcevSymbolicGrpElementByExponents( malcevObject, exp );
+    else
+        return MalcevGrpElementByExponents( malcevObject, exp );
+    fi;
+end;
 
+InstallMethod( Exp, 
+               "for Malcev lie elments (Guarana)",
+	       true,
+	        [IsMalcevLieElement ],
+		0, 
+function( x )
+    if x!.malcevObject!.exp_method = "pols" then 
+	return GUARANA.ExpByPols( x );
+    else
+	return GUARANA.ExpByStar( x );
+    fi;
+end);
 
 #############################################################################
 ##
