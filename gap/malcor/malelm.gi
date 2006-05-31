@@ -134,7 +134,11 @@ InstallMethod( PrintObj,
 function( elm )
     local coeffs;
     coeffs := elm!.coefficients;
-    Print( coeffs );
+    if Length( coeffs ) = 0 then 
+        Print( "<zero of Lie algebra>" );
+    else
+        Print( coeffs );
+    fi;
 end );
 
 InstallOtherMethod( Coefficients, 
@@ -228,9 +232,13 @@ InstallMethod( PrintObj,
                [IsMalcevGrpElement ], 
                0,
 function( elm )
-    local coeffs;
-    coeffs := elm!.exponents;
-    Print( coeffs );
+    local exps;
+    exps := elm!.exponents;
+    if Length( exps ) = 0 then 
+        Print( "id" );
+    else
+        Print( exps );
+    fi;
 end );
 
 InstallOtherMethod( Exponents, 

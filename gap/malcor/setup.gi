@@ -23,7 +23,7 @@
 #F GUARANA.TGroupRec_GEN( N )
 ## 
 ## IN
-## args[1]=N ................ a T-group given by a pcp
+## rgs[1]=N ................ a T-group given by a pcp
 ## args[2] .................  an optional string, that determines
 ##                            how the Mal'cev basis should be obtained.
 ##                            "gen" means that the Malcev basis is 
@@ -260,7 +260,6 @@ GUARANA.LogByStar := function( g )
     malcevObject := g!.malcevObject;
 
     # get zero element of lie algebra of correct type (symbolic/not symbolic)
-    r := 0*GUARANA.MalcevBasisLieElement( malcevObject, 1, 0 );
     if IsSymbolicElement( g ) then 
 	r := MalcevSymbolicLieElementByWord( malcevObject,  [[],[]] );
     else

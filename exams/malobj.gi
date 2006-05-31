@@ -10,17 +10,19 @@
 ##
 ##
 ExamplesOfSomeMalcevObjects := function( x )
-    local x;
+    if x = 0 then 
+        return GUARANA.Get_Unitriangular_MalcevObject( 1, 2);
+    fi;
     if x in [1..5] then
-        return GUARANA.Get_FNG_MalcevObjects( 2, x );
+        return GUARANA.Get_FNG_MalcevObject( 2, x );
     elif x in [6..10] then
-        return GUARANA.Get_FNG_MalcevObjects( 3, x-5 );
+        return GUARANA.Get_FNG_MalcevObject( 3, x-5 );
     elif x in [11..15] then 
-        return GUARANA.Get_Unitriangular_MalcevObjects(x-9 ,2 ); 
+        return GUARANA.Get_Unitriangular_MalcevObject(x-9 ,2 ); 
     else 
         Error( " " );
     fi;
-fi;
+end;
 
 #############################################################################
 ##

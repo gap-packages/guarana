@@ -33,6 +33,13 @@ GUARANA.Get_FNG_TGroupRecords := function( n, c )
     return ll;
 end;
 
+GUARANA.Get_FNG_TGroupRecord := function( n, c )
+    local N, r;
+    N := GUARANA.Examples_FreeNilpotentGrp( n, c );
+    r := GUARANA.TGroupRec( [N] );
+    return r; 
+end;
+
 #############################################################################
 ##
 #F GUARANA.Get_Unitriangular_TGroupRecords( dim , degree )
@@ -47,11 +54,30 @@ GUARANA.Get_Unitriangular_TGroupRecords := function( dim , degree )
     ll := [];
     for i in [2..dim] do
         Print( "Untriangular group ", degree, " ", i, "\n" );
-        N := GUARANA.Examples_Unitriangular( i, degree );
-	r := GUARANA.TGroupRec( [N] );
+        if degree = 2 then 
+            N := GUARANA.Tr_n_O1( i )[4];
+        elif degree =3 then 
+            N := GUARANA.Tr_n_O2( i )[4];
+        else 
+            Error( "Wrong degree " );
+        fi;
+	    r:= GUARANA.TGroupRec( [N] );
         Add( ll, r );
     od;
     return ll;
+end;
+
+GUARANA.Get_Unitriangular_TGroupRecord := function( dim , degree )
+    local N, r;
+    if degree = 2 then 
+        N := GUARANA.Tr_n_O1( dim )[4];
+    elif degree =3 then 
+        N := GUARANA.Tr_n_O2( dim )[4];
+    else 
+        Error( "Wrong degree " );
+    fi;
+    r:= GUARANA.TGroupRec( [N] );
+    return r;
 end;
 
 #############################################################################
@@ -76,6 +102,14 @@ GUARANA.Get_FNG_MalcevObjects := function( n, c )
     ll2 := List( ll, x-> MalcevObjectConstruction( x ) ); 
     return ll2;
 end;
+
+GUARANA.Get_FNG_MalcevObject := function( n, c )
+    local rT, mo;
+    rT := GUARANA.Get_FNG_TGroupRecord( n, c );
+    mo := MalcevObjectConstruction( rT); 
+    return mo;
+end;
+
 #############################################################################
 ##
 #F GUARANA.Get_Unitriangular_LieAlgRecords( dim , degree )
@@ -90,6 +124,20 @@ GUARANA.Get_Unitriangular_LieAlgRecords := function( dim , degree )
     ll := GUARANA.Get_Unitriangular_TGroupRecords( dim, degree );
     ll2 := List( ll, x-> GUARANA.LieAlgebraByTGroupRec( [x] ) );
     return ll2;
+end;
+
+GUARANA.Get_Unitriangular_MalcevObjects := function( dim , degree )
+    local ll,ll2;
+    ll := GUARANA.Get_Unitriangular_TGroupRecords( dim, degree );
+    ll2 := List( ll, x-> MalcevObjectConstruction( x ) );
+    return ll2;
+end;
+
+GUARANA.Get_Unitriangular_MalcevObject := function( dim , degree )
+    local rT, mo;
+    rT :=GUARANA.Get_Unitriangular_TGroupRecord( dim, degree );
+    mo := MalcevObjectConstruction( rT );
+    return mo;
 end;
 
 #############################################################################
