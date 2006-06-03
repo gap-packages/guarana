@@ -128,12 +128,7 @@ end);
 ##
 #M BCHStar .......................................... for Malcev lie elements
 ##
-InstallMethod( BCHStar, 
-               "for Malcev Lie elments (Guarana)",
-	       IsIdenticalObj,
-	        [IsMalcevLieElement, IsMalcevLieElement ],
-		0, 
-function( x, y )
+GUARANA.MO_BCHStar_Simple := function( x, y )
     local wx, wy, malObj, max_weight, bchSers, r, tree, max, 
           min, bound, com, a, i, term;
 
@@ -172,6 +167,21 @@ function( x, y )
         od;
     od;
     return r;
+end;
+
+InstallMethod( BCHStar, 
+               "for Malcev Lie elments (Guarana)",
+	       IsIdenticalObj,
+	        [IsMalcevLieElement, IsMalcevLieElement ],
+		0, 
+function( x, y )
+    local malcevObject;
+    malcevObject := x!.malcevObject;
+    if StarMethod( malcevObject ) = "pols" then 
+        return GUARANA.MO_Star_Symbolic( x,y );
+    else
+        return GUARANA.MO_BCHStar_Simple( x, y );
+    fi;
 end);
 
 if false then 

@@ -10,33 +10,6 @@
 #Y 2006
 ##
 ##
-
-#############################################################################
-##
-#F GUARANA.PcpGroupByPcs( G, pcs )
-##
-## IN
-## G ........................ polycyclically presented group
-## pcs ...................... polycyclic sequence of G
-##
-## OUT
-## Polycyclically presented group isomorphic to G, with 
-## a polycyclic presentation with respect to pcs. 
-##
-GUARANA.PcpGroupByPcs := function (G, pcs )
-    local sers, l, H, i;
-    # built corresponding series
-    sers := [];
-    l := Length( pcs );
-    for i in [1..l+1] do
-	Add( sers, Subgroup( G, pcs{[i..l]} ));
-    od;
-
-    # get pcp 
-    H := PcpGroupBySeries( sers );
-
-    return H;
-end;
     
 #############################################################################
 ##

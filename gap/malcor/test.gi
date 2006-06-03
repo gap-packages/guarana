@@ -14,6 +14,37 @@
 #
 # Test Log, Exp and the computation of structur constants
 #
+InstallOtherMethod( Random, 
+               "for Malcev objects (Guarana)", 
+               true, 
+               [IsMalcevObjectRep], 
+               0,
+function( malcevObject)
+    local n, range, exps, a, x;
+    n := malcevObject!.dim;
+    range := 10;
+    exps := List( [1..n], x-> Random( [-range..range] ) );
+    a := MalcevGenElementByExponents( malcevObject, exps );
+    # compute also the lie element
+    x := LieElement( a );
+    return a;
+end);
+
+InstallOtherMethod( Random, 
+               "for Malcev objects (Guarana)", 
+               true, 
+               [IsMalcevObjectRep, IsInt], 
+               0,
+function( malcevObject, range)
+    local n, exps, a, x;
+    n := malcevObject!.dim;
+    exps := List( [1..n], x-> Random( [-range..range] ) );
+    a := MalcevGenElementByExponents( malcevObject, exps );
+    # compute also the lie element
+    x := LieElement( a );
+    return a;
+end);
+
 InstallMethod( RandomGrpElm, 
                "for Malcev objects (Guarana)", 
                true, 

@@ -73,6 +73,61 @@ function( malcevObject)
     return malcevObject!.exp_method;
 end );
 
+InstallMethod( SetStarMethod,
+               "for Malcev objects and strings (Guarana)", 
+               true, 
+               [IsMalcevObjectRep, IsString ], 
+               0,
+function( malcevObject, s)
+    local possible_methods;
+    possible_methods := [ "pols", "simple" ];
+    if s in possible_methods then 
+	    if s = "pols" then 
+	        if not IsBound( malcevObject!.recStarPols) then 
+		        Print( "Computing Star Polynomials ...\n" );
+		        AddStarPolynomials( malcevObject );
+	        fi;
+	    fi;
+	    malcevObject!.star_method := s;
+    else
+	    Error( "Wrong Star method specified\n" );
+    fi;
+end );
+
+InstallMethod( StarMethod, 
+               "for Malcev objects (Guarana)", 
+               true, 
+               [IsMalcevObjectRep ], 
+               0,
+function( malcevObject)
+    return malcevObject!.star_method;
+end );
+
+InstallMethod( SetMultiplicationMethod,
+               "for Malcev objects and strings (Guarana)", 
+               true, 
+               [IsMalcevObjectRep, IsString ], 
+               0,
+function( malcevObject, s)
+    local possible_methods;
+    possible_methods := [ GUARANA.MultMethodIsStar, 
+                          GUARANA.MultMethodIsDeepThought ];
+    if s in possible_methods then 
+	    malcevObject!.mult_method := s;
+    else
+	    Error( "Wrong Multplication method specified\n" );
+    fi;
+end );
+
+InstallMethod( MultiplicationMethod, 
+               "for Malcev objects (Guarana)", 
+               true, 
+               [IsMalcevObjectRep ], 
+               0,
+function( malcevObject)
+    return malcevObject!.mult_method;
+end );
+
 #############################################################################
 ##
 #F GUARANA.RationalVariableList( n, st )
@@ -139,6 +194,27 @@ GUARANA.MO_AddStarPolynomialsSingleVersusGeneric := function( malcevObject )
     return 0;                  
 end;
 
+GUARANA.MO_AddStarPolynomials := function( malcevObject )
+    local n, vars_x, vars_y, star_pols, x, y, star, recStarPols, i;
+
+    # get variable for polynomials
+    n := malcevObject!.dim;
+    vars_x := GUARANA.RationalVariableList( n, "x" ); 
+    vars_y := GUARANA.RationalVariableList( n, "y" );  
+
+    # compute polynomials
+    x := MalcevSymbolicLieElementByCoefficients( malcevObject, vars_x );
+    y := MalcevSymbolicLieElementByCoefficients( malcevObject, vars_y );
+    star := BCHStar( x, y );
+    star_pols := Coefficients( star );
+
+    recStarPols := rec( vars_x := vars_x,
+                        vars_y := vars_y,
+                        pols := star_pols );
+    malcevObject!.recStarPols := recStarPols; 
+    return 0;                  
+end;
+
 #############################################################################
 ##
 #F GUARANA.MO_Star_Symbolic_SingleVersusGeneric(  x, y )
@@ -197,6 +273,42 @@ GUARANA.MO_Star_Symbolic_SingleVersusGeneric := function( x, y  )
     return MalcevLieElementByCoefficients( malcevObject, coeff_res ); 
 end;
 
+GUARANA.MO_Star_Symbolic := function( x, y  )
+    local malcevObject, coeffs_x, coeffs_y, n, vars_x, vars_y, 
+          indets, vals, pols, coeff_res, r, i;
+
+    # some simple tests
+    malcevObject := x!.malcevObject;
+    if not IsBound( malcevObject!.recStarPols ) then 
+	Error( "recStarPols has to be computed first" );
+    fi;
+    coeffs_x := x!.coefficients;
+    coeffs_y := y!.coefficients;
+
+    # setup
+    n := malcevObject!.dim;
+    vars_x := malcevObject!.recStarPols.vars_x;
+    vars_y := malcevObject!.recStarPols.vars_y;
+    indets := Concatenation( vars_x, vars_y);
+    vals := Concatenation( coeffs_x, coeffs_y );
+
+    # get polynomials which are going to be used
+    pols := malcevObject!.recStarPols.pols;
+
+    # compute result
+    coeff_res := [ ];
+    for i in [1..n] do 
+        r := Value( pols[i], indets, vals );
+        Add( coeff_res, r );
+    od;
+
+    if IsSymbolicElement( x ) or IsSymbolicElement( y ) then 
+	    return MalcevSymbolicLieElementByCoefficients( malcevObject,coeff_res );
+    else
+        return MalcevLieElementByCoefficients( malcevObject, coeff_res );
+    fi;
+end;
+
 #############################################################################
 ##
 #F GUARANA.MO_AddLogPolynomialsByStarPols( malcevObject )
@@ -249,7 +361,7 @@ GUARANA.LogByPols := function( g )
         Add( coeffs, coeff );
     od;
     if IsSymbolicElement( g ) then 
-	return MalcevSymbolicLieElementByCoefficients( malcevObject,coeffs );
+	    return MalcevSymbolicLieElementByCoefficients( malcevObject,coeffs );
     else
         return MalcevLieElementByCoefficients( malcevObject, coeffs );
     fi;
@@ -329,6 +441,11 @@ end;
 InstallGlobalFunction( AddLogAndExpPolynomials,
 function( malcevObject )
     GUARANA.MO_AddLogAndExpPols( malcevObject );
+end);
+
+InstallGlobalFunction( AddStarPolynomials,
+function( malcevObject )
+    GUARANA.MO_AddStarPolynomials( malcevObject );
 end);
 
 if false then 

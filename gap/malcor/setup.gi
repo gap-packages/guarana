@@ -17,6 +17,9 @@
 ##
 ##
 
+GUARANA.MultMethodIsStar := "Star";
+GUARANA.MultMethodIsDeepThought := "DeepThought";
+
 ############################################################################
 ##
 #F GUARANA.TGroupRec( args )
@@ -82,7 +85,7 @@ end;
 InstallGlobalFunction( MalcevObjectConstruction, 
 function( recTGroup ) 
     local hl, T, L, malcevBasisInfo, lie_fam, lie_elms_type, grp_fam, 
-          grp_elms_type, obj;
+          grp_elms_type, obj, gen_fam, gen_elms_type;
     
     # get dimension of algebra
     hl := HirschLength( recTGroup.T );
@@ -97,6 +100,10 @@ function( recTGroup )
     malcevBasisInfo := StructuralCopy( recTGroup.malcevBasisInfo );
 
     # create family and types for elements of Lie algebra and group
+    gen_fam := NewFamily( "MalcevGenFamily",
+                          IsMalcevGenElement,
+                          IsMalcevGenElement );
+    gen_elms_type := NewType( gen_fam, IsMalcevGenElementRep );
     lie_fam := NewFamily( "MalcevLieFamily", 
                            IsMalcevLieElement, 
 			   IsMalcevLieElement );
@@ -117,6 +124,9 @@ function( recTGroup )
 	        log_method := "simple",
 		exp_method := "simple",
 		star_method := "simple",
+        mult_method := GUARANA.MultMethodIsStar,
+        gen_fam := gen_fam,
+        gen_elms_type := gen_elms_type,
 		lie_fam := lie_fam,
 		lie_elms_type := lie_elms_type,
 		grp_fam := grp_fam,

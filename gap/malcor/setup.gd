@@ -22,6 +22,7 @@ DeclareRepresentation( "IsMalcevObjectRep", IsComponentObjectRep,
 			 "log_method",
 			 "exp_method",
 			 "star_method",
+             "mult_method",
 			 "lie_fam",
 			 "lie_elms_type" ] );
 

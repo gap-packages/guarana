@@ -10,6 +10,21 @@
 
 DeclareCategory( "IsMalcevElement", IsObject );
 
+DeclareCategory( "IsMalcevGenElement", IsMalcevElement );
+DeclareCategoryFamily( "IsMalcevGenElement" );
+DeclareCategoryCollections( "IsMalcevGenElement" );
+
+DeclareRepresentation( "IsMalcevGenElementRep", 
+                        IsComponentObjectRep, 
+            [ "malcevObject", 
+              "grp_elm",
+              "lie_elm" ] );
+
+DeclareGlobalFunction( "MalcevGenElementConstruction" );
+DeclareGlobalFunction( "MalcevGenElementByExponents" );
+DeclareGlobalFunction( "MalcevGenElementByCoefficients" );
+DeclareGlobalFunction( "MalcevGenElementByLieElement" );
+
 #############################################################################
 ##
 ## Lie elements
@@ -52,6 +67,8 @@ DeclareProperty( "IsSymbolicElement", IsMalcevElement );
 
 DeclareAttribute( "Weight", IsMalcevElement );
 
+DeclareOperation( "LieElement", [IsMalcevGenElement] );
+DeclareOperation( "GrpElement", [IsMalcevGenElement] );
 
 #############################################################################
 ##

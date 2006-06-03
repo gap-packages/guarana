@@ -11,11 +11,17 @@
 ##
 DeclareOperation( "SetLogMethod", [IsObject, IsString] );
 DeclareOperation( "SetExpMethod", [IsObject, IsString] );
+DeclareOperation( "SetStarMethod", [IsObject, IsString] );
+DeclareOperation( "SetMultiplicationMethod", [IsObject, IsString] );
+
 
 DeclareOperation( "LogMethod" , [IsObject] );
 DeclareOperation( "ExpMethod" , [IsObject] );
+DeclareOperation( "StarMethod" , [IsObject] );
+DeclareOperation( "MultiplicationMethod" , [IsObject] );
 
 DeclareGlobalFunction( "AddLogAndExpPolynomials" );
+DeclareGlobalFunction( "AddStarPolynomials" );
 
 #############################################################################
 ##

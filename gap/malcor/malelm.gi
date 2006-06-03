@@ -10,6 +10,151 @@
 
 #############################################################################
 ##
+## Methods for constructing Malcev elements
+##
+InstallGlobalFunction( MalcevGenElementByExponents, 
+function( malcevObject, exps )
+    local g, weight, x, elm, lie_elm;
+
+   # get group element
+   g := MalcevGrpElementByExponents( malcevObject, exps );
+
+   # get weight 
+   weight := Weight( g );
+
+   # lie element unknown so far
+   x := "unknown yet";
+
+   elm := rec( malcevObject := malcevObject,
+               grp_elm := Immutable( g ),
+               lie_elm := x,
+               weight := weight );
+   return Objectify( malcevObject!.gen_elms_type , elm );
+end);
+
+InstallGlobalFunction( MalcevGenElementByCoefficients, 
+function( malcevObject, coeffs )
+    local g, weight, x, elm, lie_elm;
+
+   # group element unknown so far
+   g := "unknown yet";
+
+   # get lie element 
+   x := MalcevLieElementByCoefficients( malcevObject, coeffs ); 
+
+   # get weight 
+   weight := Weight( x );
+
+
+   elm := rec( malcevObject := malcevObject,
+               grp_elm := g,
+               lie_elm := Immutable( x ),
+               weight := weight );
+   return Objectify( malcevObject!.gen_elms_type , elm );
+end);
+
+
+InstallGlobalFunction( MalcevGenElementByLieElement, 
+function(  x )
+    local malcevObject, g, weight, elm;
+
+    malcevObject := x!.malcevObject;
+
+    # get group element
+    g := "unknown yet";
+
+    # get weight 
+    weight := Weight( x );
+
+
+   elm := rec( malcevObject := malcevObject,
+               grp_elm := g,
+               lie_elm := Immutable( x ),
+               weight := weight );
+   return Objectify( malcevObject!.gen_elms_type , elm );
+end);
+
+#############################################################################
+##
+#M Print Malcev gen elements
+##
+InstallMethod( PrintObj, 
+               "for Malcev gen elements (Guarana)", 
+               true, 
+               [IsMalcevGenElement ], 
+               0,
+function( elm )
+    Print( "Group element: ", elm!.grp_elm, "\n" );
+    Print( "Lie element:   ", elm!.lie_elm );
+end );
+
+InstallMethod( LieElement,
+               "for Malcev Gen element (Guarana)",
+               [IsMalcevGenElement],
+               0,
+function( x )
+    if IsString( x!.lie_elm ) then 
+        x!.lie_elm := Immutable( Log( x!.grp_elm ) );
+    fi;
+    return x!.lie_elm;
+end);
+           
+InstallMethod( GrpElement,
+               "for Malcev Gen element (Guarana)",
+               [IsMalcevGenElement],
+               0,
+function( x )
+    if IsString( x!.grp_elm ) then 
+        x!.grp_elm := Immutable( Exp( x!.lie_elm ) );
+    fi;
+    return x!.grp_elm;
+end);
+
+InstallOtherMethod( Exponents, 
+               "for Malcev Gen element (Guarana)", 
+	       [IsMalcevGenElement ],
+	       0,
+function( x )
+    return Exponents( GrpElement( x ) );
+end);
+
+InstallOtherMethod( Coefficients, 
+               "for Malcev Gen element (Guarana)", 
+	       [IsMalcevGenElement ],
+	       0,
+function( x )
+    return Coefficients( LieElement( x ) );
+end);
+
+#############################################################################
+##
+#M a * b .......................................Product of Malcev Gen elments
+##
+GUARANA.MultViaStar := function( a, b )
+    local x_a, x_b, x_res;
+    x_a := LieElement( a );
+    x_b := LieElement( b );
+    x_res := BCHStar( x_a, x_b );
+    return MalcevGenElementByLieElement( x_res );
+end;
+
+InstallOtherMethod( \*, 
+               "for Malcev Gen elments (Guarana)",
+	       IsIdenticalObj,
+	        [IsMalcevGenElement, IsMalcevGenElement ],
+		0, 
+function( a, b  )
+    local malcevObject;
+    malcevObject := a!.malcevObject;
+    if malcevObject!.mult_method = GUARANA.MultMethodIsStar then 
+        return GUARANA.MultViaStar( a, b );
+    else
+        Error( " " );
+    fi;
+end);
+
+#############################################################################
+##
 ## Methods for constructing Malcev lie elements.
 ##
 InstallGlobalFunction( MalcevLieElementConstruction, 
