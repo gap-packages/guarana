@@ -1,3 +1,5 @@
+- prod, pow, Exponents for MalcevCNElements
+
 - Since we do lots of computation with elements in CN it migh be useful 
   to represent them in the form [ c, log(n) ].
   This way, the tail in C\cap N has only to be computed when we

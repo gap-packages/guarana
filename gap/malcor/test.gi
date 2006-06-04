@@ -70,6 +70,31 @@ function( malcevObject, range)
     return MalcevGrpElementByExponents( malcevObject, exps );
 end);
 
+InstallMethod( RandomLieElm, 
+               "for Malcev objects (Guarana)", 
+               true, 
+               [IsMalcevObjectRep], 
+               0,
+function( malcevObject)
+    local n, range, exps;
+    n := malcevObject!.dim;
+    range := 10;
+    exps := List( [1..n], x-> Random( [-10..10] ) );
+    return MalcevLieElementByCoefficients( malcevObject, exps );
+end);
+
+InstallOtherMethod( RandomLieElm, 
+               "for Malcev objects and integers (Guarana)", 
+               true, 
+               [IsMalcevObjectRep, IsInt], 
+               0,
+function( malcevObject, range)
+    local n, exps;
+    n := malcevObject!.dim;
+    exps := List( [1..n], x-> Random( [-10..10] ) );
+    return MalcevLieElementByCoefficients( malcevObject, exps );
+end);
+
 GUARANA.MO_Test_ExpOfLog := function(  malcevObject, noTests,range, method )
     local g, x, gg, i;
     for i in [1..noTests] do

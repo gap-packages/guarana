@@ -128,6 +128,12 @@ GUARANA.SomePolyMalcevExams := function( n )
     fi;
 end;
 
+ExamplesOfSomeMalcevCollectors := function( n )
+    local l;
+    l := GUARANA.SomePolyMalcevExams( n );
+    return MalcevCollectorConstruction( l );
+end;
+
 #############################################################################
 ##
 #E 
