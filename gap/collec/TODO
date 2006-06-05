@@ -1,10 +1,8 @@
-- prod, pow, Exponents for MalcevCNElements
+- convert remaining parts from collec.gi 
+  ( create MalcevGElement,
+  ( conjugation with finite elm, 
 
-- Since we do lots of computation with elements in CN it migh be useful 
-  to represent them in the form [ c, log(n) ].
-  This way, the tail in C\cap N has only to be computed when we
-  switch back to the group represenetation. 
-  Computations in C could be done via Deep Thought.
+-  Computations in C could be done via Deep Thought.
 - Maybe it might be useful to use the trick of Exp of Star prdouct.
 
 - catch all the trivial cases ( F trivial, C trivial, N trivial )

@@ -23,7 +23,8 @@ function( malCol, exps_c, exps_n )
 
     elm := rec( malCol := malCol,
                 c := c,
-                n := n );
+                n := n,
+                exps := "unknown yet" );
     return Objectify( malCol!.cn_elms_type , elm );
 end);
 
@@ -37,7 +38,8 @@ function( malCol, coeffs_c, coeffs_n )
 
     elm := rec( malCol := malCol,
                 c := c,
-                n := n );
+                n := n,
+                exps := "unknown yet" );
     return Objectify( malCol!.cn_elms_type , elm );
 end);
 
@@ -67,7 +69,18 @@ function( malCol, exps_cn )
 
     elm := rec( malCol := malCol,
                 c := c,
-                n := n );
+                n := n,
+                exps := exps_cn );
+    return Objectify( malCol!.cn_elms_type , elm );
+end);
+
+InstallGlobalFunction( MalcevCNElementBy2GenElements,
+function( malCol, c, n )
+    local elm;
+    elm := rec( malCol := malCol,
+                c := c,
+                n := n,
+                exps := "unknown yet" );
     return Objectify( malCol!.cn_elms_type , elm );
 end);
 
@@ -84,17 +97,49 @@ GUARANA.RandomCNElement := function( malCol, range )
     return a;
 end;
 
-InstallOtherMethod( Random, 
-               "for Malcev CN Elements (Guarana)", 
-               true, 
-               [IsMalcevCollectorRep, IsString ], 
-               0,
-function( malCol, info )
-    local range;
+GUARANA.RandomCNElement2 := function( malCol, range )
+    local hlC, hlN, exps_c, exps_n;
 
+    hlC := HirschLength( malCol!.CC );
+    hlN := HirschLength( malCol!.NN );
+
+    exps_c := List( [1..hlC], x-> Random( [-range..range] ) );
+    exps_n := List( [1..hlN], x-> Random( [-range..range] ) );
+
+    return MalcevCNElementBy2Exponents( malCol, exps_c, exps_n );
+end;
+
+InstallOtherMethod( Random, 
+               "for Malcev Collectors (Guarana)", 
+               true, 
+               [IsMalcevCollectorRep ], 
+               0,
+function( malCol )
+    local range;
     range := 10;
+    return Random( malCol, range ) ;
+end);
+
+InstallOtherMethod( Random, 
+               "for Malcev Collectors and Integers (Guarana)", 
+               true, 
+               [IsMalcevCollectorRep, IsInt ], 
+               0,
+function( malCol, range )
+    # TODO: change to full group element
+    return Random( malCol, "CN", range );
+end);
+
+InstallOtherMethod( Random, 
+               "for Malcev Collectors, strings and integers (Guarana)", 
+               true, 
+               [IsMalcevCollectorRep, IsString, IsInt ], 
+               0,
+function( malCol, info, range )
     if info = "CN" then 
         return GUARANA.RandomCNElement( malCol, range );
+    elif info = "CN2" then 
+        return GUARANA.RandomCNElement2( malCol, range );
     fi;
 end);
 
@@ -103,21 +148,127 @@ end);
 #M Print Malcev CN elements
 ##
 InstallMethod( PrintObj, 
-               "for Malcev gen elements (Guarana)", 
+               "for Malcev CN elements (Guarana)", 
                true, 
-               [GUAR_IsCNElement ], 
+               [IsMalcevCNElement ], 
                0,
 function( elm )
     Print( "c \n", elm!.c, "\n" );
-    Print( "n \n", elm!.n );
+    Print( "n \n", elm!.n, "\n\n" );
+    Print( "Exponents: ", elm!.exps );
 end );
 
-# Exponents ( with respect of pcs of CN )
-#       GetTail ( in the intersection of C and N )
-#       map it to N
-#       get CN/N part
-# 
+## g = c n = c_1^x_1 ... c_k^x_k * tail * n
+## c(g) = c_1^x_1 ... c_k^x_k 
+## Normal form is with respect to the pcs of CN.
+## g = c(g)n(g) 
+##
+##
+## COMMENT
+## You could also divide off in the Lie algebra 
+## (Pols single versus generic would be suitable for that ).
+##
+GUARANA.CN_NormalForm := function( g )
+    local malCol, exps_c, hlC, hlCN_N, exps_c_g, exps_tail, tail, 
+          tail2, n_new, c_new, g_new;
 
+    # catch case when element is known to be normalised
+    malCol := g!.malCol;
+    if not IsString( g!.exps ) then 
+        return g; 
+    fi;
+
+    # get exponents of c(g) with respect to the pcs of C
+    exps_c := Exponents( g!.c );
+    hlC := HirschLength( malCol!.CC );
+    hlCN_N := Length( malCol!.indeces[2] );
+    exps_c_g := List( [1..hlC], x-> 0 );
+    exps_c_g{[1..hlCN_N]} := exps_c{[1..hlCN_N]};
+
+    # get tail in C
+    exps_tail := List( [1..hlC], x-> 0 );
+    exps_tail{[hlCN_N+1..hlC]} := exps_c{[hlCN_N +1..hlC]};
+    if exps_tail = 0* exps_tail then 
+        # elm is already in normal form
+        g!.exps := Concatenation( exps_c_g{[1..hlCN_N]},
+                                  Exponents( g!.n ) );
+        return g;
+    fi;
+    tail := MalcevGenElementByExponents( malCol!.mo_CC, exps_tail );
+
+    # map it to N
+    tail2 := GUARANA.MapFrom_MOC_2_MON( malCol, tail );
+
+    # multiply with n 
+    n_new := tail2 * g!.n;
+
+    c_new := MalcevGenElementByExponents( malCol!.mo_CC, exps_c_g );
+
+    g_new := MalcevCNElementBy2GenElements( malCol, c_new, n_new ); 
+    g_new!.exps := Concatenation( exps_c_g{[1..hlCN_N]},
+                                  Exponents( g_new!.n ) );
+    return g_new;
+end;
+
+InstallMethod( NormalForm, 
+               "for Malcev CN elements (Guarana)", 
+               true, 
+               [IsMalcevCNElement ], 
+               0,
+function( elm )
+    return GUARANA.CN_NormalForm( elm );
+end );
+
+InstallMethod( Normalise, 
+               "for Malcev CN elements (Guarana)", 
+               true, 
+               [IsMalcevCNElement ], 
+               0,
+function( elm )
+    local malCol, nf;
+
+    # catch case when element is known to be normalised
+    malCol := elm!.malCol;
+    if not IsString( elm!.exps ) then 
+        return elm; 
+    fi;
+
+    # compute normal form
+    nf := GUARANA.CN_NormalForm( elm );
+
+    # update elm
+    elm!.c := nf!.c;
+    elm!.n := nf!.n;
+    elm!.exps := nf!.exps;
+end );
+
+## Note that this changes the input
+InstallMethod( Exponents, 
+               "for Malcev CN elements (Guarana)", 
+               true, 
+               [IsMalcevCNElement ], 
+               0,
+function( g )
+    if IsString( g!.exps ) then 
+        Normalise( g );
+        return g!.exps;
+    else 
+        return g!.exps;
+    fi;
+end);
+
+#############################################################################
+##
+#M x = y 
+##
+InstallOtherMethod( \=, 
+               "for Malcev Gen elments (Guarana)",
+	       IsIdenticalObj,
+	        [IsMalcevCNElement, IsMalcevCNElement ],
+		0, 
+function( x, y )
+    return Exponents( x ) = Exponents( y );
+end);
 #############################################################################
 ##
 #E

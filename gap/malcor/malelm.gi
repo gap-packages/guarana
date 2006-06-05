@@ -422,7 +422,7 @@ end);
 #M k * x ...................... Scalar mulitplication for Malcev Lie elements
 ##
 InstallOtherMethod( \*, 
-               "scalar product for Malcev Lie elments (Guarana)",
+               "producto of scalar with  Malcev Lie elments (Guarana)",
 	       true,
 	        [IsScalar, IsMalcevLieElement ],
 		0, 
@@ -628,7 +628,7 @@ function( g, n )
     gg := PcpElementByExponentsNC( coll, exp_g );
 
     exp_res := Exponents( gg^n );
-    return MalcevSymbolicGrpElementByExponents( malObj, exp_res );
+	return MalcevGrpElementByExponents( malObj, exp_res );
 end);
 
 
@@ -668,6 +668,52 @@ InstallOtherMethod( \=,
 		0, 
 function( x, y )
     return Exponents( x ) = Exponents( y );
+end);
+
+InstallOtherMethod( \*, 
+               "for Malcev Gen elements and a matrix (Guarana)", 
+               true, 
+               [IsMalcevElement, IsMatrix ], 
+               0,
+function( elm, mat )
+    local coeffs, coeffs_res;
+    coeffs := Coefficients( elm );
+    coeffs_res := coeffs * mat;
+    return MalcevGenElementByCoefficients( elm!.malcevObject, coeffs_res );
+end);
+
+InstallOtherMethod( \^, 
+               "for IsMalcevGenElement and a scalar (Guarana)",
+	       true,
+	        [IsMalcevGenElement, IsScalar ],
+		0, 
+function( elm, k )
+    return k*elm;
+end);
+
+InstallOtherMethod( \*, 
+               "product of scalar and Malcev Gen elments (Guarana)",
+	       true,
+	        [IsScalar, IsMalcevGenElement ],
+		0, 
+function( k, elm )
+    local x, x_res;
+    x := LieElement( elm );
+    x_res := k*x;
+    return MalcevGenElementByLieElement( x_res );
+end);
+
+#############################################################################
+##
+#M x = y 
+##
+InstallOtherMethod( \=, 
+               "for Malcev Gen elments (Guarana)",
+	       IsIdenticalObj,
+	        [IsMalcevGenElement, IsMalcevGenElement ],
+		0, 
+function( x, y )
+    return Coefficients( x ) = Coefficients( y );
 end);
 
 if false then 

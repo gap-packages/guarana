@@ -10,7 +10,7 @@
 ##
 ##
 
-DeclareOperation( "BCHStar", [IsMalcevLieElement, IsMalcevLieElement ] );
+DeclareOperation( "BCHStar", [IsMalcevElement, IsMalcevElement ] );
 
 #############################################################################
 ##

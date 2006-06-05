@@ -19,11 +19,16 @@ DeclareRepresentation( "IsMalcevCNElementRep",
                         IsComponentObjectRep, 
             [ "malcevCollector", 
               "c",
-              "n" ] );
+              "n",
+              "exps"] );
 
 DeclareGlobalFunction( "MalcevCNElementByExponents" );
 DeclareGlobalFunction( "MalcevCNElementBy2Coefficients" );
 DeclareGlobalFunction( "MalcevCNElementBy2Exponents" );
+DeclareGlobalFunction( "MalcevCNElementBy2GenElements" );
+
+DeclareOperation( "NormalForm" , [IsObject] );
+DeclareOperation( "Normalise" , [IsObject] );
 
 #############################################################################
 ##

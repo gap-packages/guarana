@@ -184,6 +184,19 @@ function( x, y )
     fi;
 end);
 
+InstallMethod( BCHStar, 
+               "for Malcev Gen elments (Guarana)",
+	       IsIdenticalObj,
+	        [IsMalcevGenElement, IsMalcevGenElement ],
+		0, 
+function( g, h )
+    local l_g, l_h, l_res;
+    l_g := LieElement( g );
+    l_h := LieElement( h );
+    l_res := BCHStar( l_g, l_h );
+    return MalcevGenElementByLieElement( l_res );
+end);
+
 if false then 
     malObjs := GUARANA.Get_FNG_MalcevObjects( 2, 4 );
     malObj := malObjs[3];

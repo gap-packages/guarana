@@ -12,6 +12,65 @@
 ##
 ##
 
+GUARANA.ConjugationByC_Elm := function( malCol, n, c )
+    local coeffs, exps_c, lieAuts, i;
+  
+    coeffs := Coefficients( n );
+    exps_c := Exponents( c );
+    n := Length( exps_c );
+    lieAuts := malCol!.C_lieAuts;
+    for i in [1..n] do
+        coeffs := coeffs*( lieAuts[i]^exps_c[i] );
+    od;
+    return MalcevGenElementByCoefficients( malCol!.mo_NN, coeffs );
+end;
+
+#############################################################################
+##
+#M g* h  ................................... Product of Malcev CN elements
+##
+## Comment: 
+## g h = c(g)n(g) c(h)n(h)
+##     = c(g)c(h0 n(g)^c(h) n(h)
+##
+## TODO
+## Install a variation for this for symbolic CN elements
+##
+InstallOtherMethod( \*, 
+               "for Malcev CN elments (Guarana)",
+	       IsIdenticalObj,
+	        [IsMalcevCNElement, IsMalcevCNElement ],
+		0, 
+function( g, h )
+    local malCol, c_new, n_c, n_new;
+
+    malCol := g!.malCol;
+    c_new := g!.c * h!.c;
+    n_c := GUARANA.ConjugationByC_Elm( malCol, g!.n, h!.c );
+    n_new := n_c * h!.n; 
+    return MalcevCNElementBy2GenElements( malCol, c_new, n_new ); 
+end);
+
+##
+## (cn)^-1 = n^-1 c^-1 = c^-1 (n^-1)^(c^-1)
+##
+GUARANA.CN_Inverse := function( g )
+    local c, n, c_inv, n_inv, n_inv_c_inv;
+
+    c := g!.c;
+    n := g!.n;
+    c_inv := c^-1;
+    n_inv := n^-1;
+
+    n_inv_c_inv := GUARANA.ConjugationByC_Elm( g!.malCol, n_inv, c_inv );
+    return MalcevCNElementBy2GenElements( g!.malCol, c_inv, n_inv_c_inv );
+end;
+
+#############################################################################
+##
+## Old code
+##
+
 #############################################################################
 ##
 #F GUARANA.CutExpVector( malcevRec, exp )

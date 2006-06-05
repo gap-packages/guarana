@@ -309,6 +309,24 @@ GUARANA.MapFromLCcapNtoLN := function( malCol, l_cc )
     return LinearCombination( imgs, coeffs_2 );
 end;
 
+## IN elm ..................... MalcevGenElement of C
+##                              that lies in the intersection of C and N
+##
+## OUT 
+## The
+GUARANA.MapFrom_MOC_2_MON := function( malCol, elm )
+    local x, x_img;
+
+    x := LieElement( elm );
+    x_img := GUARANA.MapFromLCcapNtoLN( malCol, x );
+    if x_img = fail then
+        return fail;
+    else
+        return MalcevGenElementByLieElement( x_img );
+    fi;
+end;
+    
+
 #############################################################################
 ##
 #F GUARANA.MO_AddCompleteMalcevInfo( malCol )
