@@ -12,7 +12,14 @@
 ##
 ##
 
-GUARANA.ConjugationByC_Elm := function( malCol, n, c )
+## IN
+## malCol ..................... Malcev collector
+##    n ....................... Malcev gen elment of N
+##    c ....................... Malcev gen elment of C
+## 
+## n^c given as Malcev gen elment of N
+##
+GUARANA.N_ConjugationByC_Elm := function( malCol, n, c )
     local coeffs, exps_c, lieAuts, i;
   
     coeffs := Coefficients( n );
@@ -21,6 +28,27 @@ GUARANA.ConjugationByC_Elm := function( malCol, n, c )
     lieAuts := malCol!.C_lieAuts;
     for i in [1..n] do
         coeffs := coeffs*( lieAuts[i]^exps_c[i] );
+    od;
+    return MalcevGenElementByCoefficients( malCol!.mo_NN, coeffs );
+end;
+
+## IN
+## malCol
+## n ........................ Malcev gen elment of N
+## exps_g .................... exponent vector of group elment g of G.
+##                            the vector is allowed to be shorter then
+##                            the lengths of the pcs of G.
+##
+## n^g given as Malcev gen elment 
+##
+GUARANA.N_ConjugationByExp := function( malCol, n, exps_g )
+    local coeffs, lieAuts, i;
+  
+    coeffs := Coefficients( n );
+    n := Length( exps_g );
+    lieAuts := malCol!.C_lieAuts;
+    for i in [1..n] do
+        coeffs := coeffs*( lieAuts[i]^exps_g[i] );
     od;
     return MalcevGenElementByCoefficients( malCol!.mo_NN, coeffs );
 end;
@@ -46,7 +74,7 @@ function( g, h )
 
     malCol := g!.malCol;
     c_new := g!.c * h!.c;
-    n_c := GUARANA.ConjugationByC_Elm( malCol, g!.n, h!.c );
+    n_c := GUARANA.N_ConjugationByC_Elm( malCol, g!.n, h!.c );
     n_new := n_c * h!.n; 
     return MalcevCNElementBy2GenElements( malCol, c_new, n_new ); 
 end);
@@ -62,10 +90,128 @@ GUARANA.CN_Inverse := function( g )
     c_inv := c^-1;
     n_inv := n^-1;
 
-    n_inv_c_inv := GUARANA.ConjugationByC_Elm( g!.malCol, n_inv, c_inv );
+    n_inv_c_inv := GUARANA.N_ConjugationByC_Elm( g!.malCol, n_inv, c_inv );
     return MalcevCNElementBy2GenElements( g!.malCol, c_inv, n_inv_c_inv );
 end;
 
+#############################################################################
+##
+#F GUARANA.MO_CconjF_ElmConjByFiniteElm( malCol, exp_c, exp_f )
+##
+## IN
+## malCol ........................ Malcev collector
+## exp_c ............................ short exponent vector (with respect 
+##                                    to pcs of CN/N) of an element 
+##                                    in C.
+##                                    c = c_1^x_1 ... c_k^x_k 
+##                                    where k is the rank of CN/N.
+## exp_f  ................................ short expvector (with respect 
+##                                         to the pcs of G/CN ) of an elment
+##                                         f in G, that is a product of 
+##                                         generators of the finite part of the
+##                                         pcs. 
+## OUT
+## Exponent vector of c^f
+##
+## COMMENT
+## c^f = (c_1^x_1 ... c_k^x_k )^f
+##     = (c_1^x_1)^f ... (c_k^x_k)^f
+## 
+GUARANA.MO_CconjF_ElmConjByFiniteElm := function( malCol, exp_c, exp_f )
+    local res, x_i, c_i_f, i;
+
+    res := GUARANA.CN_Identity( malCol );   
+    for i in [1..Length( exp_c )] do
+	    x_i := exp_c[i];
+	    if x_i <> 0 then 
+	        # look up c_i^f
+            c_i_f := GUARANA.MO_CconjF_LookUp( malCol, i, exp_f );
+
+            res := res*(c_i_f^x_i);
+	    fi;
+    od;
+    return res;
+end;
+
+#############################################################################
+##
+#F GUARANA.MO_CN_ConjugationByFiniteElm( malCol, exp_g, exp_f )
+##
+## IN
+## g      ................................ Malcev CN Element 
+## exp_f  ................................ short expvector (with respect 
+##                                         to the pcs of G/CN ) of an elment
+##                                         f in G, that is a product of 
+##                                         generators of the finite part of the
+##                                         pcs. 
+##
+## OUT
+## Malcev G element  g^f
+##
+## COMMENT
+## g^f = ( c(g) n(g) )^f
+##     =  c(g)^f n(g)^f
+##
+GUARANA.MO_CN_ConjugationByFiniteElm := function( g, exp_f )
+    local malCol, exps, hlCN, exps_c_g, c_g_f, n_g_f, c_new, n_new;
+
+    # get part of the exponent vector of g that corresponds to CN/N
+    malCol := g!.malCol;
+    exps := Exponents( g );
+    hlCN := malCol!.lengths[2];
+    exps_c_g := exps{[1..hlCN]};
+
+    # compute c(g)^f
+    c_g_f := GUARANA.MO_CconjF_ElmConjByFiniteElm( malCol, exps_c_g, exp_f);
+
+    # compute n(g)^f
+    n_g_f := GUARANA.N_ConjugationByExp( malCol, g!.n, exp_f );
+
+    c_new := c_g_f!.c;
+    n_new := c_g_f!.n * n_g_f;
+    return MalcevCNElementBy2GenElements( malCol, c_new, n_new );
+end;
+
+#############################################################################
+##
+#F GUARANA.MO_G_Collection( g, h )
+##
+## COMMENT
+## g h = f(g)c(g)n(g) f(h)c(h)n(h) 
+##     = f(g)f(h)        (c(g)n(g))^f(h)    c(h)n(h)
+##     = f(gh) u         v                  w
+## 
+GUARANA.MO_G_Collection := function( g, h )
+
+
+    f_g := g!.exps_f;
+    f_h := h!.exps_f;
+# jump 
+
+
+
+    # get f(gh) and u
+    malCol := g!.malCol;
+    a := GUARANA.MO_G_CN_LookUpProduct( malCol, f_g, f_h );
+    f_gh := a{malcevRec.indeces[1]};
+    u := GUARANA.GetCNPart( malcevRec, a ); 
+
+    # compute v
+    b := GUARANA.GetCNPart( malcevRec, exp_g );
+    v := GUARANA.CN_ConjugationByFiniteElm( malcevRec, b, f_h );
+    
+    # compute w
+    w := GUARANA.GetCNPart( malcevRec, exp_h );
+
+    # compute normal form of uvw.
+    uv := GUARANA.CN_Collection( malcevRec, u, v );
+    uvw := GUARANA.CN_Collection( malcevRec, uv, w );
+
+    exp_gh := uvw;
+    exp_gh{malcevRec.indeces[1]} := f_gh;
+
+    return exp_gh;
+end;
 #############################################################################
 ##
 ## Old code
@@ -135,7 +281,7 @@ GUARANA.RandomGrpElm := function( args )
     indeces := malcevRec.indeces;
     rels := RelativeOrdersOfPcp( Pcp( malcevRec.G ));
 
-    exp := List( [1..hl], x-> 0 );
+    exp := [];
     if grp = "N" then 
 	for i in indeces[3] do
 	    exp[i] := Random( domain );

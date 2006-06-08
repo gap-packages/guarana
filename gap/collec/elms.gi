@@ -84,6 +84,52 @@ function( malCol, c, n )
     return Objectify( malCol!.cn_elms_type , elm );
 end);
 
+GUARANA.CN_Identity := function( malCol )
+    local hlCN, exps;
+    hlCN := malCol!.lengths[2] + malCol!.lengths[3];
+    exps := List( [1..hlCN], x-> 0 );
+    return MalcevCNElementByExponents( malCol, exps );
+end;
+
+#############################################################################
+##
+## Methods for constructing Malcev G Elements
+##
+InstallGlobalFunction( MalcevGElementByExponents,
+function( malCol, exps )
+    local n, indeces, rels, exps_f, exps_cn, cn_elm, elm, i,r;
+
+    # check input
+    n := Sum( malCol!.lengths );
+    if n <> Length( exps ) then
+        Error( "Wrong length of exponent vector\n" );
+    fi;
+
+    indeces := malCol!.indeces;
+    rels := RelativeOrdersOfPcp( Pcp( malCol!.G ) );
+    exps_f := [];
+    for i in indeces[1] do
+        r := [0..rels[i]-1];
+        if not exps[i] in r then 
+            Error( "Input vector out of range" );
+        fi;
+        exps_f[i] := exps[i];
+    od;
+
+    exps_cn := exps{ Concatenation(indeces[2],indeces[3]) };
+    cn_elm := MalcevCNElementByExponents( malCol, exps_cn );
+
+    elm := rec( malCol := malCol,
+                cn_elm := cn_elm,
+                exps_f := exps_f,
+                exps := exps );
+    return Objectify( malCol!.g_elms_type , elm );
+end);
+
+#############################################################################
+##
+## Methods for creating random elements
+
 GUARANA.RandomCNElement := function( malCol, range )
     local hl, exps, a;
 
@@ -109,6 +155,24 @@ GUARANA.RandomCNElement2 := function( malCol, range )
     return MalcevCNElementBy2Exponents( malCol, exps_c, exps_n );
 end;
 
+GUARANA.RandomGElement := function( malCol, range )
+    local rels, domain, exps, i, indeces;
+
+    rels := RelativeOrdersOfPcp( Pcp( malCol!.G ) );
+    domain := [-range..range];
+    exps := [];
+    indeces := malCol!.indeces;
+
+    for i in indeces[1] do
+        exps[i] := Random( domain ) mod rels[i];
+    od;
+    for i in Concatenation( indeces[2], indeces[3] ) do
+        exps[i] := Random( domain );
+    od;
+
+    return MalcevGElementByExponents( malCol, exps );
+end;
+
 InstallOtherMethod( Random, 
                "for Malcev Collectors (Guarana)", 
                true, 
@@ -126,8 +190,18 @@ InstallOtherMethod( Random,
                [IsMalcevCollectorRep, IsInt ], 
                0,
 function( malCol, range )
-    # TODO: change to full group element
-    return Random( malCol, "CN", range );
+    return Random( malCol, "G", range );
+end);
+
+InstallOtherMethod( Random, 
+               "for Malcev Collectors and strings (Guarana)", 
+               true, 
+               [IsMalcevCollectorRep, IsString ], 
+               0,
+function( malCol, info )
+    local range;
+    range := 10;
+    return Random( malCol, info, range );
 end);
 
 InstallOtherMethod( Random, 
@@ -140,6 +214,8 @@ function( malCol, info, range )
         return GUARANA.RandomCNElement( malCol, range );
     elif info = "CN2" then 
         return GUARANA.RandomCNElement2( malCol, range );
+    elif info = "G" then
+        return GUARANA.RandomGElement( malCol, range );
     fi;
 end);
 
@@ -154,9 +230,31 @@ InstallMethod( PrintObj,
                0,
 function( elm )
     Print( "c \n", elm!.c, "\n" );
-    Print( "n \n", elm!.n, "\n\n" );
+    Print( "n \n", elm!.n, "\n" );
     Print( "Exponents: ", elm!.exps );
 end );
+
+#############################################################################
+##
+#M Print Malcev G elements
+##
+InstallMethod( PrintObj, 
+               "for Malcev G elements (Guarana)", 
+               true, 
+               [IsMalcevGElement ], 
+               0,
+function( elm )
+    if IsString( elm!.exps ) then 
+        Print( "Exponent vector of finite part: ", elm!.exps_f, "\n" );
+        Print( "CN Element: \n", elm!.cn_elm, "\n" );
+    else
+        Print(  elm!.exps );
+    fi;
+end );
+
+#############################################################################
+##
+## Computing normal forms for CN elements
 
 ## g = c n = c_1^x_1 ... c_k^x_k * tail * n
 ## c(g) = c_1^x_1 ... c_k^x_k 
@@ -242,6 +340,7 @@ function( elm )
     elm!.exps := nf!.exps;
 end );
 
+
 ## Note that this changes the input
 InstallMethod( Exponents, 
                "for Malcev CN elements (Guarana)", 
@@ -257,18 +356,44 @@ function( g )
     fi;
 end);
 
+InstallMethod( Exponents, 
+               "for Malcev G elements (Guarana)", 
+               true, 
+               [IsMalcevGElement ], 
+               0,
+function( g )
+    local exps_f, exps_cn;
+    if IsString( g!.exps ) then
+        exps_f := g!.exps_f;
+        exps_cn := Exponents( g!.cn_elms );
+        return Concatenation( exps_f, exps_cn );
+    else
+        return g!.exps;
+    fi;
+end);
+
 #############################################################################
 ##
 #M x = y 
 ##
 InstallOtherMethod( \=, 
-               "for Malcev Gen elments (Guarana)",
+               "for Malcev CN elments (Guarana)",
 	       IsIdenticalObj,
 	        [IsMalcevCNElement, IsMalcevCNElement ],
 		0, 
 function( x, y )
     return Exponents( x ) = Exponents( y );
 end);
+
+InstallOtherMethod( \=, 
+               "for Malcev G elments (Guarana)",
+	       IsIdenticalObj,
+	        [IsMalcevGElement, IsMalcevGElement ],
+		0, 
+function( x, y )
+    return Exponents( x ) = Exponents( y );
+end);
+
 #############################################################################
 ##
 #E

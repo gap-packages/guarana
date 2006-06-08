@@ -77,7 +77,8 @@ end;
 ## Maybe add some tests to check whether the input is correct.
 ##
 GUARANA.InitialSetupMalcevCollector := function( args )
-    local G, indeces, N, NN, C, CC, lengths, cn_fam, cn_elms_type, obj;
+    local G, indeces, N, NN, C, CC, lengths, cn_fam, cn_elms_type, obj,
+          g_fam, g_elms_type, rels;
 
     G := args[1];
     indeces := args[2];
@@ -87,19 +88,27 @@ GUARANA.InitialSetupMalcevCollector := function( args )
     CC := args[6];
     lengths := [ Length(indeces[1]), Length( indeces[2] ),
 	         Length( indeces[3] ) ];
+    rels := RelativeOrdersOfPcp( Pcp(G ) );
 
     # create family and types for elements of CN and ...
     cn_fam := NewFamily( "MalcevCNFamily",
                           IsMalcevCNElement,
                           IsMalcevCNElement );
     cn_elms_type := NewType( cn_fam, IsMalcevCNElementRep );
+    g_fam := NewFamily( "MalcevGFamily",
+                          IsMalcevGElement,
+                          IsMalcevGElement );
+    g_elms_type := NewType( g_fam, IsMalcevGElementRep );
 
     obj := rec( G := G, indeces := indeces, lengths := lengths,
                 N := N, NN := NN, 
                 C := C, CC := CC,
+                rels := rels,
                 mo_NN := "unknown" , mo_CC := "unknown",
                 cn_fam := cn_fam,
-                cn_elms_type := cn_elms_type );
+                cn_elms_type := cn_elms_type, 
+                g_fam := g_fam, 
+                g_elms_type := g_elms_type );
 
     obj :=  Objectify( NewType( MalcevCollectorFamily, 
                                IsMalcevCollectorRep and
@@ -115,6 +124,7 @@ end;
 InstallMethod( PrintObj, "for Malcev collector", [ IsMalcevCollectorRep ],
 function( malColl )
     Print( "<<Malcev collector>>\n",
+           "  F : ", malColl!.rels{malColl!.indeces[1]} , "\n", 
            "  C : ", malColl!.mo_CC, "\n",
            "  N : ", malColl!.mo_NN  );
 end );
@@ -193,6 +203,29 @@ GUARANA.Add_C_LieAuts := function( malCol )
     od;
 
     malCol!.C_lieAuts := lieAuts;
+end;
+
+#############################################################################
+##
+#F GUARANA.Add_G_LieAuts( malCol )
+##
+## all lie automorphism matrices corresponding to the pcs elms of G
+## are added to the Malcev collector. 
+##
+GUARANA.Add_G_LieAuts := function( malCol )
+    local lieAuts, pcpG, g, autMat, i;
+
+    lieAuts := [];
+    pcpG := Pcp( malCol!.G );
+
+    # compute lie auts corresponding to conjugation action
+    for i in [1..Length(pcpG)] do 
+	    g := pcpG[i];
+        autMat := GUARANA.MO_ComputeLieAutMatrix( malCol, g );
+	Add( lieAuts, autMat );
+    od;
+
+    malCol!.G_lieAuts := lieAuts;
 end;
 
 #############################################################################
@@ -326,6 +359,315 @@ GUARANA.MapFrom_MOC_2_MON := function( malCol, elm )
     fi;
 end;
     
+#############################################################################
+##
+#F GUARANA.G_CN_WeightVector( rels )
+##
+## IN
+## rels ....................... relative orders of G/CN
+##
+## OUT
+## A weight vector that can be used to associate a number
+## to the exponent vector of a group element of G/CN
+## and vice versa.
+##
+GUARANA.G_CN_WeightVector := function( rels )
+    local vec, n, i;
+
+    # catch trivial case
+    if Length( rels ) = 0 then
+	return [];
+    fi;
+    
+    vec := [1];
+    n := Length( rels );
+    for i in [1..n-1] do
+	Add( vec, vec[i]*rels[n-i+1] );
+    od;
+    return Reversed( vec );
+end;
+
+#############################################################################
+##
+#F GUARANA.G_CN_ExpVectorToNumber( exp, w_vec )
+#F GUARANA.G_CN_NumberToExpVector( num, w_vec )
+##
+## IN
+## exp .................... exponent vector of an element of G/CN
+## n ...................... number of an element of G/CN
+## w_vec .................. a weight vector 
+##
+## OUT
+## The number corresponding to exp, or the exponent vector corresponding to n
+##
+GUARANA.G_CN_ExpVectorToNumber := function( exp, w_vec )
+    local num;
+    num := ScalarProduct( exp, w_vec );
+    return num+1;
+end;
+    
+GUARANA.G_CN_NumberToExpVector := function( num, w_vec )
+    local exp, n, div, i, num2;
+   
+    num2 := num -1;
+    exp := [];
+    n := Length( w_vec );
+    for i in [1..n] do
+	div := Int( num2/w_vec[i] );
+	Add( exp, div );
+	num2 := num2 - div*w_vec[i];
+    od;
+    return exp;
+end;
+
+#############################################################################
+##
+#F GUARANA.MO_G_CN_InitialSetup( malCol )
+#F GUARANA.MO_G_CN_AddMultTable( malCol )
+#F GUARANA.MO_G_CN_Setup( malCol )
+##
+## EFFECT
+## The multiplication table of G/CN is added to the malcev collector
+##
+GUARANA.MO_G_CN_InitialSetup := function( malCol )
+    local rels_G, rels, w_vec, order;
+
+    # compute weight vector 
+    rels_G := RelativeOrdersOfPcp( Pcp(malCol!.G ) );
+    rels := rels_G{ malCol!.indeces[1] };
+    w_vec := GUARANA.G_CN_WeightVector( rels );
+
+    # compute order of the finite quotient G/CN 
+    order := Product( rels );
+
+    # add info record
+    malCol!.G_CN := rec( w_vec := w_vec, 
+                         order := order,
+		                 rels := rels );
+end;
+
+GUARANA.MO_G_CN_AddMultTable := function( malCol )
+    local prods, pcpG, order, w_vec, exp_g, exp_h, g, h, k, i, j, exps_k;
+
+    prods := [];
+    pcpG := Pcp( malCol!.G );
+    
+    # catch trivial case 
+    if Length( malCol!.G_CN.rels ) = 0 then 
+	return prods;
+    fi;
+    
+    # go through all possible products and store their normal form
+    order := malCol!.G_CN.order;
+    w_vec := malCol!.G_CN.w_vec;
+    for i in [1..order] do
+	    Add( prods, [] );
+	    for j in [1..order] do 
+	        exp_g := GUARANA.G_CN_NumberToExpVector( i, w_vec );
+	        exp_h := GUARANA.G_CN_NumberToExpVector( j, w_vec );
+	        g := GUARANA.GrpElmByExpsAndPcs( pcpG, exp_g );
+	        h := GUARANA.GrpElmByExpsAndPcs( pcpG, exp_h );
+	        k := g*h;
+	        #Add( prods[i], Exponents( k ) );
+            exps_k := Exponents( k );
+            Add( prods[i], MalcevGElementByExponents( malCol, exps_k ));
+	    od;
+    od;
+    
+    malCol!.G_CN.multTable := prods;
+end;
+
+GUARANA.MO_G_CN_Setup := function( malCol )
+    GUARANA.MO_G_CN_InitialSetup( malCol );
+    GUARANA.MO_G_CN_AddMultTable( malCol );
+end;
+
+#############################################################################
+##
+#F GUARANA.MO_G_CN_LookUpProduct( malCol, exp1, exp2 )
+##
+## IN
+## malCol ....................... malcev collector
+## exp1, exp2 ...................... exponent vector of two elments g1,g2
+##                                   of G/CN
+##
+## OUT 
+## Exponent vector ( with respect to the pcs of G ) of g1*g2
+##
+GUARANA.MO_G_CN_LookUpProduct := function( malCol, exp1, exp2 )
+    local w_vec, num1, num2;
+    w_vec := malCol!.G_CN.w_vec;
+    num1 := GUARANA.G_CN_ExpVectorToNumber( exp1, w_vec );
+    num2 := GUARANA.G_CN_ExpVectorToNumber( exp2, w_vec );
+    return malCol!.G_CN.multTable[num1][num2];
+end;
+
+GUARANA.GetCNElmentByGExpVector := function( malCol, exps )
+    local indeces, exps_cn, cn_elm;
+    indeces := malCol!.indeces;
+    if exps{indeces[1]} <> 0*exps{indeces[1]} then
+        Error( "Exponent vector does not correspond to CN element \n" );
+    else
+        exps_cn := exps{ Concatenation(indeces[2],indeces[3]) };
+        cn_elm := MalcevCNElementByExponents( malCol, exps_cn );
+        return cn_elm;
+    fi;
+end;
+
+#############################################################################
+##
+#F GUARANA.MO_CconjF_AddInfo( malCol )
+##
+## EFFECT
+## Let (f_1,...,f_r,c_1,...,c_s,n_1,...,n_t ) be a pcs suitable
+## for Malcev collection. This function stores
+## all normal forms of the type 
+## c_i^f ( where f is product of the f_j )
+## in the Malcev collector.
+##
+GUARANA.MO_CconjF_AddInfo := function( malCol )
+    local CconjF, pcpG, indeces, order, w_vec, ind_C, cconjF, 
+          exp_f, c_i, f, k, exps_k, cn_elm, i, j; 
+    CconjF := [];
+    pcpG := Pcp( malCol!.G );
+    indeces := malCol!.indeces;
+
+    # catch trivial case 
+    if Length( malCol!.G_CN.rels ) = 0 then 
+        malCol!.CconjF := CconjF;
+	return 0;
+    fi;
+    
+    order := malCol!.G_CN.order;
+    w_vec := malCol!.G_CN.w_vec;
+    ind_C := malCol!.indeces[2];
+   
+    # go through all c_i
+    for i in ind_C do 
+	    cconjF := [];
+	    exp_f := GUARANA.G_CN_NumberToExpVector( i, w_vec );
+	    # go through all elms of finite part
+	    for j in [1..order] do 
+	        exp_f := GUARANA.G_CN_NumberToExpVector( j, w_vec );
+	        c_i := pcpG[i]; 
+	        f := GUARANA.GrpElmByExpsAndPcs( pcpG, exp_f );
+	        k := c_i^f;
+	        # Add( cconjF, Exponents( k ) );
+            exps_k := Exponents( k );
+            # get corresponding Malcev CN element
+            cn_elm := GUARANA.GetCNElmentByGExpVector( malCol, exps_k );
+            # get also lie information about cn
+            Coefficients( cn_elm!.c );
+            Coefficients( cn_elm!.n );
+
+            Add( cconjF, cn_elm );
+	    od;
+	    Add( CconjF, cconjF );
+    od;
+
+    malCol!.CconjF := CconjF;
+end;
+
+#############################################################################
+##
+#F GUARANA.MO_CconjF_LookUp( malCol, i, exp_f )
+##
+## IN
+## malCol .......................    Malcev collector
+## i ............................... index of c_i, which is a part 
+##                                   of the pcs of CN/N.
+##                                   i determines the position of c_i in 
+##                                   the pcs of CN/N.
+## exp_f ........................... short exponent vector (with respect 
+##                                   to G/CN) of an element of the finite 
+##                                   part.
+## 
+## OUT
+## (c_i)^f as stored in the Malcev record.
+##
+GUARANA.MO_CconjF_LookUp := function( malCol, i, exp_f )
+    local w_vec, num_f;
+
+    # check input 
+    if not i+malCol!.lengths[1] in malCol!.indeces[2] then
+        Error( " \n" );
+    fi;
+    # catch trivial case G/CN =1 
+    #TODO
+
+    # get number that corresponds to f
+    w_vec := malCol!.G_CN.w_vec;
+    num_f := GUARANA.G_CN_ExpVectorToNumber( exp_f, w_vec ); 
+
+    return malCol!.CconjF[i][num_f]; 
+end;
+
+#############################################################################
+##
+#F GUARANA.MO_F_AddInverseInfo( malCol )
+##
+## IN
+## malCol ....................... Malcev record 
+##
+## EFFECT
+## Store f^-1 for all representatives f of the finite part G/CN
+##
+GUARANA.MO_F_AddInverseInfo := function( malCol )
+    local inversesF, pcpG, order, w_vec, exp_f, f, f_inv, exps, elm, j;
+
+    inversesF := [];
+    pcpG := Pcp( malCol!.G );
+
+    # catch trivial case 
+    if Length( malCol!.G_CN.rels ) = 0 then 
+        malCol!.inversesF := inversesF;
+	    return 0;
+    fi;
+    
+    order := malCol!.G_CN.order;
+    w_vec := malCol!.G_CN.w_vec;
+
+    # go through all elms of finite part
+    for j in [1..order] do 
+	    exp_f := GUARANA.G_CN_NumberToExpVector( j, w_vec );
+	    f := GUARANA.GrpElmByExpsAndPcs( pcpG, exp_f );
+	    f_inv := f^-1;   
+	    #Add( inversesF, Exponents( f_inv ) );
+        exps := Exponents( f_inv );
+        elm := MalcevGElementByExponents( malCol, exps );
+        Add( inversesF, elm );
+    od;
+    malCol!.inversesF := inversesF;
+    return 0;
+end;
+
+#############################################################################
+##
+#F GUARANA.MO_F_LookupInverse( malCol, exp_f )
+##
+## IN
+## malCol ........................... malcev Record
+## exp_f ........................... short exponent vector (with respect 
+##                                   to G/CN) of an element of the finite 
+##                                   part.
+## 
+## OUT
+## Exponent vector of f^-1  as stored in the Malcev record.
+##
+GUARANA.MO_F_LookupInverse := function( malCol, exp_f )
+    local w_vec, num_f;
+
+    # catch trivial case G/CN = 1
+    if Length( exp_f )=0 then 
+	   # TODO 
+    fi;
+
+    # get number that corresponds to f
+    w_vec := malCol!.G_CN.w_vec;
+    num_f := GUARANA.G_CN_ExpVectorToNumber( exp_f, w_vec ); 
+
+    return malCol!.inversesF[num_f];
+end;
 
 #############################################################################
 ##
@@ -344,12 +686,14 @@ end;
 ## GUARANA.MO_AddCompleteMalcevInfo( R );
 ##
 GUARANA.MO_AddCompleteMalcevInfo := function( malCol )
-
     GUARANA.MO_AddTGroupRecs( malCol );
     GUARANA.AddMalcevObjects( malCol );
     GUARANA.Add_C_LieAuts( malCol );
+    GUARANA.Add_G_LieAuts( malCol );
     GUARANA.MO_AddImgsOf_LCcapN_in_LN( malCol );
-
+    GUARANA.MO_G_CN_Setup( malCol );
+    GUARANA.MO_CconjF_AddInfo( malCol );
+    GUARANA.MO_F_AddInverseInfo( malCol );
 end;
 
 #############################################################################
@@ -404,35 +748,6 @@ InstallGlobalFunction( MalcevCollectorConstruction,
 function( args )
     return GUARANA.SetupMalcevCollector( args );
 end);
-
-# TODO
-#
-# functions for creating an CN - element by an cn vector.
-# 
-# Creat object GUA_CN_Elm
-#                  malcev_elm_c
-#                  malcev_elm_n
-#              Methods
-#              GUA_Exponents_CN
-#              GUA_Exponents_C
-#              GUA_Exponents_N
-#              GUA_Coefficients_LN
-#              GUA_Coefficients_LC
-#
-#        object MalcevElement
-#                   grp_elm
-#                   lie_elm
-#                   (not both of them have to be known).
-#        need a constructor
-#        a type,...
-#
-#              * for IsMalcevElm IsMalcevElm
-#              (mulitplication can happen in group or in Lie algebra).
-#              * for IsMalcevElm IsMatrix   
-# Create object GUA_G_Elm
-#                  exp_f
-#                  GUA_CN_Elm
-
 
 #############################################################################
 ##

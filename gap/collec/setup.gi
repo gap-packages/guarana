@@ -269,66 +269,6 @@ GUARANA.MapFromLCcapNtoLN := function( malcevRec, l_cc )
     return LinearCombination( imgs, coeffs_2 );
 end;
 
-#############################################################################
-##
-#F GUARANA.G_CN_WeightVector( rels )
-##
-## IN
-## rels ....................... relative orders of G/CN
-##
-## OUT
-## A weight vector that can be used to associate a number
-## to the exponent vector of a group element of G/CN
-## and vice versa.
-##
-GUARANA.G_CN_WeightVector := function( rels )
-    local vec, n, i;
-
-    # catch trivial case
-    if Length( rels ) = 0 then
-	return [];
-    fi;
-    
-    vec := [1];
-    n := Length( rels );
-    for i in [1..n-1] do
-	Add( vec, vec[i]*rels[n-i+1] );
-    od;
-    return Reversed( vec );
-end;
-
-#############################################################################
-##
-#F GUARANA.G_CN_ExpVectorToNumber( exp, w_vec )
-#F GUARANA.G_CN_NumberToExpVector( num, w_vec )
-##
-## IN
-## exp .................... exponent vector of an element of G/CN
-## n ...................... number of an element of G/CN
-## w_vec .................. a weight vector 
-##
-## OUT
-## The number corresponding to exp, or the exponent vector corresponding to n
-##
-GUARANA.G_CN_ExpVectorToNumber := function( exp, w_vec )
-    local num;
-    num := ScalarProduct( exp, w_vec );
-    return num+1;
-end;
-    
-GUARANA.G_CN_NumberToExpVector := function( num, w_vec )
-    local exp, n, div, i, num2;
-   
-    num2 := num -1;
-    exp := [];
-    n := Length( w_vec );
-    for i in [1..n] do
-	div := Int( num2/w_vec[i] );
-	Add( exp, div );
-	num2 := num2 - div*w_vec[i];
-    od;
-    return exp;
-end;
 
 #############################################################################
 ##

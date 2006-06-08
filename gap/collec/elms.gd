@@ -27,6 +27,20 @@ DeclareGlobalFunction( "MalcevCNElementBy2Coefficients" );
 DeclareGlobalFunction( "MalcevCNElementBy2Exponents" );
 DeclareGlobalFunction( "MalcevCNElementBy2GenElements" );
 
+DeclareCategory( "IsMalcevGElement", IsObject );
+DeclareCategoryFamily( "IsMalcevGElement" );
+DeclareCategoryCollections( "IsMalcevGElement" );
+
+DeclareRepresentation( "IsMalcevGElementRep", 
+                        IsComponentObjectRep, 
+            [ "malcevCollector", 
+              "cn_elm",
+              "exps_f",
+              "exps"] );
+
+DeclareGlobalFunction( "MalcevGElementByExponents" );
+
+
 DeclareOperation( "NormalForm" , [IsObject] );
 DeclareOperation( "Normalise" , [IsObject] );
 
