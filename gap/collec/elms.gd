@@ -39,7 +39,7 @@ DeclareRepresentation( "IsMalcevGElementRep",
               "exps"] );
 
 DeclareGlobalFunction( "MalcevGElementByExponents" );
-
+DeclareGlobalFunction( "MalcevGElementByCNElmAndExps" );
 
 DeclareOperation( "NormalForm" , [IsObject] );
 DeclareOperation( "Normalise" , [IsObject] );

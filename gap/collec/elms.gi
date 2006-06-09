@@ -91,6 +91,7 @@ GUARANA.CN_Identity := function( malCol )
     return MalcevCNElementByExponents( malCol, exps );
 end;
 
+
 #############################################################################
 ##
 ## Methods for constructing Malcev G Elements
@@ -126,6 +127,24 @@ function( malCol, exps )
     return Objectify( malCol!.g_elms_type , elm );
 end);
 
+InstallGlobalFunction( MalcevGElementByCNElmAndExps,
+function( malCol, exps_f, cn_elm )
+    local elm;
+    elm := rec( malCol := malCol,
+                cn_elm := cn_elm,
+                exps_f := exps_f,
+                exps := "unknown yet" );
+    return Objectify( malCol!.g_elms_type , elm );
+end);
+
+GUARANA.G_Identity := function( malCol )
+    local hlG_CN, exps_f, cn_elm;
+    hlG_CN := malCol!.lengths[1];
+    exps_f := List( [1..hlG_CN], x-> 0 );
+    cn_elm := GUARANA.CN_Identity( malCol );
+    return MalcevGElementByCNElmAndExps( malCol, exps_f, cn_elm );
+end;
+
 #############################################################################
 ##
 ## Methods for creating random elements
@@ -136,7 +155,6 @@ GUARANA.RandomCNElement := function( malCol, range )
     # get HirschLength of CN
     hl := malCol!.lengths[2] + malCol!.lengths[3];
 
-    range := 10;
     exps := List( [1..hl], x-> Random( [-range..range] ) );
 
     a := MalcevCNElementByExponents( malCol, exps );
@@ -246,7 +264,7 @@ InstallMethod( PrintObj,
 function( elm )
     if IsString( elm!.exps ) then 
         Print( "Exponent vector of finite part: ", elm!.exps_f, "\n" );
-        Print( "CN Element: \n", elm!.cn_elm, "\n" );
+        Print( "CN Element: \n", elm!.cn_elm );
     else
         Print(  elm!.exps );
     fi;
@@ -365,7 +383,7 @@ function( g )
     local exps_f, exps_cn;
     if IsString( g!.exps ) then
         exps_f := g!.exps_f;
-        exps_cn := Exponents( g!.cn_elms );
+        exps_cn := Exponents( g!.cn_elm);
         return Concatenation( exps_f, exps_cn );
     else
         return g!.exps;
