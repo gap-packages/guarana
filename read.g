@@ -39,6 +39,8 @@ ReadPackage( "guarana", "gap/malcor/test.gi" );
 ReadPackage( "guarana", "exams/malobj.gi" );
 ReadPackage( "guarana", "gap/collec/setup2.gi" );
 ReadPackage( "guarana", "gap/collec/elms.gi" );
+ReadPackage( "guarana", "gap/collec/test.gi" );
+
 
 #############################################################################
 ##

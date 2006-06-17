@@ -13,7 +13,7 @@
 #############################################################################
 ##
 ##
-InstallMethod( SetLogMethod, 
+InstallMethod( SetLogAndExpMethod, 
                "for Malcev objects and strings (Guarana)", 
                true, 
                [IsMalcevObjectRep, IsString ], 
@@ -24,6 +24,8 @@ function( malcevObject, s)
     if s in possible_methods then 
 	if s = "pols" then 
 	    if not IsBound( malcevObject!.recLogPols) then 
+        # we assume that if recLogPols is not set, then the exp pols are 
+        # not known as well.
 		Print( "Computing Log and Exp Polynomials ...\n" );
 		AddLogAndExpPolynomials( malcevObject );
 	    fi;
@@ -41,27 +43,6 @@ InstallMethod( LogMethod,
                0,
 function( malcevObject)
     return malcevObject!.log_method;
-end );
-
-InstallMethod( SetExpMethod, 
-               "for Malcev objects and strings (Guarana)", 
-               true, 
-               [IsMalcevObjectRep, IsString ], 
-               0,
-function( malcevObject, s)
-    local possible_methods;
-    possible_methods := [ "pols", "simple" ];
-    if s in possible_methods then 
-	if s = "pols" then 
-	    if not IsBound( malcevObject!.recExpPols) then 
-		Print( "Computing Log and Exp Polynomials ...\n" );
-		AddLogAndExpPolynomials( malcevObject );
-	    fi;
-	fi;
-	malcevObject!.exp_method := s;
-    else
-	Error( "Wrong Exp method specified\n" );
-    fi;
 end );
 
 InstallMethod( ExpMethod, 
@@ -327,6 +308,13 @@ GUARANA.MO_AddLogPolynomialsByStarPols:=function( malcevObject )
     # get variable for polynomials
     n := malcevObject!.dim;
     vars_e := GUARANA.RationalVariableList( n, "e" ); 
+
+    # catch trivial case 
+    if n = 0 then 
+        malcevObject!.recLogPols := rec( pols := [],
+                                         vars_e := [] );
+        return 0;
+    fi;
 
     # compute recursively polynomials as follows
     # log( g_1^e_1...g_n^e_n ) = log( g_1^e_1 )*(log( g_2^e_2...g_n^e_n ))

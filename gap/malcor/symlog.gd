@@ -9,8 +9,7 @@
 #Y 2006
 ##
 ##
-DeclareOperation( "SetLogMethod", [IsObject, IsString] );
-DeclareOperation( "SetExpMethod", [IsObject, IsString] );
+DeclareOperation( "SetLogAndExpMethod", [IsObject, IsString] );
 DeclareOperation( "SetStarMethod", [IsObject, IsString] );
 DeclareOperation( "SetMultiplicationMethod", [IsObject, IsString] );
 

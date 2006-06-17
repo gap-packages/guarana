@@ -696,6 +696,18 @@ GUARANA.MO_AddCompleteMalcevInfo := function( malCol )
     GUARANA.MO_F_AddInverseInfo( malCol );
 end;
 
+GUARANA.SetAllMethodsToSymbolic := function( malCol )
+    local mo_CC, mo_NN;
+
+    mo_CC := malCol!.mo_CC;
+    mo_NN := malCol!.mo_NN;
+    
+    SetLogAndExpMethod( mo_CC, "pols" ); 
+    SetStarMethod( mo_CC, "pols" );
+
+    SetLogAndExpMethod( mo_NN, "pols" ); 
+    SetStarMethod( mo_NN, "pols" );
+end;
 #############################################################################
 ##
 #F GUARANA.SetupMalcevCollector( args )
@@ -741,6 +753,8 @@ GUARANA.SetupMalcevCollector := function( args )
     local malCol;
     malCol := GUARANA.InitialSetupMalcevCollector( args );
     GUARANA.MO_AddCompleteMalcevInfo( malCol );
+    GUARANA.SetAllMethodsToSymbolic( malCol );
+
     return malCol;
 end;
 
