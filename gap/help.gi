@@ -70,3 +70,22 @@ GUARANA.GrpElmByExpsAndPcs := function( pcs, exp )
     od;
     return elm;
 end;
+
+GUARANA.CompleteRuntime2:= function( func, input )
+    local rec1,rec2, user_time, user_time_child, system_time,
+    system_time_child, sum, result;
+    rec1 := Runtimes();
+    result := func( input );
+    rec2 := Runtimes();
+
+    user_time := rec2.user_time -rec1.user_time;
+    user_time_child := rec2.user_time_children -rec1.user_time_children;
+    system_time := rec2.system_time - rec1.system_time;
+    system_time_child := rec2.system_time_children - rec1.system_time_children;
+
+    sum := user_time + user_time_child + system_time + system_time_child;
+
+    return rec( time := sum, result := result );
+end;
+
+

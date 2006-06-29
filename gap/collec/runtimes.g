@@ -27,7 +27,7 @@ GUARANA.AverageRuntimeCollec := function( malCol, ranges, no )
             h := Random( malCol, range );
         
             # compute time for product
-            time := POL_CompleteRuntime2( GUARANA.ProdRuntimeVers, 
+            time := GUARANA.CompleteRuntime2( GUARANA.ProdRuntimeVers, 
                                           [g,h] ).time;
 
             Add( times, time );
