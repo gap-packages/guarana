@@ -210,15 +210,16 @@ GUARANA.Latex_GenerateRuntimesTable := function( class_string, ranges, range_n, 
     fi;
     latex_code := GUARANA.Latex_RuntimesToLatex( res );
     Print( latex_code );
+    return latex_code;
 end;
 
 # Example
 if false then 
     ranges := [1,10,100,1000];
-    range_n := [4..8];
+    range_n := [4..7];
     range_c := [0];
     no := 100;
-    class_string := "Tr_n_O1";
+    class_string := "Tr_n_O2";
     GUARANA.Latex_GenerateRuntimesTable( class_string, ranges, range_n,
     range_c, no );
 

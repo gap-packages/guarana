@@ -21,7 +21,9 @@ RuntimesCftl := function( G, range, no )
     for i in [1..no] do 
         print i;
         t := RuntimeCftl( G, range );
-        print GetMaximumMemoryUsage();
+        print "Maximum memory usage ", GetMaximumMemoryUsage();
+        print "Current memory usage ", GetMemoryUsage();
+        print "time ", t;
         Append( ~res, t );
     end for;
     sum := &+ res;
@@ -49,8 +51,8 @@ limit vmemoryuse 262144
 limit vmemoryuse 524288
 limit vmemoryuse 1048576
 
-// Set memory limit to 1GB. Does not work !!!!
-//SetMemoryLimit( 1024^3 );
+// Set memory limit to 1GB. 
+SetMemoryLimit( 1024^3 );
 load "../random.m";
 load "Tr_4_O1.m";
 load "Tr_5_O1.m";
@@ -58,7 +60,7 @@ load "Tr_6_O1.m";
 load "Tr_7_O1.m";
 
 ranges := [ 8, 16, 32, 64 ];
-ranges := [1000];
+ranges := [100];
 no := 10;
 G := Tr_5_O1;
 RuntimesCftlByRanges( G, ranges, no );
