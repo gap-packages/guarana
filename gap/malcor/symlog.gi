@@ -328,7 +328,7 @@ GUARANA.MO_AddLogPolynomialsByStarPols:=function( malcevObject )
     od;
     malcevObject!.recLogPols := rec( pols := Coefficients( tail ),
                                      vars_e := vars_e );
-    SetLogMethod( malcevObject, "pols" );
+    #SetLogMethod( malcevObject, "pols" );
     return 0;
 end;
 
@@ -393,7 +393,7 @@ GUARANA.MO_AddExpPolynomialsByStarPols := function( malcevObject )
         Add( exp_pols, a_bar );
     od;
     malcevObject!.recExpPols := rec( pols := exp_pols , vars_a := vars_a );
-    SetExpMethod( malcevObject, "pols" );
+    #SetExpMethod( malcevObject, "pols" );
     return 0;
 end;
 

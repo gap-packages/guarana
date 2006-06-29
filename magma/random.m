@@ -19,17 +19,18 @@ end function;
 RuntimesCftl := function( G, range, no )
     res := [];
     for i in [1..no] do 
+        print i;
         t := RuntimeCftl( G, range );
+        print GetMaximumMemoryUsage();
         Append( ~res, t );
     end for;
     sum := &+ res;
     average := sum/no;
     r := <range, average, res>;
     print r;
+    print "\n";
     return r;
 end function;
-
-ranges := [8,16,32,64,128,256];
 
 RuntimesCftlByRanges := function( G, ranges, no )
     results := [];
@@ -40,5 +41,26 @@ RuntimesCftlByRanges := function( G, ranges, no )
     return results;
 end function;    
 
-// - save important examples as text files
-// - write test function in magma
+/*
+// set max memory in the cshell to 1GB
+// and virtual memory to 256MB or 512MB
+limit memoryuse 1048576
+limit vmemoryuse 262144
+limit vmemoryuse 524288
+limit vmemoryuse 1048576
+
+// Set memory limit to 1GB. Does not work !!!!
+//SetMemoryLimit( 1024^3 );
+load "../random.m";
+load "Tr_4_O1.m";
+load "Tr_5_O1.m";
+load "Tr_6_O1.m";
+load "Tr_7_O1.m";
+
+ranges := [ 8, 16, 32, 64 ];
+ranges := [1000];
+no := 10;
+G := Tr_5_O1;
+RuntimesCftlByRanges( G, ranges, no );
+
+*/

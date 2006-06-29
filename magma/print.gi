@@ -67,5 +67,49 @@ GUARANA.Print2FilePcpMagmaStyle := function( G, grpName, file )
     AppendTo( file,  ">;\n" );
 end;
 
+GUARANA.PrintExamClassesMagmaStyle := function( exam_string, ranges_n, 
+                                                ranges_c )
+    local G, s1, s2, s3, grp_name, file_name, s4, n, c;
+    if exam_string = "Tr_n_O1" then 
+        for n in ranges_n do 
+            # get group
+            G := GUARANA.Tr_n_O1( n )[1];
+            # get name of group and magma file
+            s1 := "Tr_";
+            s2 := String( n );
+            s3 := "_O1";
+            grp_name := Concatenation( s1, s2, s3 );
+            file_name := Concatenation( grp_name, ".m" );
+            GUARANA.Print2FilePcpMagmaStyle( G, grp_name, file_name );
+        od;
+    elif exam_string = "Tr_n_O2" then 
+        for n in ranges_n do 
+            # get group
+            G := GUARANA.Tr_n_O2( n )[1];
+            # get name of group and magma file
+            s1 := "Tr_";
+            s2 := String( n );
+            s3 := "_O2";
+            grp_name := Concatenation( s1, s2, s3 );
+            file_name := Concatenation( grp_name, ".m" );
+            GUARANA.Print2FilePcpMagmaStyle( G, grp_name, file_name );
+        od;
+    elif exam_string = "F_nc_Aut1" then 
+        for n in ranges_n do 
+            for c in ranges_c do 
+                # get group
+                G := GUARANA.F_nc_Aut1( n, c )[1];
+                # get name of group and magma file
+                s1 := "F_";
+                s2 := String( n );
+                s3 := String( c );
+                s4 := "_Aut1";
+                grp_name := Concatenation( s1, s2, s3, s4 );
+                file_name := Concatenation( grp_name, ".m" );
+                GUARANA.Print2FilePcpMagmaStyle( G, grp_name, file_name );
+            od;
+        od;
+    fi;
+end;
 # - save important examples as text files
 # - write test function in magma

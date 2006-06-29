@@ -99,8 +99,8 @@ GUARANA.MO_Test_ExpOfLog := function(  malcevObject, noTests,range, method )
     local g, x, gg, i;
     for i in [1..noTests] do
 	g := RandomGrpElm( malcevObject, range );
-	SetLogMethod( malcevObject, method );
-	SetExpMethod( malcevObject, method );
+	SetLogAndExpMethod( malcevObject, method );
+	#SetExpMethod( malcevObject, method );
 	x := Log( g );
 	gg := Exp( x );
 	if not gg = g then 

@@ -492,11 +492,16 @@ end;
 ##                                   of G/CN
 ##
 ## OUT 
-## Exponent vector ( with respect to the pcs of G ) of g1*g2
+## MalcevGElement  g1*g2
 ##
 GUARANA.MO_G_CN_LookUpProduct := function( malCol, exp1, exp2 )
     local w_vec, num1, num2;
     w_vec := malCol!.G_CN.w_vec;
+    # catch case G/CN = 1
+    if Length( w_vec ) = 0 then 
+        return GUARANA.G_Identity( malCol );
+    fi;
+
     num1 := GUARANA.G_CN_ExpVectorToNumber( exp1, w_vec );
     num2 := GUARANA.G_CN_ExpVectorToNumber( exp2, w_vec );
     return malCol!.G_CN.multTable[num1][num2];
@@ -535,7 +540,7 @@ GUARANA.MO_CconjF_AddInfo := function( malCol )
     # catch trivial case 
     if Length( malCol!.G_CN.rels ) = 0 then 
         malCol!.CconjF := CconjF;
-	return 0;
+	    return 0;
     fi;
     
     order := malCol!.G_CN.order;
@@ -652,14 +657,14 @@ end;
 ##                                   part.
 ## 
 ## OUT
-## Exponent vector of f^-1  as stored in the Malcev record.
+## f^-1  as stored in the Malcev record.
 ##
 GUARANA.MO_F_LookupInverse := function( malCol, exp_f )
     local w_vec, num_f;
 
     # catch trivial case G/CN = 1
     if Length( exp_f )=0 then 
-	   # TODO 
+        return GUARANA.G_Identity( malCol );
     fi;
 
     # get number that corresponds to f

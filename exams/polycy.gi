@@ -59,11 +59,23 @@ GUARANA.Tr_n_O1 := function( n )
     return GUARANA.Tr_n_O( n, pol );
 end;
 
+GUARANA.MalcevColl_Tr_n_O1 := function( n )
+    local l;
+    l := GUARANA.Tr_n_O1( n );
+    return MalcevCollectorConstruction( l );
+end;
+
 GUARANA.Tr_n_O2 := function( n )
     local x, pol;
     x := Indeterminate( Rationals );
     pol := x^3 - x^2 + 4;
     return GUARANA.Tr_n_O( n, pol );
+end;
+
+GUARANA.MalcevColl_Tr_n_O2 := function( n )
+    local l;
+    l := GUARANA.Tr_n_O2( n );
+    return MalcevCollectorConstruction( l );
 end;
 
 GUARANA.Tr_n_O3 := function( n )
@@ -73,7 +85,53 @@ GUARANA.Tr_n_O3 := function( n )
     return GUARANA.Tr_n_O( n, pol );
 end;
 
-# - function for free-nilpotent-by automorphism examples.
+## functions for free-nilpotent-by automorphism examples.
+##
+GUARANA.F_nc_Aut1 := function( n, c )
+    local F, F_nc, hl, auts, a, G, indeces, N, NN, C, CC;
+
+    F := FreeGroup( n );
+    F_nc := GUARANA.NilpotentQuotient( F, c );
+    hl := HirschLength( F_nc );
+    auts := GUARANA.GetSomeAutomorphsimOfF_nc( F_nc, n );
+    a := auts[1]*auts[2]*auts[3]^3;
+    G := GUARANA.PcpGroupTGroupByAbelianGroup( F_nc, [a] );
+    indeces := [ [], [1], [2..hl+1] ];
+    N := Subgroup( G, Pcp(G){indeces[3]} );
+    NN := GUARANA.PcpGroupByPcs( G, Pcp(G){indeces[3]} );
+    C := Subgroup( G, Pcp(G){indeces[2]} );
+    CC := GUARANA.PcpGroupByPcs( G, Pcp(G){indeces[2]} );
+    return [G,indeces,N,NN,C,CC];
+end;
+
+GUARANA.MalcevColl_F_nc_Aut1 := function( n, c )
+    local l;
+    l := GUARANA.F_nc_Aut1( n, c );
+    return MalcevCollectorConstruction( l );
+end;
+
+GUARANA.F_nc_Aut2 := function( n, c )
+    local F, F_nc, hl, auts, a, G, indeces, N, NN, C, CC;
+
+    F := FreeGroup( n );
+    F_nc := GUARANA.NilpotentQuotient( F, c );
+    hl := HirschLength( F_nc );
+    auts := GUARANA.GetSomeAutomorphsimOfF_nc( F_nc, n );
+    a := auts[1]*auts[3]^3;
+    G := GUARANA.PcpGroupTGroupByAbelianGroup( F_nc, [a] );
+    indeces := [ [], [1], [2..hl+1] ];
+    N := Subgroup( G, Pcp(G){indeces[3]} );
+    NN := GUARANA.PcpGroupByPcs( G, Pcp(G){indeces[3]} );
+    C := Subgroup( G, Pcp(G){indeces[2]} );
+    CC := GUARANA.PcpGroupByPcs( G, Pcp(G){indeces[2]} );
+    return [G,indeces,N,NN,C,CC];
+end;
+
+GUARANA.MalcevColl_F_nc_Aut2 := function( n, c )
+    local l;
+    l := GUARANA.F_nc_Aut2( n, c );
+    return MalcevCollectorConstruction( l );
+end;
 
 ## 
 ## OUT
@@ -94,9 +152,12 @@ GUARANA.SomePolyMalcevExams := function( n )
 	return GUARANA.Tr_n_O2( 3 );
     elif n = 5 then 
 	return GUARANA.Tr_n_O2( 4 );
-    fi;
-    if n in [6..8] then
-	# todo 
+    elif n = 6 then 
+        return GUARANA.F_nc_Aut1( 2, 4 ); 
+    elif n = 7 then 
+        return GUARANA.F_nc_Aut1( 2, 5 );
+    elif n = 8 then 
+        return GUARANA.F_nc_Aut2( 3, 4 );
     fi;
     if n = 9 then 
 	# in this example C and N have non trivial intersection

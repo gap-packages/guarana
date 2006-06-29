@@ -146,7 +146,7 @@ end;
 ##                                         pcs. 
 ##
 ## OUT
-## Malcev G element  g^f
+## Malcev CN element  g^f
 ##
 ## COMMENT
 ## g^f = ( c(g) n(g) )^f
@@ -154,6 +154,11 @@ end;
 ##
 GUARANA.MO_CN_ConjugationByFiniteElm := function( g, exp_f )
     local malCol, exps, hlCN, exps_c_g, c_g_f, n_g_f, c_new, n_new;
+
+    # catch trivial case G/CN = 1
+    if Length( exp_f ) = 0 then 
+        return g;
+    fi;
 
     # get part of the exponent vector of g that corresponds to CN/N
     malCol := g!.malCol;
