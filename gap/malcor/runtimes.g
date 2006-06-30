@@ -99,7 +99,7 @@ end;
 
 
 GUARANA.Latex_RuntimesSetupToLatex := function( list )
-    local groupClass, res, k, ll, n, c, stringLine, le, i, j;
+    local groupClass, res, k, ll, n, c, stringLine, le, i, j,hl;
 
     groupClass := list[1][1];
     res := "";
