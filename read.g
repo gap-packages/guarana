@@ -41,6 +41,7 @@ ReadPackage( "guarana", "gap/collec/setup2.gi" );
 ReadPackage( "guarana", "gap/collec/elms.gi" );
 ReadPackage( "guarana", "gap/collec/test.gi" );
 ReadPackage( "guarana", "gap/collec/runtimes.g" );
+ReadPackage( "guarana", "gap/malcor/runtimes.g" );
 
 
 #############################################################################
