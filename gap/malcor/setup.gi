@@ -141,6 +141,16 @@ function( recTGroup )
     return obj;
 end );
 
+## IN N ..................... T-group that is given by a pcp with respect 
+##                            to Malcev basis.
+##
+InstallGlobalFunction( MalcevObjectByTGroup, 
+function( N ) 
+    local recT;
+    recT := GUARANA.TGroupRec( [N] );
+    return MalcevObjectConstruction( recT );
+end);
+
 #############################################################################
 ##
 ## Funtions to view and print a Malcev object.
@@ -950,8 +960,8 @@ end;
 ## Example of usage
 if false then 
     F := FreeGroup( 2 );
-    N := NilpotentQuotient( F, 3 );
-    recTGroup := GUARANA.TGroupRec( [N] );
+    N := NilpotentQuotient( F, 8 );
+    recTGroup := GUARANA.TGroupRec( [N, "ucs"] );
     recLieAlg := GUARANA.SetUpLieAlgebraRecordByMalcevbasis( recTGroup );
 
     GUARANA.ComputeStructureConstants( recLieAlg );

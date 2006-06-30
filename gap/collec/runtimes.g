@@ -125,7 +125,7 @@ GUARANA.AverageRuntimesCollec_F_nc_Aut2 := function( range_n, range_c,
 end;
 
 GUARANA.Latex_GroupClass2Latex := function( str, n, c )
-    local ss, s1, s2, s3, s4;
+    local ss, s1, s2, s3, s4,s2b;
 
     if str = "Tr_n_O1" then
         s1 := "$G(\\mathrm{Tr}_";
@@ -149,6 +149,23 @@ GUARANA.Latex_GroupClass2Latex := function( str, n, c )
         s3 := String( c );
         s4 := "})$";
         ss := Concatenation( s1, s2, s3, s4 );
+    elif str = "Tr_1_n_O1" then 
+        s1 := "$G(\\mathrm{Tr}_1(";
+        s2 := String( n );
+        s3 := ", \\mathcal{O}_1))$";
+        ss := Concatenation( s1, s2, s3 );
+    elif str = "Tr_1_n_O2" then 
+        s1 := "$G(\\mathrm{Tr}_1(";
+        s2 := String( n );
+        s3 := ", \\mathcal{O}_2))$";
+        ss := Concatenation( s1, s2, s3 );
+    elif str = "F_nc" then
+        s1 := "$F_{";
+        s2 := String( n );
+        s2b := ",";
+        s3 := String( c );
+        s4 := "}$";
+        ss := Concatenation( s1, s2, s2b, s3, s4 );
     fi;
     return ss;
 end;
