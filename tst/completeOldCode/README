@@ -1,0 +1,6 @@
+This directory contains the old code from 
+phd/liealg.
+
+It is here only for testing purposes.
+In particular because we want to compute times 
+for the matrix setup.
