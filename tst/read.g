@@ -1,9 +1,9 @@
 # representation alg of werner
-Read( "../repsWerner/subs.g" );
-Read( "../repsWerner/dtpols.g" );
-Read( "../repsWerner/pcp.g" );
-Read( "../repsWerner/polgauss.g" );
-Read( "../repsWerner/polycoeff.g" );
+Read( "./repsWerner/subs.g" );
+Read( "./repsWerner/dtpols.g" );
+Read( "./repsWerner/pcp.g" );
+Read( "./repsWerner/polgauss.g" );
+Read( "./repsWerner/polycoeff.g" );
 
 #matrix approach
 Read( "unitri_Mod.g" );
