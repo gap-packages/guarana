@@ -74,6 +74,26 @@ function(  x )
    return Objectify( malcevObject!.gen_elms_type , elm );
 end);
 
+InstallGlobalFunction( MalcevGenElementByGrpElement, 
+function(  g )
+    local malcevObject, x, weight, elm;
+
+    malcevObject := g!.malcevObject;
+
+    # lie element element
+    x := "unknown yet";
+
+    # get weight 
+    weight := Weight( g );
+
+
+   elm := rec( malcevObject := malcevObject,
+               grp_elm := Immutable( g ),
+               lie_elm := x,
+               weight := weight );
+   return Objectify( malcevObject!.gen_elms_type , elm );
+end);
+
 #############################################################################
 ##
 #M Print Malcev gen elements
@@ -138,6 +158,16 @@ GUARANA.MultViaStar := function( a, b )
     return MalcevGenElementByLieElement( x_res );
 end;
 
+GUARANA.MultViaCollection := function( a, b )
+    local g_a, g_b, g_res;
+
+    g_a := GrpElement( a );
+    g_b := GrpElement( b );
+    # note that in the group DT collection can be used.
+    g_res := g_a * g_b; 
+    return MalcevGenElementByGrpElement( g_res );
+end;
+
 InstallOtherMethod( \*, 
                "for Malcev Gen elments (Guarana)",
 	       IsIdenticalObj,
@@ -148,6 +178,8 @@ function( a, b  )
     malcevObject := a!.malcevObject;
     if malcevObject!.mult_method = GUARANA.MultMethodIsStar then 
         return GUARANA.MultViaStar( a, b );
+    elif malcevObject!.mult_method = GUARANA.MultMethodIsCollection then
+        return GUARANA.MultViaCollection( a, b );
     else
         Error( " " );
     fi;
@@ -602,9 +634,9 @@ function( g, h )
 
     exp_res := Exponents( gg*hh );
     if IsSymbolicElement( g ) or IsSymbolicElement( h ) then
-	return MalcevSymbolicGrpElementByExponents( malObj, exp_res );
+	    return MalcevSymbolicGrpElementByExponents( malObj, exp_res );
     else 
-	return MalcevGrpElementByExponents( malObj, exp_res );
+	    return MalcevGrpElementByExponents( malObj, exp_res );
     fi;
 end);
 

@@ -18,7 +18,7 @@
 ##
 
 GUARANA.MultMethodIsStar := "Star";
-GUARANA.MultMethodIsDeepThought := "DeepThought";
+GUARANA.MultMethodIsCollection := "Collec";
 
 ############################################################################
 ##

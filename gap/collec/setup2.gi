@@ -146,6 +146,7 @@ end;
 GUARANA.AddMalcevObjects := function( malCol )
     malCol!.mo_NN := MalcevObjectConstruction( malCol!.recNN ); 
     malCol!.mo_CC := MalcevObjectConstruction( malCol!.recCC ); 
+    
 end;
 
 #############################################################################
@@ -708,10 +709,10 @@ GUARANA.SetAllMethodsToSymbolic := function( malCol )
     mo_NN := malCol!.mo_NN;
     
     SetLogAndExpMethod( mo_CC, "pols" ); 
-    SetStarMethod( mo_CC, "pols" );
+    #SetStarMethod( mo_CC, "pols" );
 
     SetLogAndExpMethod( mo_NN, "pols" ); 
-    SetStarMethod( mo_NN, "pols" );
+    #SetStarMethod( mo_NN, "pols" );
 end;
 #############################################################################
 ##
@@ -757,8 +758,16 @@ end;
 GUARANA.SetupMalcevCollector := function( args )
     local malCol;
     malCol := GUARANA.InitialSetupMalcevCollector( args );
+    
     GUARANA.MO_AddCompleteMalcevInfo( malCol );
     GUARANA.SetAllMethodsToSymbolic( malCol );
+
+    # add dt polynomials and set them as defaul method
+    # TODO: Should we add them before we setup the malcev correspondence ?
+    AddDTPolynomials( malCol!.mo_NN );
+    AddDTPolynomials( malCol!.mo_CC );
+    SetMultiplicationMethod( malCol!.mo_NN , GUARANA.MultMethodIsCollection );
+    SetMultiplicationMethod( malCol!.mo_CC, GUARANA.MultMethodIsCollection );
 
     return malCol;
 end;

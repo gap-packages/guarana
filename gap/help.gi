@@ -105,4 +105,24 @@ GUARANA.CompleteRuntime2:= function( func, input )
     return rec( time := sum, result := result );
 end;
 
+#########################################################################
+##
+## This function is only temporarily necessary untill 
+## I can use IsWeightedCollector from "polycyclic" again.
+## In gap.dev USE_COMBINATORIAL_COLLECTOR is false and thus 
+## IsWeigthedCollector does not work.
+## 
+GUARANA.IsWeightedCollector :=  function( coll )
+
+    # check wehter weights are already computed and compute them 
+    # if necessary
+    if not IsBound( coll![PC_WEIGHTS] ) then
+        if FromTheLeftCollector_SetWeights( coll ) = fail then 
+            Error( "Computation of weights not possible\n" );
+            return false;
+        fi;
+    fi;
+    SetFeatureObj( coll, IsWeightedCollector, true  );
+    return true;
+end;
 

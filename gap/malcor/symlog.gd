@@ -21,7 +21,7 @@ DeclareOperation( "MultiplicationMethod" , [IsObject] );
 
 DeclareGlobalFunction( "AddLogAndExpPolynomials" );
 DeclareGlobalFunction( "AddStarPolynomials" );
-
+DeclareGlobalFunction( "AddDTPolynomials" );
 #############################################################################
 ##
 #E

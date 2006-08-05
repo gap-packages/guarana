@@ -92,7 +92,7 @@ InstallMethod( SetMultiplicationMethod,
 function( malcevObject, s)
     local possible_methods;
     possible_methods := [ GUARANA.MultMethodIsStar, 
-                          GUARANA.MultMethodIsDeepThought ];
+                          GUARANA.MultMethodIsCollection ];
     if s in possible_methods then 
 	    malcevObject!.mult_method := s;
     else
@@ -435,6 +435,18 @@ InstallGlobalFunction( AddStarPolynomials,
 function( malcevObject )
     GUARANA.MO_AddStarPolynomials( malcevObject );
 end);
+
+InstallGlobalFunction( AddDTPolynomials,
+function( malcevObject )
+    local T, coll;
+
+    Print( "Adding DT polynomials\n" );
+    T := malcevObject!.recTGroup.T;
+    coll := Collector( T );
+    GUARANA.IsWeightedCollector( coll );
+    AddHallPolynomials( coll );
+end);
+
 
 if false then 
     malObjs := GUARANA.Get_FNG_MalcevObjects( 2, 9 );

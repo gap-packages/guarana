@@ -24,7 +24,7 @@ DeclareGlobalFunction( "MalcevGenElementConstruction" );
 DeclareGlobalFunction( "MalcevGenElementByExponents" );
 DeclareGlobalFunction( "MalcevGenElementByCoefficients" );
 DeclareGlobalFunction( "MalcevGenElementByLieElement" );
-
+DeclareGlobalFunction( "MalcevGenElementByGrpElement" );
 #############################################################################
 ##
 ## Lie elements
