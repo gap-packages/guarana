@@ -59,7 +59,8 @@ function( malcevObject)
 end);
 
 InstallOtherMethod( RandomGrpElm, 
-               "for Malcev objects and integers (Guarana)", 
+               for Malcev objects and integers (Guarana)", ;
+               end;
                true, 
                [IsMalcevObjectRep, IsInt], 
                0,

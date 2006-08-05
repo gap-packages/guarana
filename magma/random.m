@@ -59,10 +59,17 @@ load "Tr_5_O1.m";
 load "Tr_6_O1.m";
 load "Tr_7_O1.m";
 
-ranges := [ 8, 16, 32, 64 ];
-ranges := [64];
-no := 100;
-G := Tr_5_O1;
-RuntimesCftlByRanges( G, ranges, no );
+ranges := [15];
+no := 1000;
+G := Tr_6_O1;
+times  := RuntimesCftlByRanges( G, ranges, no );
 
 */
+
+PrintRuntimes := function( l )
+    for a in l do 
+        print a[1], a[2];
+    end for;
+    return 1;
+end function;
+        

@@ -153,9 +153,9 @@ end;
 
 # Example
 if false then 
-    range_n := [2..5];
+    range_n := [7];
     range_c := [0];
-    class_string := "Tr_1_n_O1";
+    class_string := "Tr_1_n_O2";
     latex_code := GUARANA.Latex_GenerateRuntimesSetupTable( class_string, range_n, range_c );
     Print( latex_code );
 
@@ -165,6 +165,38 @@ if false then
     latex_code := GUARANA.Latex_GenerateRuntimesSetupTable( class_string, range_n, range_c );
     Print( latex_code );
 fi;
+
+#############################################################################
+##
+## Runtimes for Log
+##
+GUARANA.AverageRuntimeLog := function(  malcevObject, noTests,range, method )
+    local results, g, r, i,aver;
+
+	SetLogAndExpMethod( malcevObject, method );
+    results := [];
+    for i in [1..noTests] do
+        g := RandomGrpElm( malcevObject, range );
+        r := GUARANA.CompleteRuntime1( Log, g ); 
+        Add( results, r );
+    od;
+    aver := Int( Sum( results )/noTests );
+    return [aver, results];
+end;
+
+if false then
+    # get malcev setup for F_nc
+    method := "pols";
+    #method := "simple";
+    range := 1024;
+    noTests := 100;
+    n := 3;
+    c := 6;
+    mo_Fnc := GUARANA.Get_FNG_MalcevObject( n, c );
+
+    res := GUARANA.AverageRuntimeLog( mo_Fnc, noTests, range, method );
+fi;
+
 
 #############################################################################
 ##

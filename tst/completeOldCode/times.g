@@ -57,10 +57,10 @@ end;
 #                 Nickel
 #
 # Example of use:
-# exams_Fnc := BCH_Get_FNG_TGroupRecords( 2, 9 );
-# MAT_ComputeTimeMatSetup( exams_Fnc, 9,9, "Nickel" );
+# exams_Fnc := BCH_Get_FNG_TGroupRecords( 3, 6 );
+# MAT_ComputeTimeMatSetup( exams_Fnc, 2,9, "Nickel" );
 #
-# exams_unitr_2 := BCH_Get_Unitriangular_TGroupRecords( 10, 2 );
+# exams_unitr_2 := BCH_Get_Unitriangular_TGroupRecords( 7, 3 );
 # MAT_ComputeTimeMatSetup(exams_unitr_2, 2, 5, "Nickel" );
 #
 MAT_ComputeTimeMatSetup := function( ll, start, stop, rep_method )
@@ -336,7 +336,7 @@ end;
 #          [ 4096, 6695, 7291 ] ] ] ]
 #
 # recLieAlgs_nickelMat_F3c := List( [2..Length( exams_F3c )], x-> MAT_LieAlgebra( [exams_F3c[x].N, "Nickel"] ) );;
-# res_mat_F3c := BCH_ComputeTime_ExpAndLog_List(recLieAlgs_nickelMat_F3c,2,5,recBCH9,ranges,200,2);  
+# res_mat_F3c := BCH_ComputeTime_ExpAndLog_List(recLieAlgs_nickelMat_Æ3c,2,5,recBCH9,ranges,200,2);  
 # 
 #
 #
