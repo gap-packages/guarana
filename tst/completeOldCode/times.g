@@ -224,6 +224,7 @@ end;
 #
 # ranges := [2,4,8,16,32,64];
 # ranges := [1024, 2048, 4096];
+# ranges := [1024];
 # 
 # for BCH
 # recLieAlg_bch := BCH_LieAlgebraByTGroupRec( recBCH9,exams_Fnc[8] );;
