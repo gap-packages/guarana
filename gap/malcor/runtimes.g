@@ -153,14 +153,24 @@ end;
 
 # Example
 if false then 
+    range_n := [2..8];
     range_n := [7];
     range_c := [0];
+    class_string := "Tr_1_n_O1";
+    latex_code1 := GUARANA.Latex_GenerateRuntimesSetupTable( class_string, range_n, range_c );
+    Print( latex_code1 );
+
+    range_n := [2..7];
+    range_c := [0];
+    class_string := "Tr_1_n_O2";
+    latex_code2 := GUARANA.Latex_GenerateRuntimesSetupTable( class_string, range_n, range_c );
+    Print( latex_code2 );
     class_string := "Tr_1_n_O2";
     latex_code := GUARANA.Latex_GenerateRuntimesSetupTable( class_string, range_n, range_c );
     Print( latex_code );
 
-    range_n := 2;
-    range_c := [2..9];
+    range_n := [3];
+    range_c := [2..6];
     class_string := "F_nc";
     latex_code := GUARANA.Latex_GenerateRuntimesSetupTable( class_string, range_n, range_c );
     Print( latex_code );

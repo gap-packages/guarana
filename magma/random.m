@@ -58,6 +58,17 @@ load "Tr_4_O1.m";
 load "Tr_5_O1.m";
 load "Tr_6_O1.m";
 load "Tr_7_O1.m";
+load "Tr_8_O1.m";
+load "Tr_4_O2.m";
+load "Tr_5_O2.m";
+load "Tr_6_O2.m";
+load "Tr_7_O2.m";
+
+ranges := [ 8, 16, 32, 64 ];
+ranges := [100];
+no := 10;
+G := Tr_6_O2;
+times := RuntimesCftlByRanges( G, ranges, no );
 
 ranges := [15];
 no := 1000;
