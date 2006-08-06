@@ -23,6 +23,7 @@ DeclareRepresentation( "IsMalcevCNElementRep",
               "exps"] );
 
 DeclareGlobalFunction( "MalcevCNElementByExponents" );
+DeclareGlobalFunction( "MalcevCNElementByExponentsNC" );
 DeclareGlobalFunction( "MalcevCNElementBy2Coefficients" );
 DeclareGlobalFunction( "MalcevCNElementBy2Exponents" );
 DeclareGlobalFunction( "MalcevCNElementBy2GenElements" );
@@ -39,6 +40,7 @@ DeclareRepresentation( "IsMalcevGElementRep",
               "exps"] );
 
 DeclareGlobalFunction( "MalcevGElementByExponents" );
+DeclareGlobalFunction( "MalcevGElementByExponentsNC" );
 DeclareGlobalFunction( "MalcevGElementByCNElmAndExps" );
 
 DeclareOperation( "NormalForm" , [IsObject] );

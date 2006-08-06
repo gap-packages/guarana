@@ -74,6 +74,32 @@ function( malCol, exps_cn )
     return Objectify( malCol!.cn_elms_type , elm );
 end);
 
+InstallGlobalFunction( MalcevCNElementByExponentsNC,
+function( malCol, exps_cn )
+    local hlCN_N, hlC, hlN, hlCN, exps_n, exps_c, c, n, elm;
+
+    # setup
+    hlCN_N := Length( malCol!.indeces[2] );
+    hlC := HirschLength( malCol!.CC );
+    hlN := HirschLength( malCol!.NN ); 
+    hlCN := hlCN_N + hlN;
+
+    # get exps_c, exps_n 
+    exps_n := exps_cn{ [1+hlCN_N..hlCN] };
+    exps_c := List( [1..hlC], x-> 0 );
+    exps_c{[1..hlCN_N]} := exps_cn{[1..hlCN_N]};
+
+    # get malcev element of C and N
+    c := MalcevGenElementByExponents( malCol!.mo_CC, exps_c );
+    n := MalcevGenElementByExponents( malCol!.mo_NN, exps_n );
+
+    elm := rec( malCol := malCol,
+                c := c,
+                n := n,
+                exps := exps_cn );
+    return Objectify( malCol!.cn_elms_type , elm );
+end);
+
 InstallGlobalFunction( MalcevCNElementBy2GenElements,
 function( malCol, c, n )
     local elm;
@@ -119,6 +145,22 @@ function( malCol, exps )
 
     exps_cn := exps{ Concatenation(indeces[2],indeces[3]) };
     cn_elm := MalcevCNElementByExponents( malCol, exps_cn );
+
+    elm := rec( malCol := malCol,
+                cn_elm := cn_elm,
+                exps_f := exps_f,
+                exps := exps );
+    return Objectify( malCol!.g_elms_type , elm );
+end);
+
+InstallGlobalFunction( MalcevGElementByExponentsNC,
+function( malCol, exps )
+    local exps_cn, cn_elm, indeces, exps_f, elm;
+
+    indeces := malCol!.indeces;
+    exps_f := exps{indeces[1]};
+    exps_cn := exps{ Concatenation(indeces[2],indeces[3]) };
+    cn_elm := MalcevCNElementByExponentsNC( malCol, exps_cn );
 
     elm := rec( malCol := malCol,
                 cn_elm := cn_elm,

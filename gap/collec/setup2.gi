@@ -448,10 +448,10 @@ GUARANA.MO_G_CN_InitialSetup := function( malCol )
 end;
 
 GUARANA.MO_G_CN_AddMultTable := function( malCol )
-    local prods, pcpG, order, w_vec, exp_g, exp_h, g, h, k, i, j, exps_k;
+    local prods, collG, order, w_vec, exp_g, exp_h, g, h, k, i, j, exps_k;
 
     prods := [];
-    pcpG := Pcp( malCol!.G );
+    collG := Collector( malCol!.G );
     
     # catch trivial case 
     if Length( malCol!.G_CN.rels ) = 0 then 
@@ -466,12 +466,15 @@ GUARANA.MO_G_CN_AddMultTable := function( malCol )
 	    for j in [1..order] do 
 	        exp_g := GUARANA.G_CN_NumberToExpVector( i, w_vec );
 	        exp_h := GUARANA.G_CN_NumberToExpVector( j, w_vec );
-	        g := GUARANA.GrpElmByExpsAndPcs( pcpG, exp_g );
-	        h := GUARANA.GrpElmByExpsAndPcs( pcpG, exp_h );
-	        k := g*h;
+	        #g := GUARANA.GrpElmByExpsAndCollNC( collG, exp_g );
+	        #h := GUARANA.GrpElmByExpsAndCollNC( collG, exp_h );
+	        #k := g*h;
+                # only save exp vector, since the generation of 
+                # malcevGelements is a little bit expensive
 	        #Add( prods[i], Exponents( k ) );
-            exps_k := Exponents( k );
-            Add( prods[i], MalcevGElementByExponents( malCol, exps_k ));
+
+                #exps_k := Exponents( k );
+                #Add( prods[i], MalcevGElementByExponentsNC( malCol, exps_k ));
 	    od;
     od;
     
@@ -496,16 +499,19 @@ end;
 ## MalcevGElement  g1*g2
 ##
 GUARANA.MO_G_CN_LookUpProduct := function( malCol, exp1, exp2 )
-    local w_vec, num1, num2;
+    local w_vec, num1, num2,exp_vec;
     w_vec := malCol!.G_CN.w_vec;
     # catch case G/CN = 1
     if Length( w_vec ) = 0 then 
         return GUARANA.G_Identity( malCol );
     fi;
 
+    # get exp vector
     num1 := GUARANA.G_CN_ExpVectorToNumber( exp1, w_vec );
     num2 := GUARANA.G_CN_ExpVectorToNumber( exp2, w_vec );
-    return malCol!.G_CN.multTable[num1][num2];
+    exp_vec := malCol!.G_CN.multTable[num1][num2];
+
+    return  MalcevGElementByExponentsNC( malCol, exp_vec );
 end;
 
 GUARANA.GetCNElmentByGExpVector := function( malCol, exps )

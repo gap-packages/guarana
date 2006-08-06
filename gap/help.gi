@@ -71,6 +71,13 @@ GUARANA.GrpElmByExpsAndPcs := function( pcs, exp )
     return elm;
 end;
 
+GUARANA.GrpElmByExpsAndCollNC := function( coll, exp )
+    local word;
+     word := ObjByExponents( coll, exp );
+     return PcpElementByGenExpListNC( coll, word );
+end;
+
+
 GUARANA.CompleteRuntime1:= function( func, input )
      local rec1,rec2, user_time, user_time_child, system_time,
      system_time_child, sum;
