@@ -28,3 +28,5 @@
   is roughly a half of the whole setup. 
   Further it seems that using symbolic Log slows down the
   same function immensly !! 
+
+- Is it necessary to set up the Mal'cev correspondence for C ?
