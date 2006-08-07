@@ -245,6 +245,22 @@ if false then
     GUARANA.Latex_GenerateRuntimesTable( class_string, ranges, range_n,
     range_c, no );
 
+    class_string := "Tr_n_O2";
+    ranges := [1,10,100,1000];
+    range_n := [2..7];
+    range_c := [0];
+    no := 100;
+    GUARANA.Latex_GenerateRuntimesTable( class_string, ranges, range_n,
+    range_c, no );
+
+    class_string := "F_nc_Aut1";
+    ranges := [1,10,100,1000];
+    range_n := [2];
+    range_c := [2..8];
+    no := 100;
+    GUARANA.Latex_GenerateRuntimesTable( class_string, ranges, range_n,
+    range_c, no );
+    
 GUARANA.Latex_GenerateRuntimesTable( "Tr_n_O1", [2,4,8], [2..4], [1], 100 );
 GUARANA.Latex_GenerateRuntimesTable( "Tr_n_O2", [2,4,8], [2..4], [1], 100 );
 GUARANA.Latex_GenerateRuntimesTable( "F_nc_Aut1", [2,4,8], [2..3], [2..4], 100 );
