@@ -21,3 +21,10 @@
 
   Furhter it seems that the whole setup has still the potential 
   to be speeded up. 
+
+- F_36 semdirect Aut1 
+  shows a very strange behaviour. 
+  The function Add_G_LieAuts needs 20 seconds which 
+  is roughly a half of the whole setup. 
+  Further it seems that using symbolic Log slows down the
+  same function immensly !! 

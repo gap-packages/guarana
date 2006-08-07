@@ -238,7 +238,7 @@ if false then
     no := 10;
 
     class_string := "Tr_n_O1";
-    ranges := [1,10,100];
+    ranges := [1,10,100,1000];
     range_n := [4..8];
     range_c := [0];
     no := 100;
@@ -259,6 +259,190 @@ PrintList := function( list )
         Print( a[1], " ", a[2], "\n" );
     od;
 end;
+
+#############################################################################
+##
+## Functions for computing the time needed for the complete setup
+## of the Malcev collector
+##
+
+## Example
+## GUARANA.RuntimesSetupCollector_Tr_n_O1( [2..4] );
+##
+GUARANA.RuntimesSetupCollector_Tr_n_O1 := function( range_n )
+    local results, res, info, args, time, n, hl;
+    
+    results := [];
+    Add( results, [ "Tr_n_O1" ] );
+    for n in range_n do 
+        # get pcs and subgroups C,N etc
+        args := GUARANA.Tr_n_O1( n );
+
+        # collect some meta data
+        res := [];
+        hl := HirschLength( args[1] );
+        info := [ "dim = ", n, "class = ", n-1, "hl = ", hl  ] ;
+        Add( res,info );
+
+        # compute time needed for the setup
+        time := GUARANA.CompleteRuntime2( MalcevCollectorConstruction, 
+                                          args ).time;
+        Add( res, time );
+        Add( results, res );
+    od;
+    return results;
+end;
+
+GUARANA.RuntimesSetupCollector_Tr_n_O2 := function( range_n )
+    local results, res, info, args, time, n, hl;
+    
+    results := [];
+    Add( results, [ "Tr_n_O2" ] );
+    for n in range_n do 
+        # get pcs and subgroups C,N etc
+        args := GUARANA.Tr_n_O2( n );
+
+        # collect some meta data
+        res := [];
+        hl := HirschLength( args[1] );
+        info := [ "dim = ", n, "class = ", n-1, "hl = ", hl  ] ;
+        Add( res,info );
+
+        # compute time needed for the setup
+        time := GUARANA.CompleteRuntime2( MalcevCollectorConstruction, 
+                                          args ).time;
+        Add( res, time );
+        Add( results, res );
+    od;
+    return results;
+end;
+
+GUARANA.RuntimesSetupCollector_F_nc_Aut1 := function( range_n, range_c )
+    local results, args, res, hl, info, time, c, n;
+    
+    results := [];
+    Add( results, [ "F_nc_Aut1" ] );
+    for c in range_c do 
+        for n in range_n do 
+            # get pcs and subgroups C,N etc
+            args := GUARANA.F_nc_Aut1( n,c );
+
+            # collect some meta data
+            res := [];
+            hl := HirschLength( args[1] );
+            info := [ "dim = ", n, "class = ", c, "hl = ", hl  ] ;
+            Add( res,info );
+
+            # compute time needed for the setup
+            time := GUARANA.CompleteRuntime2( MalcevCollectorConstruction, 
+                                          args ).time;
+            Add( res, time );
+            Add( results, res );
+        od;
+    od;
+    return results;
+end;
+
+
+GUARANA.RuntimesSetupCollector_F_nc_Aut2 := function( range_n, range_c )
+    local results, args, res, hl, info, time, c, n;
+    
+    results := [];
+    Add( results, [ "F_nc_Aut2" ] );
+    for c in range_c do 
+        for n in range_n do 
+            # get pcs and subgroups C,N etc
+            args := GUARANA.F_nc_Aut2( n,c );
+
+            # collect some meta data
+            res := [];
+            hl := HirschLength( args[1] );
+            info := [ "dim = ", n, "class = ", c, "hl = ", hl  ] ;
+            Add( res,info );
+
+            # compute time needed for the setup
+            time := GUARANA.CompleteRuntime2( MalcevCollectorConstruction, 
+                                          args ).time;
+            Add( res, time );
+            Add( results, res );
+        od;
+    od;
+    return results;
+end;
+
+GUARANA.Latex_RuntimesSetupCollectorToLatex := function( list )
+    local groupClass, res, k, ll, n, c, stringLine, hl, i;
+
+    groupClass := list[1][1];
+    res := "";
+    k := Length( list );
+    for i in [2..k] do 
+        ll := list[i];
+
+        # add group name
+        n := ll[1][2];
+        c := ll[1][4];
+        stringLine := GUARANA.Latex_GroupClass2Latex( groupClass, n, c );
+
+        # add hirsch length
+        hl := ll[1][6];
+        Append( stringLine, " & " );
+        Append( stringLine, String( hl ) );
+
+        # add runtime
+        Append( stringLine, " & " );
+        Append( stringLine, String( ll[2] ) );
+
+        # add new line
+        Append( stringLine, " \\\\ \\hline \n" );
+
+        Append( res, stringLine );
+    od;
+    return res;
+
+end;
+
+GUARANA.Latex_GenerateCompleteSetupTable 
+                := function( class_string, range_n, range_c )
+    local res, latex_code;
+
+    if class_string = "Tr_n_O1" then  
+        res := GUARANA.RuntimesSetupCollector_Tr_n_O1( range_n );
+    elif class_string = "Tr_n_O2" then  
+        res := GUARANA.RuntimesSetupCollector_Tr_n_O2( range_n );
+    elif class_string = "F_nc_Aut1" then
+        res := GUARANA.RuntimesSetupCollector_F_nc_Aut1( range_n,range_c );
+    elif class_string = "F_nc_Aut2" then
+        res := GUARANA.RuntimesSetupCollector_F_nc_Aut2( range_n,range_c );
+    fi;
+    latex_code := GUARANA.Latex_RuntimesSetupCollectorToLatex( res );
+    Print( latex_code );
+    return latex_code;
+end;
+
+# Example
+if false then 
+    class_string := "Tr_n_O1";
+    range_n := [2..8];
+    range_c := [0];
+    latex_code := GUARANA.Latex_GenerateCompleteSetupTable( class_string, range_n, range_c );
+
+    class_string := "Tr_n_O2";
+    range_n := [2..7];
+    range_c := [0];
+    latex_code := GUARANA.Latex_GenerateCompleteSetupTable( class_string, range_n, range_c );
+
+    class_string := "F_nc_Aut1";
+    range_n := [2];
+    range_c := [2..8];
+    latex_code := GUARANA.Latex_GenerateCompleteSetupTable( class_string, range_n, range_c );
+
+    class_string := "F_nc_Aut1";
+    range_n := [3];
+    range_c := [2..6];
+    latex_code := GUARANA.Latex_GenerateCompleteSetupTable( class_string, range_n, range_c );
+fi;
+
 
 #############################################################################
 ##

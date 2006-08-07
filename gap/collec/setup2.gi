@@ -466,12 +466,12 @@ GUARANA.MO_G_CN_AddMultTable := function( malCol )
 	    for j in [1..order] do 
 	        exp_g := GUARANA.G_CN_NumberToExpVector( i, w_vec );
 	        exp_h := GUARANA.G_CN_NumberToExpVector( j, w_vec );
-	        #g := GUARANA.GrpElmByExpsAndCollNC( collG, exp_g );
-	        #h := GUARANA.GrpElmByExpsAndCollNC( collG, exp_h );
-	        #k := g*h;
-                # only save exp vector, since the generation of 
-                # malcevGelements is a little bit expensive
-	        #Add( prods[i], Exponents( k ) );
+	        g := GUARANA.GrpElmByExpsAndCollNC( collG, exp_g );
+	        h := GUARANA.GrpElmByExpsAndCollNC( collG, exp_h );
+	        k := g*h;
+            # only save exp vector, since the generation of 
+            # malcevGelements is a little bit expensive
+	        Add( prods[i], Exponents( k ) );
 
                 #exps_k := Exponents( k );
                 #Add( prods[i], MalcevGElementByExponentsNC( malCol, exps_k ));
