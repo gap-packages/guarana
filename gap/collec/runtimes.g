@@ -144,7 +144,7 @@ GUARANA.Latex_GroupClass2Latex := function( str, n, c )
         s4 := "})$";
         ss := Concatenation( s1, s2, s3, s4 );
     elif str = "F_nc_Aut2" then 
-        s1 := "$G( \\langle \\bar{\varphi_2} \\rangle \\rtimes F_{";
+        s1 := "$G( \\langle \\bar{\\varphi_2} \\rangle \\rtimes F_{";
         s2 := String( n );
         s3 := String( c );
         s4 := "})$";
@@ -259,7 +259,7 @@ if false then
     class_string := "F_nc_Aut2";
     ranges := [1,10,100,1000];
     range_n := [3];
-    range_c := [2..5];
+    range_c := [6];
     no := 100;
     latex_times := GUARANA.Latex_GenerateRuntimesTable( class_string, ranges, 
                                             range_n, range_c, no );
