@@ -131,7 +131,7 @@ end;
 # Example
 if false then 
     ranges_n := [2..5];
-    res := GUARANA.AverageRuntimesSetup_Tr_n_O1( ranges_n );
+    res := GUARANA.AverageRuntimesSetup_Tr_1_n_O1( ranges_n );
     latex_code := GUARANA.Latex_RuntimesSetupToLatex( res );
     Print( latex_code );
 fi;

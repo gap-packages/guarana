@@ -4,3 +4,7 @@ phd/liealg.
 It is here only for testing purposes.
 In particular because we want to compute times 
 for the matrix setup.
+
+See the file times.gi.
+The code there was used for testing the times
+for the BCH collection paper.

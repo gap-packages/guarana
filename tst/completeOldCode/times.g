@@ -77,6 +77,25 @@ MAT_ComputeTimeMatSetup := function( ll, start, stop, rep_method )
     return results;
 end;
 
+if false
+    # for the BCH paper with Steve
+    exams_Fnc := BCH_Get_FNG_TGroupRecords( 3, 6 );
+    # compute times for F_32 to F_35
+    MAT_ComputeTimeMatSetup( exams_Fnc, 3,6, "Nickel" );
+
+    # to be exact substract the conjugator time ?
+    # probably not because the representations is not integral anyway.
+
+
+    # compute setup time for Tr_1_n_O2 for n = 2..6
+    exams_unitr_2 := BCH_Get_Unitriangular_TGroupRecords( 7, 3 );
+    MAT_ComputeTimeMatSetup(exams_unitr_2, 2, 6, "Nickel" );
+
+    
+fi;
+    
+
+
 
 BCH_AbstractLog_Simple_ByExponent_RuntimeVersion := function( args )
     local recLieAlg, recBCH, exp;
