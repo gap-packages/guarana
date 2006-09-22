@@ -1,4 +1,69 @@
 To do:
+
+-----------------------------------------------------------------------------
+Aim:
+create objects that represent objects of the kind 
+w^y where w is an algebraic number and y a symbolic integer.
+
+I want to be able to do the following computations with them:
+- Evaluate for given integer y = ...
+- Have them as entries in a matrix, so that matrix multiplication
+  still works.
+- In the end we could probably symbolic powers of matrices.
+- Evaluate polynomials with them as the entries.
+
+  For example we could have a polynmials like 
+  p(x) = x^2 + 1/2* x 
+  and we want to evaluate x = w^y. 
+  This would give 
+  (w^y)^2 + 1/2 * w^y.
+  = w^(2*y) + 1/2* w^y.
+
+  So we need to allow powering with integers with these objects.
+
+
+  We have probably to overload the following operators:
+  - "*" 
+     w^x * w^y should give w^(x+y). 
+ 
+     w^y * v^y should give (w*v)^y
+
+     In the general case we cannot do much to simply. 
+
+  - "+" , "-"
+     w^x + w^x should give 2* w^x
+     w^x + w^y  = we cannot to much about it. 
+     w^x + v^x also no simplification.
+
+  - "^" 
+    (w^x)^2 = w^(2*)
+    Alternatively this 
+
+     This implies that we actually need to have a proper 
+     representations of of the kind of functions that  you get
+     when you allow all these operators. 
+
+It seems that we have to allow polynomials in the exponents.
+Scalar multiplication comes from powering with that scalar 
+and addtion comes from w^x * w^y = w^(x+y).
+
+Problem: We can simply the following 
+(1/2*w )^y * w^x = (1/2)^y w^y * w^x 
+                 = (1/2)^y w^(x+y).
+
+But how do we know wheter one of the bases is 
+a rational multiple of the other?
+
+
+Idea for my objects
+- check with polynomials. 
+  How do we deal with them.
+
+
+
+
+-----------------------------------------------------------------------------
+
 - write function that provides the important families of examples
   that I already have. Don't forget the small exams ( good for comparing
   with Cftl). 
