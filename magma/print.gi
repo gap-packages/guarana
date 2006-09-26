@@ -109,7 +109,41 @@ GUARANA.PrintExamClassesMagmaStyle := function( exam_string, ranges_n,
                 GUARANA.Print2FilePcpMagmaStyle( G, grp_name, file_name );
             od;
         od;
+    elif exam_string = "F_nc_Aut2" then 
+        for n in ranges_n do 
+            for c in ranges_c do 
+                # get group
+                G := GUARANA.F_nc_Aut2( n, c )[1];
+                # get name of group and magma file
+                s1 := "F_";
+                s2 := String( n );
+                s3 := String( c );
+                s4 := "_Aut2";
+                grp_name := Concatenation( s1, s2, s3, s4 );
+                file_name := Concatenation( grp_name, ".m" );
+                GUARANA.Print2FilePcpMagmaStyle( G, grp_name, file_name );
+            od;
+        od;
     fi;
 end;
+
+if false then 
+    exam_string := "Tr_n_O2";
+    ranges_n := [2..3];
+    ranges_c := [0];
+    GUARANA.PrintExamClassesMagmaStyle( exam_string, ranges_n, ranges_c );
+
+    exam_string := "F_nc_Aut1";
+    ranges_n := [2];
+    ranges_c := [2..8];
+    GUARANA.PrintExamClassesMagmaStyle( exam_string, ranges_n, ranges_c );
+
+    exam_string := "F_nc_Aut2";
+    ranges_n := [3];
+    ranges_c := [2..6];
+    GUARANA.PrintExamClassesMagmaStyle( exam_string, ranges_n, ranges_c );
+fi;
+
+
 # - save important examples as text files
 # - write test function in magma
