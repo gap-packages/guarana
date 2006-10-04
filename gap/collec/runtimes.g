@@ -62,6 +62,7 @@ GUARANA.AverageRuntimesCollec_Tr_n_O1 := function( range_n, ranges, no )
         Add( res,info );
         r := GUARANA.AverageRuntimeCollec( malCol, ranges, no );
         Add( res, r );
+        Print( r, " " );
         Add( results, res );
     od;
     return results;
@@ -79,6 +80,7 @@ GUARANA.AverageRuntimesCollec_Tr_n_O2 := function( range_n, ranges, no )
         Add( res,info );
         r := GUARANA.AverageRuntimeCollec( malCol, ranges, no );
         Add( res, r );
+        Print( r, " " );
         Add( results, res );
     od;
     return results;
@@ -98,6 +100,7 @@ GUARANA.AverageRuntimesCollec_F_nc_Aut1 := function( range_n, range_c,
             Add( res,info );
             r := GUARANA.AverageRuntimeCollec( malCol, ranges, no );
             Add( res, r );
+            Print( r, " " );
             Add( results, res );
         od;
     od;
@@ -118,6 +121,7 @@ GUARANA.AverageRuntimesCollec_F_nc_Aut2 := function( range_n, range_c,
             Add( res,info );
             r := GUARANA.AverageRuntimeCollec( malCol, ranges, no );
             Add( res, r );
+            Print( r, " " );
             Add( results, res );
         od;
     od;
@@ -264,6 +268,14 @@ if false then
     latex_times := GUARANA.Latex_GenerateRuntimesTable( class_string, ranges, 
                                             range_n, range_c, no );
 
+    class_string := "F_nc_Aut2";
+    ranges := [1000];
+    range_n := [3];
+    range_c := [6];
+    no := 1000;
+    latex_times := GUARANA.Latex_GenerateRuntimesTable( class_string, ranges, 
+                                            range_n, range_c, no );
+
 GUARANA.Latex_GenerateRuntimesTable( "Tr_n_O1", [2,4,8], [2..4], [1], 100 );
 GUARANA.Latex_GenerateRuntimesTable( "Tr_n_O2", [2,4,8], [2..4], [1], 100 );
 GUARANA.Latex_GenerateRuntimesTable( "F_nc_Aut1", [2,4,8], [2..3], [2..4], 100 );
@@ -278,6 +290,30 @@ PrintList := function( list )
         Print( a[1], " ", a[2], "\n" );
     od;
 end;
+
+#############################################################################
+##
+## Methods to get the data for the graph in the BCH paper.
+##
+## We consider the group Tr_6_O1
+##
+##
+if false then 
+ranges := [1..200];
+no := 100;
+
+# compute the times
+times := GUARANA.AverageRuntimesCollec_Tr_n_O1( [6], ranges, no );
+
+# print in format range, time, \n
+# to a file
+LogTo( "times_Tr_6_O1.txt" );
+PrintList( times[2][2] );
+LogTo();
+
+
+fi;
+
 
 #############################################################################
 ##
@@ -457,8 +493,18 @@ if false then
     latex_code := GUARANA.Latex_GenerateCompleteSetupTable( class_string, range_n, range_c );
 
     class_string := "F_nc_Aut1";
+    range_n := [2];
+    range_c := [8];
+    latex_code := GUARANA.Latex_GenerateCompleteSetupTable( class_string, range_n, range_c );
+
+    class_string := "F_nc_Aut2";
     range_n := [3];
     range_c := [2..6];
+    latex_code := GUARANA.Latex_GenerateCompleteSetupTable( class_string, range_n, range_c );
+
+    class_string := "F_nc_Aut2";
+    range_n := [3];
+    range_c := [6];
     latex_code := GUARANA.Latex_GenerateCompleteSetupTable( class_string, range_n, range_c );
 fi;
 
