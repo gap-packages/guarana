@@ -55,14 +55,16 @@ PackageWWWHome :="http://www.icm.tu-bs.de/ag_algebra/software/assmann/Polenta",
 
 Dependencies := rec(
   GAP := ">= 4.3fix4",
-  NeededOtherPackages := [[ "polycyclic", ">=1.1" ]],
+  NeededOtherPackages := [[ "polycyclic", ">=1.1" ], 
+                          [ "polenta", ">=1.2.3" ],
+                          [ "radiroot", ">=2.0" ]],
   SuggestedOtherPackages := [ ["nq", ">=2.0"]], 
   ExternalConditions :=[], 
 ), 
 
 AvailabilityTest := ReturnTrue,             
 BannerString := Concatenation([ 
-"Loading Polenta ",
+"Loading Guarana ",
 ~.Version,
 " ... \n" ]),     
 Autoload := true,
