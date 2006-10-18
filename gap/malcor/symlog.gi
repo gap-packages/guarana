@@ -254,9 +254,17 @@ GUARANA.MO_Star_Symbolic_SingleVersusGeneric := function( x, y  )
     return MalcevLieElementByCoefficients( malcevObject, coeff_res ); 
 end;
 
+GUARANA.MO_GetOneOfUnderlyingFieldOfPol := function( pol )
+    local ext, coeff;
+
+    ext := ExtRepPolynomialRatFun( pol );
+    coeff := ext[2];
+    return coeff^0;
+end;
+
 GUARANA.MO_Star_Symbolic := function( x, y  )
     local malcevObject, coeffs_x, coeffs_y, n, vars_x, vars_y, 
-          indets, vals, pols, coeff_res, r, i;
+          indets, vals, pols, coeff_res, r, i, one, isPolOverExtField;
 
     # some simple tests
     malcevObject := x!.malcevObject;
@@ -278,10 +286,31 @@ GUARANA.MO_Star_Symbolic := function( x, y  )
 
     # compute result
     coeff_res := [ ];
-    for i in [1..n] do 
-        r := Value( pols[i], indets, vals );
-        Add( coeff_res, r );
-    od;
+    if n > 0 then 
+        # check wheter the coefficients are polynomials over a number field
+        # (which is the case when we compute duSautoy functions)
+        isPolOverExtField := false;
+        if IsSymbolicElement( x ) or IsSymbolicElement( y )  then
+            one := GUARANA.MO_GetOneOfUnderlyingFieldOfPol( coeffs_x[1] );
+            if not one in Rationals then 
+                isPolOverExtField := true;
+            fi;
+        fi;
+
+        # if we deal with polynomials over extension fields we need
+        # a slightly different evaluation functions.
+        if isPolOverExtField then 
+            for i in [1..n] do
+                r := Value( pols[i], indets, vals, 1, one );
+                Add( coeff_res, r );
+            od;
+        else
+            for i in [1..n] do
+                r := Value( pols[i], indets, vals );
+                Add( coeff_res, r );
+            od;
+        fi;
+    fi;
 
     if IsSymbolicElement( x ) or IsSymbolicElement( y ) then 
 	    return MalcevSymbolicLieElementByCoefficients( malcevObject,coeff_res );
@@ -333,7 +362,8 @@ GUARANA.MO_AddLogPolynomialsByStarPols:=function( malcevObject )
 end;
 
 GUARANA.LogByPols := function( g )
-    local exp_g, malcevObject, indets, pols, coeffs, coeff, i,n;
+    local exp_g, malcevObject, indets, pols, coeffs, coeff, i,n,
+          one,isPolOverExtField;
     
     # setup    
     exp_g := Exponents( g );
@@ -344,10 +374,33 @@ GUARANA.LogByPols := function( g )
     
     # compute coeffs of result
     coeffs := []; 
-    for i in [1..n] do
-        coeff := Value( pols[i], indets, exp_g );
-        Add( coeffs, coeff );
-    od;
+    if n > 0 then 
+        # check wheter the exponents are polynomials over a number field
+        # (which is the case when we compute duSautoy functions)
+        if IsSymbolicElement( g ) then 
+            if FieldOfPolynomial( exp_g[1] ) <> Rationals then 
+                isPolOverExtField := true;
+                one := One( FieldOfPolynomial( exp_g[1] ));
+            fi;
+        else 
+            isPolOverExtField := false;
+        fi;
+
+        # if we deal with polynomials over extension fields we need
+        # a slightly different evaluation functions.
+        if isPolOverExtField then 
+            for i in [1..n] do
+                coeff := Value( pols[i], indets, exp_g, 1, one );
+                Add( coeffs, coeff );
+            od;
+        else
+            for i in [1..n] do
+                coeff := Value( pols[i], indets, exp_g );
+                Add( coeffs, coeff );
+            od;
+        fi;
+    fi;
+
     if IsSymbolicElement( g ) then 
 	    return MalcevSymbolicLieElementByCoefficients( malcevObject,coeffs );
     else

@@ -94,6 +94,51 @@ function(  g )
    return Objectify( malcevObject!.gen_elms_type , elm );
 end);
 
+InstallGlobalFunction( MalcevSymbolicGenElementByExponents, 
+function( malcevObject, exps )
+    local g, weight, x, elm, lie_elm;
+
+   # get group element
+   g := MalcevSymbolicGrpElementByExponents( malcevObject, exps );
+
+   # get weight 
+   weight := Weight( g );
+
+   # lie element unknown so far
+   x := "unknown yet";
+
+   elm := rec( malcevObject := malcevObject,
+               grp_elm := Immutable( g ),
+               lie_elm := x,
+               weight := weight );
+   elm := Objectify( malcevObject!.gen_elms_type , elm );
+   Setter( IsSymbolicElement )( elm, true );
+   return elm;
+end);
+
+InstallGlobalFunction( MalcevSymbolicGenElementByCoefficients, 
+function( malcevObject, coeffs )
+    local g, weight, x, elm, lie_elm;
+
+   # group element unknown so far
+   g := "unknown yet";
+
+   # get lie element 
+   x := MalcevSymbolicLieElementByCoefficients( malcevObject, coeffs ); 
+
+   # get weight 
+   weight := Weight( x );
+
+
+   elm := rec( malcevObject := malcevObject,
+               grp_elm := g,
+               lie_elm := Immutable( x ),
+               weight := weight );
+   elm :=  Objectify( malcevObject!.gen_elms_type , elm );
+   Setter( IsSymbolicElement )( elm, true );
+   return elm;
+end);
+
 #############################################################################
 ##
 #M Print Malcev gen elements
@@ -280,12 +325,13 @@ MalcevSymbolicLieElementByWord := function( malcevObject, word )
     return elm;
 end;
 
-MalcevSymbolicLieElementByCoefficients := function( malcevObject, coeffs )
+InstallGlobalFunction( MalcevSymbolicLieElementByCoefficients,
+function( malcevObject, coeffs )
     local elm;
     elm := MalcevLieElementByCoefficients( malcevObject, coeffs );
     Setter( IsSymbolicElement )( elm, true );
     return elm;
-end;
+end);
 
 InstallMethod( IsSymbolicElement, 
                "for Malcev elements (Guarana)", 
@@ -361,23 +407,17 @@ function( malcevObject, coeffs )
     return MalcevGrpElementConstruction( malcevObject, coeffs );
 end);
 
-MalcevSymbolicGrpElementByExponents := function( malcevObject, exp )
-    local elm;
-    elm := MalcevGrpElementByExponents( malcevObject, exp );
-    Setter( IsSymbolicElement )( elm, true );
-    return elm;
-end;
-
 #############################################################################
 ##
 ## Methods for constructing symbolic Malcev grp elements.
 ##
-MalcevSymbolicGrpElementByExponents := function( malcevObject, coeffs )
+InstallGlobalFunction( MalcevSymbolicGrpElementByExponents,
+function( malcevObject, exp )
     local elm;
-    elm := MalcevGrpElementByExponents( malcevObject, coeffs );
+    elm := MalcevGrpElementByExponents( malcevObject, exp );
     Setter( IsSymbolicElement )( elm, true );
     return elm;
-end;
+end);
 
 #############################################################################
 ##

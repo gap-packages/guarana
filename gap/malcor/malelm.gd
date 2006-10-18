@@ -25,6 +25,9 @@ DeclareGlobalFunction( "MalcevGenElementByExponents" );
 DeclareGlobalFunction( "MalcevGenElementByCoefficients" );
 DeclareGlobalFunction( "MalcevGenElementByLieElement" );
 DeclareGlobalFunction( "MalcevGenElementByGrpElement" );
+DeclareGlobalFunction( "MalcevSymbolicGenElementByExponents" );
+DeclareGlobalFunction( "MalcevSymbolicGenElementByCoefficients" );
+
 #############################################################################
 ##
 ## Lie elements
@@ -44,6 +47,7 @@ DeclareRepresentation( "IsMalcevLieElementRep",
 DeclareGlobalFunction( "MalcevLieElementConstruction" );
 DeclareGlobalFunction( "MalcevLieElementByCoefficients" );
 DeclareGlobalFunction( "MalcevLieElementByWord" );
+DeclareGlobalFunction( "MalcevSymbolicLieElementByCoefficients" );
 
 #############################################################################
 ##
@@ -62,6 +66,7 @@ DeclareRepresentation( "IsMalcevGrpElementRep",
 
 DeclareGlobalFunction( "MalcevGrpElementConstruction" );
 DeclareGlobalFunction( "MalcevGrpElementByExponents" );
+DeclareGlobalFunction( "MalcevSymbolicGrpElementByExponents" );
 
 DeclareProperty( "IsSymbolicElement", IsMalcevElement );
 
