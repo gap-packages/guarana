@@ -223,6 +223,85 @@ GUARANA.SC_SetFullUnipotentAction := function( malCol )
     malCol!.symCol.fullUnipotentAction := fullUAction;
 end;
 
+GUARANA.SC_SetGenericElms := function( malCol )
+    local left_vars, right_vars;
+
+    if not IsBound( malCol!.symCol ) then 
+        Error( "Symbolic collector is not set up." );
+    fi;
+
+    # get variables
+    left_vars := malCol!.symCol.left_vars;
+    right_vars := malCol!.symCol.right_vars;
+
+    # store elms
+    malCol!.symCol.left:=MalcevSymbolicCNElementByExponents(malCol,left_vars);
+    malCol!.symCol.right:=MalcevSymbolicCNElementByExponents(malCol,right_vars);
+    
+end;
+
+## IN
+## malCol ..................... Malcev collector
+##    n ....................... Malcev gen elment of N
+##
+## n^c given as Malcev gen elment of N where 
+## c is the C-part of malCol!.symCol.right, 
+## which is an internal generic element.
+## Note that we use fact that c has only non-zero exponents in 
+## the CN/N part.
+##
+GUARANA.SC_N_ConjugationByRightC_Elm := function( malCol, n )
+    local coeffs;
+
+    coeffs := Coefficients( n );
+
+    # conjugate by semisimple action
+    coeffs := coeffs * malCol!.symCol.fullSemisimpleAction;
+
+    # conjugate by unipotent action
+    coeffs := coeffs * malCol!.symCol.fullUnipotentAction;
+
+    return MalcevSymbolicGenElementByCoefficients( malCol!.mo_NN, coeffs );
+end;
+
+## OUT
+## Compute the collection function of g*h 
+## where h is malCol!.symCol.right;
+##
+## Comment:
+## g h = c(g)n(g) c(h)n(h)
+##     = c(g)c(h0 n(g)^c(h) n(h)
+##
+GUARANA.SC_ComputeCollectionFuncByLeftElm := function( malCol, g )
+    local h, c_new, n_c, n_new, res;
+
+    # setup
+    h := malCol!.symCol.right;
+    GUARANA.COMP_OVER_EXT_FIELD := true;
+    GUARANA.EXT_FIELD := malCol!.symCol.splitField;
+
+    c_new := g!.c * h!.c;
+    n_c := GUARANA.SC_N_ConjugationByRightC_Elm( malCol, g!.n );
+    n_new := n_c * h!.n;
+    res :=  MalcevCNElementBy2GenElements( malCol, c_new, n_new );
+    Normalise( res );
+
+    GUARANA.COMP_OVER_EXT_FIELD := false;
+    return res;
+end;
+
+## computes the symbolic functions of the g*h where 
+## g and h are the two generic elms stored in maCol!.symCol
+##
+GUARANA.SC_ComputeCollectionFunc := function( malCol )
+    local left, res;
+
+    left := malCol!.symCol.left;
+    res := GUARANA.SC_ComputeCollectionFuncByLeftElm( malCol, left );
+    malCol!.symCol.collFuncs := Exponents( res );
+    return res;
+end;
+
 GUARANA.SC_FullSetup := function( malCol )
     GUARANA.SC_ComputeJordanDecomp( malCol );
     GUARANA.SC_DiagonaliseSemisimple( malCol );
@@ -232,14 +311,19 @@ GUARANA.SC_FullSetup := function( malCol )
     GUARANA.SC_SetFullUnipotentAction( malCol );
 
     # use star polynomials for mulitplication in malcev collectors
-    AddStarPolynomials( malCol!.mo_CC );
-    AddStarPolynomials( malCol!.mo_NN );
-    SetMultiplicationMethod( malCol!.mo_CC, GUARANA.MultMethodIsStar );
-    SetMultiplicationMethod( malCol!.mo_NN, GUARANA.MultMethodIsStar );
     SetStarMethod( malCol!.mo_CC, "pols" );
     SetStarMethod( malCol!.mo_NN, "pols" );
+    SetMultiplicationMethod( malCol!.mo_CC, GUARANA.MultMethodIsStar );
+    SetMultiplicationMethod( malCol!.mo_NN, GUARANA.MultMethodIsStar );
 
+    GUARANA.SC_SetGenericElms( malCol );
+    GUARANA.SC_ComputeCollectionFunc( malCol );
 end;
+
+InstallGlobalFunction( AddSymbolicCollector,
+function( malCol )
+    GUARANA.SC_FullSetup( malCol );
+end);
 
 #############################################################################
 ##

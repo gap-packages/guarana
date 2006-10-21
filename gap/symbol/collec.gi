@@ -10,99 +10,156 @@
 ##
 ##
 
-#TODO
-# -compare with normal Mal'cev collector to see how it works
-# -is there a problem with indeterminantes (in Rationals versus 
-#  splitting field)?
-# -we need a setter functions that swiches on, the right symbolic 
-#  collection in C,N.
-#  This also affects the setup of the malcev collector.
-#
-# 1. setup of the symbolic elements.
-#    maybe in a file coalled elms.gi
-#    There we should have symbolic CN elements
-# 2. Then complete this file with the aim to install a "*" method
-#    for those elements.
-if false then 
-    mc := ExamplesOfSomeMalcevCollectors(1 );   
-    GUARANA.SC_FullSetup( mc ); 
+# TODO
+# - Test the duSautoy function via the evaluation thing.
+# - write a little function that gives you the functions 
+#   and maybe some more information about it. 
 
-    GUARANA.SC_GetGenericElms( mc );
-    g := mc!.symCol.left;
-    res := GUARANA.SC_ComputeCollectionFunc( mc, g );
-    # gives an error
-    Exponents( res ); 
-    
+GUARANA.SC_GetOmegeVars := function( symCol )
+    local omega_var_recs, k, omega_vars, i;
 
-fi;
+    omega_var_recs := symCol.omega_var_recs;
+    k := Length( omega_var_recs );
+    omega_vars := [];
+    for i in [1..k] do 
+        Append( omega_vars, omega_var_recs[i].variables );
+    od;
+    return omega_vars;
+end;
 
-GUARANA.SC_GetGenericElms := function( malCol )
-    local left_vars, right_vars;
+## OUT
+## computes the values of the omega variables 
+## for given (right) multiplying elment h.
+##
+GUARANA.SC_ValsOfOmegaVars := function( malCol, exp_h )
+    local omega_var_recs, k, vals, omega_rec, eigenvalues, ll, i;
 
-    if not IsBound( malCol!.symCol ) then 
-        Error( "Symbolic collector is not set up." );
-    fi;
+    omega_var_recs := malCol!.symCol.omega_var_recs;
+    k := Length( omega_var_recs );
+    vals := [];
+    for i in [1..k] do 
+        omega_rec := omega_var_recs[i];
+        eigenvalues := omega_rec.eigenvalues;
+        ll := List( eigenvalues, x-> x^exp_h[i] );
+        Append( vals, ll );
+    od;
+    return vals;
+end;
 
-    # get variables
+## IN:
+## exp_g, exp_h .................... exponent vectors of grp elements
+##                                   in CN.
+## I think rational entries could be allowed.
+## In the moment we have the problem of computing a^(1/2)
+## where "a" is an elm of a number field.
+## OUT:
+## exponent vector of g*h, computed via the du Sautoy functions.
+##
+GUARANA.SC_Evaluate := function( malCol, exp_g, exp_h )
+    local one, exp_g_emb, exp_h_emb, left_vars, right_vars, omega_vars, 
+          indets, left_vals, right_vals, omega_vals, vals, n, 
+          collFuncs, exp_gh, pol, r, exp_gh_rat, rep, l, i;
+
+    # map the entries of exp_g, exp_h in the extension field
+    one := One( malCol!.symCol.splitField );
+    exp_g_emb := exp_g * one;
+    exp_h_emb := exp_h * one;
+
+    # get all indeterminants
     left_vars := malCol!.symCol.left_vars;
     right_vars := malCol!.symCol.right_vars;
+    omega_vars := GUARANA.SC_GetOmegeVars( malCol!.symCol );
+    indets := Concatenation( left_vars, right_vars, omega_vars );
 
-    # store elms
-    malCol!.symCol.left:=MalcevSymbolicCNElementByExponents(malCol,left_vars);
-    malCol!.symCol.right:=MalcevSymbolicCNElementByExponents(malCol,right_vars);
+    # get all values
+    left_vals := exp_g_emb;
+    right_vals := exp_h_emb;
+    omega_vals := GUARANA.SC_ValsOfOmegaVars( malCol, exp_h );
+    vals := Concatenation( left_vals, right_vals, omega_vals );
     
+
+    # compute exp vector of g*h 
+    n := Length( exp_g );
+    collFuncs := malCol!.symCol.collFuncs;
+    exp_gh := [];
+    for i in [1..n] do 
+        pol := collFuncs[i]; 
+        r := Value( pol, indets, vals );
+        Add( exp_gh, r ); 
+    od;
+
+    # transfrom the entries of exp_gh to GAP rationals
+    exp_gh_rat := [];
+    for i in [1..Length( exp_gh )] do 
+        rep := ExtRepOfObj( exp_gh[i] );
+        # test whether entry is purely rational
+        l := Length( rep );
+        if not rep{[2..l]} = 0* rep{[2..l]} then
+            Error( "exponent vector is not purely rational" );
+        fi;
+        Add( exp_gh_rat, rep[1] );
+    od;
+
+    return exp_gh_rat;
+end;
+
+GUARANA.SC_CN_Multiplication := function( g, h )
+    local malCol, exp_g, exp_h, exp_gh;
+
+    malCol := g!.malCol;
+    exp_g := Exponents( g );
+    exp_h := Exponents( h );
+    exp_gh := GUARANA.SC_Evaluate( malCol, exp_g, exp_h );
+    return MalcevCNElementByExponents( malCol, exp_gh ); 
+end;
+
+GUARANA.SC_TestCollector := function( malCol, noTests, range )
+    local g, h, gh, exp_gh_1, exp_gh_2, i;
+
+    for i in [1..noTests] do 
+        g := Random( malCol, "CN", range );
+        h := Random( malCol, "CN", range );
+
+        SetMultiplicationMethod( malCol, "symbolic" );
+        gh := g*h;
+        exp_gh_1 := Exponents( gh );
+
+        SetMultiplicationMethod( malCol, "standard" );
+        gh := g*h;
+        exp_gh_2 := Exponents( gh );
+
+        if exp_gh_1 <> exp_gh_2 then 
+            Error( "exp vectors don't coincide" );
+        fi;
+    od;
 end;
 
 
-## IN
-## malCol ..................... Malcev collector
-##    n ....................... Malcev gen elment of N
-##
-## n^c given as Malcev gen elment of N where 
-## c is the C-part of malCol!.symCol.right, 
-## which is an internal generic element.
-## Note that we use fact that c has only non-zero exponents in 
-## the CN/N part.
-##
-GUARANA.SC_N_ConjugationByRightC_Elm := function( malCol, n )
-    local coeffs;
+if false then 
+    mc := ExamplesOfSomeMalcevCollectors(1 );   
+    
+    mc := ExamplesOfSomeMalcevCollectors(2 );   
 
-    coeffs := Coefficients( n );
+    mc := ExamplesOfSomeMalcevCollectors(3 );   
 
-    # conjugate by semisimple action
-    coeffs := coeffs * malCol!.symCol.fullSemisimpleAction;
+    mc := GUARANA.MalcevColl_F_nc_Aut1( 2, 2 );
 
-    # conjugate by unipotent action
-    coeffs := coeffs * malCol!.symCol.fullUnipotentAction;
+    mc := GUARANA.MalcevColl_F_nc_Aut1( 2, 3);
 
-    return MalcevSymbolicGenElementByCoefficients( malCol!.mo_NN, coeffs );
-end;
+    mc := GUARANA.MalcevColl_F_nc_Aut1( 2, 5);
 
-##
-## OUT
-## Compute the collection function of g*h 
-## where h is malCol!.symCol.right;
-##
-## Comment:
-## g h = c(g)n(g) c(h)n(h)
-##     = c(g)c(h0 n(g)^c(h) n(h)
-##
-GUARANA.SC_ComputeCollectionFunc := function( malCol, g )
-    local h, c_new, n_c, n_new;
+    AddSymbolicCollector( mc );
+    SetMultiplicationMethod( mc, "symbolic" );
 
-    # setup
-    h := malCol!.symCol.right;
+    g := Random( mc, "CN" );
+    h := Random( mc, "CN" );
+    GUARANA.SC_CN_Multiplication( g, h );
 
-    c_new := g!.c * h!.c;
-    n_c := GUARANA.SC_N_ConjugationByRightC_Elm( malCol, g!.n );
-    n_new := n_c * h!.n;
-    return MalcevCNElementBy2GenElements( malCol, c_new, n_new );
-end;
+    r := g*h;
 
-# TODO:
-# -CN elements should become symbolic (should pass the test "IsSymbolic"
-# -MalcevCNElementBy2GenElements should become symbolic
-#
+    GUARANA.SC_TestCollector( mc, 20, 10 );
+fi;
+
 #############################################################################
 ##
 #E
