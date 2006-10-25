@@ -27,6 +27,7 @@ DeclareGlobalFunction( "MalcevCNElementByExponentsNC" );
 DeclareGlobalFunction( "MalcevCNElementBy2Coefficients" );
 DeclareGlobalFunction( "MalcevCNElementBy2Exponents" );
 DeclareGlobalFunction( "MalcevCNElementBy2GenElements" );
+DeclareGlobalFunction( "MalcevSymbolicCNElementByExponents" );
 
 DeclareCategory( "IsMalcevGElement", IsObject );
 DeclareCategoryFamily( "IsMalcevGElement" );

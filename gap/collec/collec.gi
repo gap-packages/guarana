@@ -12,6 +12,7 @@
 ##
 ##
 
+
 ## IN
 ## malCol ..................... Malcev collector
 ##    n ....................... Malcev gen elment of N
@@ -21,9 +22,14 @@
 ##
 GUARANA.N_ConjugationByC_Elm := function( malCol, n, c )
     local coeffs, exps_c, lieAuts, i;
+
+    # catch trivial case 
+    exps_c := Exponents( c );
+    if exps_c = 0* exps_c then 
+        return n;
+    end;
   
     coeffs := Coefficients( n );
-    exps_c := Exponents( c );
     n := Length( exps_c );
     lieAuts := malCol!.C_lieAuts;
     for i in [1..n] do
@@ -53,6 +59,22 @@ GUARANA.N_ConjugationByExp := function( malCol, n, exps_g )
     return MalcevGenElementByCoefficients( malCol!.mo_NN, coeffs );
 end;
 
+## IN 
+## g,h ..................... Malcev CN elemnts
+## 
+## OUT
+## g*h computed with the normal malcev collector
+##
+GUARANA.CN_Multiplication := function( g, h )
+    local malCol, c_new, n_c, n_new;
+
+    malCol := g!.malCol;
+    c_new := g!.c * h!.c;
+    n_c := GUARANA.N_ConjugationByC_Elm( malCol, g!.n, h!.c );
+    n_new := n_c * h!.n; 
+    return MalcevCNElementBy2GenElements( malCol, c_new, n_new ); 
+end;
+
 #############################################################################
 ##
 #M g* h  ................................... Product of Malcev CN elements
@@ -70,14 +92,46 @@ InstallOtherMethod( \*,
 	        [IsMalcevCNElement, IsMalcevCNElement ],
 		0, 
 function( g, h )
-    local malCol, c_new, n_c, n_new;
+    local malCol;
 
     malCol := g!.malCol;
-    c_new := g!.c * h!.c;
-    n_c := GUARANA.N_ConjugationByC_Elm( malCol, g!.n, h!.c );
-    n_new := n_c * h!.n; 
-    return MalcevCNElementBy2GenElements( malCol, c_new, n_new ); 
+    if malCol!.mult_method = "standard" then 
+        return GUARANA.CN_Multiplication( g, h );
+    elif malCol!.mult_method = "symbolic" then 
+        return GUARANA.SC_CN_Multiplication( g, h );
+    else
+        Error( "Wrong mulitplication method is specified" );
+    fi;
 end);
+
+## Note that if "symbol" should be used as a collection method 
+## for the whole group, then we need symbolic inversion in CN as well.
+##
+## So far only symbolic mulitplication in CN is implemented.
+##
+InstallMethod( SetMultiplicationMethod,
+               "for Malcev collectors and strings (Guarana)", 
+               true, 
+               [IsMalcevCollectorRep, IsString ], 
+               0,
+function( malCol, s)
+    local possible_methods;
+
+    possible_methods := [ "standard", 
+                          "symbolic" ];
+    if s in possible_methods then 
+        if s = "symbolic" then 
+            if not IsBound( malCol!.symCol ) then 
+                #TODO: timing would be nice.
+                Print( "Computing symbolic collector ...\n" );
+                AddSymbolicCollector( malCol );
+            fi;
+        fi;
+	    malCol!.mult_method := s;
+    else
+	    Error( "Wrong Multiplication method specified\n" );
+    fi;
+end );
 
 ##
 ## (cn)^-1 = n^-1 c^-1 = c^-1 (n^-1)^(c^-1)

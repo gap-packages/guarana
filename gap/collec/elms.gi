@@ -110,6 +110,37 @@ function( malCol, c, n )
     return Objectify( malCol!.cn_elms_type , elm );
 end);
 
+InstallGlobalFunction( MalcevSymbolicCNElementByExponents,
+function( malCol, exps_cn )
+    local hlCN_N, hlC, hlN, hlCN, exps_n, exps_c, c, n, elm;
+
+    # setup
+    hlCN_N := Length( malCol!.indeces[2] );
+    hlC := HirschLength( malCol!.CC );
+    hlN := HirschLength( malCol!.NN ); 
+    hlCN := hlCN_N + hlN;
+
+    # check input
+    if Length( exps_cn ) <> hlCN then
+        Error( "Input vector has not correct lenghts" );
+    fi;
+
+    # get exps_c, exps_n 
+    exps_n := exps_cn{ [1+hlCN_N..hlCN] };
+    exps_c := List( [1..hlC], x-> 0 );
+    exps_c{[1..hlCN_N]} := exps_cn{[1..hlCN_N]};
+
+    # get malcev element of C and N
+    c := MalcevSymbolicGenElementByExponents( malCol!.mo_CC, exps_c );
+    n := MalcevSymbolicGenElementByExponents( malCol!.mo_NN, exps_n );
+
+    elm := rec( malCol := malCol,
+                c := c,
+                n := n,
+                exps := exps_cn );
+    return Objectify( malCol!.cn_elms_type , elm );
+end);
+
 GUARANA.CN_Identity := function( malCol )
     local hlCN, exps;
     hlCN := malCol!.lengths[2] + malCol!.lengths[3];
