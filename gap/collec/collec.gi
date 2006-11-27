@@ -27,7 +27,7 @@ GUARANA.N_ConjugationByC_Elm := function( malCol, n, c )
     exps_c := Exponents( c );
     if exps_c = 0* exps_c then 
         return n;
-    end;
+    fi;
   
     coeffs := Coefficients( n );
     n := Length( exps_c );

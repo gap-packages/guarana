@@ -6,11 +6,6 @@
 ##
 ##
 
-#############################################################################
-##
-#V GUARANA is a holder for private function
-##
-BindGlobal("GUARANA", rec());
 
 #############################################################################
 ##
@@ -43,6 +38,7 @@ ReadPackage( "guarana", "gap/collec/test.gi" );
 ReadPackage( "guarana", "gap/collec/runtimes.g" );
 ReadPackage( "guarana", "gap/malcor/runtimes.g" );
 ReadPackage( "guarana", "gap/symbol/setup.gi" );
+ReadPackage( "guarana", "gap/symbol/collec.gi" );
 
 
 #############################################################################

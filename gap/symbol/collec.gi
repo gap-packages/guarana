@@ -148,6 +148,10 @@ if false then
 
     mc := GUARANA.MalcevColl_F_nc_Aut1( 2, 5);
 
+
+
+    mc := GUARANA.MalcevColl_F_nc_Aut1( 2, 2 );
+
     AddSymbolicCollector( mc );
     SetMultiplicationMethod( mc, "symbolic" );
 
