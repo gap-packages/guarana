@@ -392,6 +392,38 @@ local i,fam,ivals,valextrep,d;
 
 end );
 
+# for runtimes for symbolic collection paper
+GUARANA.SC_RuntimesFullSetup := function( exams, start, stop ) 
+    local times, exam, rec1,rec2, time1,time2, mc,i,time;
+    times := [];
+    for i in [start..stop] do 
+        exam := exams[i];
+        # get malcev collector
+        rec1 := GUARANA.CompleteRuntime2( MalcevCollectorConstruction, exam );
+        mc := rec1.result;
+        time1 := rec1.time;
+        mc := MalcevCollectorConstruction( exam ); 
+        # add symbolic information
+        time2 := GUARANA.CompleteRuntime1( AddSymbolicCollector, mc );
+        
+        time := time1 + time2; 
+        Print( "Index: ", i, " Time: ", time, "\n" );
+        Add( times, time1 + time2 );
+    od;
+    return times;
+end;
+
+
+if false then 
+ exams_F_2c := List( [1..6], x-> GUARANA.F_nc_Aut1( 2, x ) );
+ GUARANA.SC_RuntimesFullSetup( exams_F_2c, 2, 6 );
+  #[ 115, 264, 717, 5593, 45601 ]
+  
+ exams_F_3c := List( [1..5], x-> GUARANA.F_nc_Aut2( 3, x ) );
+ GUARANA.SC_RuntimesFullSetup( exams_F_3c, 2, 5 );
+ #[ 293, 2388, 74402, 
+
+fi;
 #############################################################################
 ##
 #E
