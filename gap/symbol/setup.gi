@@ -418,10 +418,23 @@ if false then
  exams_F_2c := List( [1..6], x-> GUARANA.F_nc_Aut1( 2, x ) );
  GUARANA.SC_RuntimesFullSetup( exams_F_2c, 2, 6 );
   #[ 115, 264, 717, 5593, 45601 ]
+  # n = 2,...,6
   
  exams_F_3c := List( [1..5], x-> GUARANA.F_nc_Aut2( 3, x ) );
  GUARANA.SC_RuntimesFullSetup( exams_F_3c, 2, 5 );
  #[ 293, 2388, 74402, 
+ # n = 2,3,4
+
+ exams_Tr_n_O1 := List( [1..8], x-> GUARANA.Tr_n_O1( x ) );
+ GUARANA.SC_RuntimesFullSetup( exams_Tr_n_O1, 2, 8 );
+ # [ 193, 360, 1759, 11228, 99285, 
+ # n = 2,...,6
+
+ exams_Tr_n_O2 := List( [1..6], x-> GUARANA.Tr_n_O2( x ) );
+ GUARANA.SC_RuntimesFullSetup( exams_Tr_n_O2, 2, 6 );
+ # [ 343, 2318, 112.763, 2.279.446,
+ # n = 2,...,5
+
 
 fi;
 #############################################################################

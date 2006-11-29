@@ -25,10 +25,13 @@ RuntimesCftl := function( G, range, no )
         print "Current memory usage ", GetMemoryUsage();
         print "time ", t;
         Append( ~res, t );
+        sum := &+ res;
+        average := sum/i;
+        print "Average so far : ", average;
     end for;
     sum := &+ res;
     average := sum/no;
-    r := <range, average, res>;
+    r := <res,range, average>;
     print r;
     print "\n";
     return r;
@@ -54,26 +57,57 @@ limit vmemoryuse 1048576
 // Set memory limit to 1GB. 
 SetMemoryLimit( 1024^3 );
 load "../random.m";
+
+load "Tr_2_O1.m";
+load "Tr_3_O1.m";
 load "Tr_4_O1.m";
 load "Tr_5_O1.m";
 load "Tr_6_O1.m";
 load "Tr_7_O1.m";
 load "Tr_8_O1.m";
+
+load "Tr_2_O2.m";
+load "Tr_3_O2.m";
 load "Tr_4_O2.m";
 load "Tr_5_O2.m";
 load "Tr_6_O2.m";
 load "Tr_7_O2.m";
 
-ranges := [ 8, 16, 32, 64 ];
-ranges := [100];
-no := 10;
-G := Tr_6_O2;
+load "F_22_Aut1.m";
+load "F_23_Aut1.m";
+load "F_24_Aut1.m";
+load "F_25_Aut1.m";
+load "F_26_Aut1.m";
+load "F_27_Aut1.m";
+load "F_28_Aut1.m";
+
+load "F_32_Aut2.m";
+load "F_33_Aut2.m";
+load "F_34_Aut2.m";
+load "F_35_Aut2.m";
+load "F_36_Aut2.m";
+
+
+SetMemoryLimit( 1024^3 );
+load "../random.m";
+load "F_22_Aut1.m"
+
+ranges := [1000];
+no := 1000;
+G := F_22_Aut1;
 times := RuntimesCftlByRanges( G, ranges, no );
 
-ranges := [15];
+
+SetMemoryLimit( 1024^3 );
+load "../random.m";
+load "Tr_2_O2.m";
+load "Tr_3_O2.m";
+load "Tr_4_O2.m";
+ranges := [10];
 no := 1000;
-G := Tr_6_O1;
-times  := RuntimesCftlByRanges( G, ranges, no );
+G := Tr_3_O2;
+times := RuntimesCftlByRanges( G, ranges, no );
+
 
 */
 
