@@ -11,7 +11,7 @@
 ## we use the paper of Reinsch 'A simple expression for the terms in the
 ## Baker-Campbell-Hausdorff series'
 ## Then we transform it to an expression only involving Liebrackets  
-## with the trick of Michael Vaughan-Lee.
+## with the Dynkin bracket operator in  Michael Vaughan-Lee's book.
 ##
 ## In addition, this file contains code for the computation of 
 ## identities that are related to BCH formula. 
