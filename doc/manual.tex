@@ -13,14 +13,14 @@
 %F  gapmacro . . . . . . . . . . . . . . . . . read the GAP macro package
 %%
 \input ../../../doc/gapmacro
-\Package{Example}    %This defines {\Example} . . see "ext:The Main File"
+\Package{Guarana}    %This defines {\Example} . . see "ext:The Main File"
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %F  BeginningOfBook . . . . . . . . . . . . . . . . . . .  start the book
 %%
-\BeginningOfBook{example}
+\BeginningOfBook{guarana}
 %
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -37,15 +37,15 @@
 %F  TitlePage . . . . . . . . . . . . . . . . . . . . . . nice title page
 %%
 \TitlePage{
-  \centerline{\titlefont Example}\medskip
+  \centerline{\titlefont Guarana}\medskip
   \centerline{\titlefont ---}\medskip
   \centerline{\titlefont A GAP4 Package}\bigskip\bigskip
   \centerline{\secfont Version \input ../VERSION}\vfill
   \centerline{\secfont by}\vfill
-  \centerline{\secfont Werner Nickel}\medskip
-  \centerline{AG 2, Fachbereich Mathematik, TU Darmstadt}\medskip
-  \centerline{Schlossgartenstr. 7, 64289 Darmstadt, Germany}\medskip
-  \centerline{email: nickel@mathematik.tu-darmstadt.de}\vfill
+  \centerline{\secfont Bj\accent127orn Assmann}\medskip
+  \centerline{Mathematical Institute}\medskip
+  \centerline{University of St Andrews}\medskip
+  \centerline{email: bjoern@mcs.st-and.ac.uk}\vfill
   \centerline{\secfont{\Month} \Year}
 }
 %
@@ -73,7 +73,8 @@
 %F  Chapters 
 %%
 \Chapters
-\Input{example}               %generally there are several chapters
+\Input{intro}
+\Input{guarana}               %generally there are several chapters
 \Input{install}               %each chapter *must* go in a separate file
 %
 %
@@ -82,8 +83,8 @@
 %F  Appendices 
 %%
 \Appendices
-\Input{hints}
-%\Bibliography
+%\Input{hints}
+\Bibliography
 \Index                        %to generate a proper index `manual.mst'
 %                             %must be present
 %

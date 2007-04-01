@@ -6,12 +6,12 @@
 SetPackageInfo( rec(
 
 PackageName := "Guarana",
-Subtitle := "Applications of Lie methods for computations with infinite groups",
+Subtitle := "Applications of Lie methods for computations with infinite polycyclic  groups",
 Version := "0.9",
 Date := "08/04/2006",
 
 ArchiveURL := Concatenation([ 
-"http://www.icm.tu-bs.de/ag_algebra/software/assmann/Polenta/Polenta-", 
+"http://www.cs.st-andrews.ac.uk/~bjoern/software/Guarana/Guarana-", 
 ~.Version]),
 ArchiveFormats := ".tar.gz",
 
@@ -37,21 +37,21 @@ Status := "other",
 #CommunicatedBy := "Charles Wright (Eugene)",
 #AcceptDate := "08/2005",
 
-README_URL := "http://www.icm.tu-bs.de/ag_algebra/software/assmann/Polenta/README",
-PackageInfoURL := "http://www.icm.tu-bs.de/ag_algebra/software/assmann/Polenta/PackageInfo.g",
+README_URL := "http://www.cs.st-andrews.ac.uk/~bjoern/software/Guarana/README",
+PackageInfoURL := "http://www.cs.st-andrews.ac.uk/~bjoern/software/Guarana/PackageInfo.g",
 
-AbstractHTML := "The Guarana packages provives methods for fast collection in infinite polycyclic groups.", 
+AbstractHTML := "The Guarana packages provives computational applications of the Mal'cev correspondence, in particular for collection in infinite polycyclic groups.", 
 
-PackageWWWHome :="http://www.icm.tu-bs.de/ag_algebra/software/assmann/Polenta",
+PackageWWWHome :="http://www.cs.st-andrews.ac.uk/~bjoern/software/Guarana",
 
-#PackageDoc := rec(          
-#  BookName  := "Polenta",
-#  ArchiveURLSubset := ["doc", "htm"],
-#  HTMLStart := "htm/chapters.htm",
-#  PDFFile   := "doc/manual.pdf",
-#  SixFile   := "doc/manual.six",
-#  LongTitle := "Polycyclic presentations for matrix groups",
-#  Autoload  := true ),
+PackageDoc := rec(          
+  BookName  := "Guarana",
+  ArchiveURLSubset := ["doc", "htm"],
+  HTMLStart := "htm/chapters.htm",
+  PDFFile   := "doc/manual.pdf",
+  SixFile   := "doc/manual.six",
+  LongTitle := "Applications of Lie methods for computations with infinite polycyclic groups",
+  Autoload  := true ),
 
 Dependencies := rec(
   GAP := ">= 4.3fix4",
@@ -76,16 +76,4 @@ Keywords := ["Mal'cev correspondence", "Collection", "Lie algebra", "Baker Campb
 #############################################################################
 ##
 #E
-
-
-
-
-
-
-
-
-
-
-
-
 
