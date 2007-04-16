@@ -314,6 +314,15 @@ LogTo();
 
 fi;
 
+if false then
+ranges := [1..10];
+no := 100;
+times := GUARANA.AverageRuntimesCollec_Tr_n_O1( [6], ranges, no );
+LogTo( "times_smallRange_Tr_6_O1.txt" );
+PrintList( times[2][2] );
+LogTo();
+
+
 
 #############################################################################
 ##
