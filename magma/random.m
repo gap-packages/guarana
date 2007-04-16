@@ -109,11 +109,20 @@ G := Tr_3_O2;
 times := RuntimesCftlByRanges( G, ranges, no );
 
 
+SetMemoryLimit( 1024^3 );
+load "../random.m";
+load "Tr_6_O1.m";
+ranges := [1..10];
+G := Tr_6_O1;
+no := 1000;
+times := RuntimesCftlByRanges( G, ranges, no );
+
+
 */
 
 PrintRuntimes := function( l )
     for a in l do 
-        print a[1], a[2];
+        print a[2], a[3];
     end for;
     return 1;
 end function;

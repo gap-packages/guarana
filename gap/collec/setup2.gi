@@ -108,7 +108,11 @@ GUARANA.InitialSetupMalcevCollector := function( args )
                 cn_fam := cn_fam,
                 cn_elms_type := cn_elms_type, 
                 g_fam := g_fam, 
-                g_elms_type := g_elms_type );
+                g_elms_type := g_elms_type,
+                mult_method := "standard" 
+                # if we set this to symbolic then we have symbolic 
+                # du Sautoy collection, (only prototype implementation).
+                );
 
     obj :=  Objectify( NewType( MalcevCollectorFamily, 
                                IsMalcevCollectorRep and
