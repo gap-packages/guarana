@@ -66,7 +66,7 @@ InstallOtherMethod( RandomGrpElm,
 function( malcevObject, range)
     local n, exps;
     n := malcevObject!.dim;
-    exps := List( [1..n], x-> Random( [-10..10] ) );
+    exps := List( [1..n], x-> Random( [-range..range] ) );
     return MalcevGrpElementByExponents( malcevObject, exps );
 end);
 
@@ -91,7 +91,7 @@ InstallOtherMethod( RandomLieElm,
 function( malcevObject, range)
     local n, exps;
     n := malcevObject!.dim;
-    exps := List( [1..n], x-> Random( [-10..10] ) );
+    exps := List( [1..n], x-> Random( [-range..range] ) );
     return MalcevLieElementByCoefficients( malcevObject, exps );
 end);
 
