@@ -680,6 +680,34 @@ function( g, h )
     fi;
 end);
 
+InstallOtherMethod( \*, 
+               "for symbolic Malcev group elments (Guarana)",
+	       IsIdenticalObj,
+	        [IsMalcevGrpElement and IsSymbolicElement, IsMalcevGrpElement ],
+		0, 
+function( g, h )
+    local x, y, z;
+
+     x := Log( g );
+     y := Log( h );
+     z := BCHStar( x, y );
+     return Exp( z );
+end);
+     
+InstallOtherMethod( \*, 
+               "for symbolic Malcev group elments (Guarana)",
+	       IsIdenticalObj,
+	        [IsMalcevGrpElement, IsMalcevGrpElement and IsSymbolicElement ],
+		0, 
+function( g, h )
+    local x, y, z;
+
+     x := Log( g );
+     y := Log( h );
+     z := BCHStar( x, y );
+     return Exp( z );
+end);
+
 #############################################################################
 ##
 #M g^n  ................................... power of Malcev group elements
@@ -703,6 +731,18 @@ function( g, n )
 	return MalcevGrpElementByExponents( malObj, exp_res );
 end);
 
+InstallOtherMethod( \^, 
+               "for symbolic Malcev group elments and an integer (Guarana)",
+	        true,
+	        [IsMalcevGrpElement and IsSymbolicElement, IsInt ],
+		0, 
+function( g, n )
+    local x;
+
+    x := Log( g );
+    return Exp( n*x );
+
+end);
 
 #############################################################################
 ##
@@ -714,19 +754,7 @@ InstallOtherMethod( COMM,
 	        [IsMalcevGrpElement, IsMalcevGrpElement ],
 		0, 
 function( g, h )
-    local malObj, exp_g, exp_h, coll, gg, hh, exp_res;
-
-    malObj := g!.malcevObject;
-    exp_g := Exponents( g );
-    exp_h  := Exponents( h );
-
-    # get corresponing pcp elms
-    coll := Collector( malObj!.recTGroup.T );
-    gg := PcpElementByExponentsNC( coll, exp_g );
-    hh := PcpElementByExponentsNC( coll, exp_h );
-
-    exp_res := Exponents( Comm( gg,hh  ));
-    return MalcevGrpElementByExponents( malObj, exp_res );
+    return g^-1*h^-1*g*h;
 end);
 
 #############################################################################

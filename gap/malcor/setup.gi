@@ -141,15 +141,75 @@ function( recTGroup )
     return obj;
 end );
 
+##
+## some checks whether the input pcp group is defined with respect to 
+## a Mal'cev basis
+## 
+GUARANA.IsGivenWithRespectToMalcevBasis := function( N )
+    local C, rels, n, r, i, j, conj;
+
+    if not IsPcpGroup( N ) then
+        return false;
+    fi;
+
+    C := Collector( N );
+
+    # check wheter all relative orders are infinite
+    rels := RelativeOrders( C );
+    for r in rels do
+        if r <> 0 then 
+            return false;
+        fi;
+    od;
+
+    # check whether nilpotent presentation
+    n := NumberOfGenerators( C );
+    for i in [1..n] do
+        for j in [i+1..n] do
+            conj := GetConjugate( C, j, i );
+            if conj[1] <> j then
+                return false;
+            fi;
+            if conj[2] <> 1 then 
+                return false;
+            fi;
+        od;
+    od;
+
+    return true;
+end;
+
+
 ## IN N ..................... T-group that is given by a pcp with respect 
 ##                            to Malcev basis.
 ##
 InstallGlobalFunction( MalcevObjectByTGroup, 
 function( N ) 
     local recT;
+    if not GUARANA.IsGivenWithRespectToMalcevBasis( N ) then 
+        return fail;
+    fi;
     recT := GUARANA.TGroupRec( [N] );
     return MalcevObjectConstruction( recT );
 end);
+
+#############################################################################
+##
+##
+InstallOtherMethod( UnderlyingLieAlgebra, "for Malcev objects", 
+[ IsMalcevObjectRep ],
+function( malObj )
+    return malObj!.L;
+end );
+
+#############################################################################
+##
+##
+InstallOtherMethod( UnderlyingGroup, "for Malcev objects", 
+[ IsMalcevObjectRep ],
+function( malObj )
+    return malObj!.recTGroup.T;
+end );
 
 #############################################################################
 ##
