@@ -24,7 +24,7 @@ ReadPackage( "guarana", "gap/malcor/symlog.gi" );
 ReadPackage( "guarana", "gap/supple/almcom.gi" );
 ReadPackage( "guarana", "gap/supple/almsup.gi" );
 ReadPackage( "guarana", "exams/supple.gi" );
-ReadPackage( "guarana", "gap/collec/setup.gi" );
+#ReadPackage( "guarana", "gap/collec/setup.gi" );
 ReadPackage( "guarana", "exams/polycy.gi" );
 ReadPackage( "guarana", "magma/print.gi" );
 ReadPackage( "guarana", "gap/collec/pow.gi" );

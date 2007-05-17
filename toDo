@@ -1,3 +1,24 @@
+Concrete TODO:
+
+- write manual part set up malcev correspondence:
+  - try to make it short. 
+  - how should the userinterface look like? 
+    should we introduce the malcev object to the user ?
+  - write some examples 
+    (list your T-groups in a convenient interface)
+  - write some testcases
+
+- write manual part of malcev collection 
+  - keep it lean
+  - essentially for the moment we demand a complicated input. 
+  - how do we set malcev collection as underlying collector ? 
+  - include test functions for timing
+
+- clean up package 
+  - which code should not be contained ?
+  - this should be remove with the packing script
+  - remove old TODOs 
+
 To do:
 
 - before publishin the package:
@@ -33,12 +54,6 @@ To do:
   But it seems that using the star pols for computing log and exp
   does not take much more time.
 
-- Idea for efficient star: 
-  save information about already computed lie brackets. 
-  We know a priori which lie brackets are going to be computed in 
-  which order. This can be used to build an efficient data  
-  structure(tree) for the computation of star. 
-  
 
 - Long term aim:
   The user comes along with a pc-group G.
