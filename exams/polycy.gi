@@ -104,6 +104,10 @@ GUARANA.F_nc_Aut1 := function( n, c )
     return [G,indeces,N,NN,C,CC];
 end;
 
+GUARANA.F_2c_Aut1 := function( c )
+    return GUARANA.F_nc_Aut1( 2, c );
+end;
+
 GUARANA.MalcevColl_F_nc_Aut1 := function( n, c )
     local l;
     l := GUARANA.F_nc_Aut1( n, c );
@@ -125,6 +129,10 @@ GUARANA.F_nc_Aut2 := function( n, c )
     C := Subgroup( G, Pcp(G){indeces[2]} );
     CC := GUARANA.PcpGroupByPcs( G, Pcp(G){indeces[2]} );
     return [G,indeces,N,NN,C,CC];
+end;
+
+GUARANA.F_3c_Aut2 := function( c )
+    return GUARANA.F_nc_Aut2( 3, c );
 end;
 
 GUARANA.MalcevColl_F_nc_Aut2 := function( n, c )
