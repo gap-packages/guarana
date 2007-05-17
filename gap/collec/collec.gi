@@ -123,7 +123,7 @@ function( malCol, s)
         if s = "symbolic" then 
             if not IsBound( malCol!.symCol ) then 
                 #TODO: timing would be nice.
-                Print( "Computing symbolic collector ...\n" );
+                Info( InfoGuarana, 1, "Computing symbolic collector ...\n" );
                 AddSymbolicCollector( malCol );
             fi;
         fi;

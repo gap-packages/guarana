@@ -433,7 +433,7 @@ end );
 
 
 ## Note that this changes the input
-InstallMethod( Exponents, 
+InstallOtherMethod( Exponents, 
                "for Malcev CN elements (Guarana)", 
                true, 
                [IsMalcevCNElement ], 
@@ -447,7 +447,7 @@ function( g )
     fi;
 end);
 
-InstallMethod( Exponents, 
+InstallOtherMethod( Exponents, 
                "for Malcev G elements (Guarana)", 
                true, 
                [IsMalcevGElement ], 

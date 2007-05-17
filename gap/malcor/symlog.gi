@@ -26,7 +26,7 @@ function( malcevObject, s)
 	    if not IsBound( malcevObject!.recLogPols) then 
         # we assume that if recLogPols is not set, then the exp pols are 
         # not known as well.
-		Print( "Computing Log and Exp Polynomials ...\n" );
+		Info( InfoGuarana, 1, "Computing Log and Exp Polynomials ...\n" );
 		AddLogAndExpPolynomials( malcevObject );
 	    fi;
 	fi;
@@ -65,7 +65,7 @@ function( malcevObject, s)
     if s in possible_methods then 
 	    if s = "pols" then 
 	        if not IsBound( malcevObject!.recStarPols) then 
-		        Print( "Computing Star Polynomials ...\n" );
+		        Info( InfoGuarana, 1, "Computing Star Polynomials ...\n" );
 		        AddStarPolynomials( malcevObject );
 	        fi;
 	    fi;
@@ -469,7 +469,7 @@ InstallGlobalFunction( AddDTPolynomials,
 function( malcevObject )
     local T, coll;
 
-    Print( "Adding DT polynomials\n" );
+    Info( InfoGuarana, 1, "Adding DT polynomials\n" );
     T := malcevObject!.recTGroup.T;
     coll := Collector( T );
     GUARANA.IsWeightedCollector( coll );
