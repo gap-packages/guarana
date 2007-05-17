@@ -149,7 +149,7 @@ GUARANA.IsGivenWithRespectToMalcevBasis := function( N )
     local C, rels, n, r, i, j, conj;
 
     if not IsPcpGroup( N ) then
-        return false;
+        return fail;
     fi;
 
     C := Collector( N );
@@ -209,6 +209,15 @@ InstallOtherMethod( UnderlyingGroup, "for Malcev objects",
 [ IsMalcevObjectRep ],
 function( malObj )
     return malObj!.recTGroup.T;
+end );
+
+#############################################################################
+##
+##
+InstallOtherMethod( Dimension, "for Malcev objects", 
+[ IsMalcevObjectRep ],
+function( malObj )
+    return malObj!.dim;
 end );
 
 #############################################################################

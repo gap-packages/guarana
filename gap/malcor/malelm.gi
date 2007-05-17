@@ -274,6 +274,10 @@ end;
 InstallGlobalFunction( MalcevLieElementByCoefficients,
 function( malcevObject, coeffs )
     local word; 
+    # check input
+    if Length( coeffs ) <> Dimension( malcevObject ) then 
+        Error( "Length of coefficient vector does not match dimension of Mal'cev object.");
+    fi;
     word := GUARANA.Coefficients2Word( malcevObject, coeffs );
     return MalcevLieElementConstruction( malcevObject, coeffs, word );
 end);
@@ -385,6 +389,11 @@ x -> x!.weight
 InstallGlobalFunction( MalcevGrpElementConstruction, 
 function( malcevObject, exponents )
     local weight, i, elm, name;
+
+    # check input
+    if Length( exponents ) <> Dimension( malcevObject ) then 
+        Error( "Length of exponent vector does not match dimension of Mal'cev object.");
+    fi;
     
     # determine weight
     weight := malcevObject!.max_weight + 1;
