@@ -335,12 +335,13 @@ InstallMethod( PrintObj,
                [IsMalcevGElement ], 
                0,
 function( elm )
-    if IsString( elm!.exps ) then 
-        Print( "Exponent vector of finite part: ", elm!.exps_f, "\n" );
-        Print( "CN Element: \n", elm!.cn_elm );
-    else
-        Print(  elm!.exps );
-    fi;
+    Print( Exponents( elm ) );    
+#    if IsString( elm!.exps ) then 
+#        Print( "Exponent vector of finite part: ", elm!.exps_f, "\n" );
+#        Print( "CN Element: \n", elm!.cn_elm );
+#    else
+#        Print(  elm!.exps );
+#    fi;
 end );
 
 #############################################################################
@@ -454,10 +455,13 @@ InstallOtherMethod( Exponents,
                0,
 function( g )
     local exps_f, exps_cn;
-    if IsString( g!.exps ) then
+    if g!.exps = [] then
+        return g!.exps;
+    elif IsString( g!.exps ) then
         exps_f := g!.exps_f;
         exps_cn := Exponents( g!.cn_elm);
-        return Concatenation( exps_f, exps_cn );
+        g!.exps := Concatenation( exps_f, exps_cn );
+        return g!.exps;
     else
         return g!.exps;
     fi;
