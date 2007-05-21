@@ -16,11 +16,6 @@ Random( malCol, 10 );
 GUARANA.AverageRuntimeCollec( malCol, [2,4,8], 1000 );   
 
 
-
 4. set as underlying collector ?
-5. make a testfile (for testing with standard gap) 
-   do the same for the setup of malcor
-   This test file should contain some exceptional cases 
-   (identity and so on).
 
     
