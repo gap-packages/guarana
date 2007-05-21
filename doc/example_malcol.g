@@ -1,33 +1,26 @@
 
-
-
-
-
 ll := GUARANA.Tr_n_O1( 3 );
 malCol := MalcevCollectorConstruction( ll );
 
 
-ll := GUARANA.F_2c_Aut1( 4 );
-malCol := MalcevCollectorConstruction( ll );
+exps_g := [ 1, 1, 1, -3, -2, 1, -2, -1, 0, 3, -1,3 ];
+exps_h := [ 1, 0, 1, -1, 0, 2, 0, 4, -1, 5, 9,-5 ];
 
+g := MalcevGElementByExponents( malCol, exps_g );
+h := MalcevGElementByExponents( malCol, exps_h );
+k := g*h;
 
-
-
-
-MalcevGElementByExponents( malCol );
-Random( malCol );
 Random( malCol, 10 );
 
-Exponents
+
+GUARANA.AverageRuntimeCollec( malCol, [2,4,8], 1000 );   
 
 
-
-2a. elms, multiplication
-2b write example application
-3. runtime measurement ?
 
 4. set as underlying collector ?
 5. make a testfile (for testing with standard gap) 
    do the same for the setup of malcor
+   This test file should contain some exceptional cases 
+   (identity and so on).
 
-
+    
