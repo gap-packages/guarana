@@ -16,6 +16,5 @@ Random( malCol, 10 );
 GUARANA.AverageRuntimeCollec( malCol, [2,4,8], 1000 );   
 
 
-4. set as underlying collector ?
 
     
