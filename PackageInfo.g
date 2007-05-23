@@ -33,7 +33,7 @@ Persons := [
 
 ],
 
-Status := "other",
+Status := "deposited",
 #CommunicatedBy := "Charles Wright (Eugene)",
 #AcceptDate := "08/2005",
 
