@@ -1,49 +1,30 @@
 Concrete TODO:
 
-- write manual part set up malcev correspondence:
-  - try to make it short. 
-  - how should the userinterface look like? 
-    should we introduce the malcev object to the user ?
-  - write some examples 
-    (list your T-groups in a convenient interface)
-  - write some testcases
-
-- write manual part of malcev collection 
-  - keep it lean
-  - essentially for the moment we demand a complicated input. 
-  - how do we set malcev collection as underlying collector ? 
-  - include test functions for timing
-
 - clean up package 
   - which code should not be contained ?
+    
   - this should be remove with the packing script
+    remove: gap/supple/*
+
   - remove old TODOs 
   - check in everything which is not checked in yet 
     (for example magma code).
 
-To do:
+- how do we set malcev collection as underlying collector ? 
 
-- before publishin the package:
-  go throught essential parts, 
-  define the user interfaces and add test files.
-  add a global testfile.
+- write Readme
 
------------------------------------------------------------------------------
 
-- write function that provides the important families of examples
-  that I already have. Don't forget the small exams ( good for comparing
-  with Cftl). 
-  In the moment are missing: Free nilpotent by free abelian exams. 
-- write function that measure the timing. 
-- construct more exams ( -> Werner )
-- Test malcev collection. 
-- How can I set it as underlying collector ? 
+
+- bring package on website:
+  1. test with normal gap
+  2. finish packaging script.
+
+
+
+
+
 - Run group computations with Malcev collector. 
-- Construct an example for which all features of the 
-  Mal'cev correspondence are going to be needed. 
-  Use for example random subgrups of the triangular 
-  groups.
-
 
 - clean up code in gap/supple
 

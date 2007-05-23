@@ -1,14 +1,3 @@
--  Computations in C could be done via Deep Thought.
-
-- it might be useful to use the trick of Exp of Star prdouct.
-
-- catch all the trivial cases ( F trivial, C trivial, N trivial )
-  speed up the computation when a part of the input is trivial.
-  (F part, C part, N part and combinations and so on )
-
-- create a Malcev collector, 
-  How can I attache this collector to a pcp group ? 
-
 - The function GUARANA.MO_G_CN_AddMultTable takes a bit of 
   time. (for Tr_8_O1 6 seconds). We could probably speed 
   this up. In the moment most time is needed for 
@@ -26,4 +15,4 @@
   Further it seems that using symbolic Log slows down the
   same function immensly !! 
 
-- Is it necessary to set up the Mal'cev correspondence for C ?
+- When should I set up the Mal'cev correspondence for C ?
