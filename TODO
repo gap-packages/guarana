@@ -5,15 +5,13 @@ Concrete TODO:
     
   - this should be remove with the packing script
     remove: gap/supple/*
+            tst/completeOldCode
+            tst/repsWerner
 
-  - remove old TODOs 
-  - check in everything which is not checked in yet 
-    (for example magma code).
 
 - how do we set malcev collection as underlying collector ? 
 
 - write Readme
-
 
 
 - bring package on website:
