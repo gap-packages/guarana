@@ -1,7 +1,0 @@
-- convert all files in this directory to the new objects.
-  In particular symlog.gi  and logexp.gi
-- Random function for grp and lie elements.
-- test the new object code (with the stuff in test.gi)
--write manual for this part ? 
--compare runtimes and write Steve.
-
