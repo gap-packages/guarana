@@ -1,86 +1,76 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
-%W  install.tex            GAP documentation                  Greg Gamble
+%W  install.tex           POLENTA documentation            Bjoern Assmann
+%W                                                     
+%W                                                     
+%W                                                       
 %%
-%H  $Id$
+%H  @(#)$Id$
 %%
-%Y  Copyright (C) 2001, School of Math & Comp. Sci., St Andrews, Scotland
+%Y 2003
 %%
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\Chapter{Installing and Loading the Example Package}
+\Chapter{Installation}
 
+\atindex{Installation}{@Installation}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\Section{Installing the Example Package}
+\Section{Installing this package}\null
 
-To install the {Guarana} package, unpack the archive file, which  should
-have a name of form `example-<XXX>.zoo' for some version number <XXX>, by
-typing
+The Guarana package is part of the standard distribution of {\GAP} and
+so normally there should be no need to install it separately.
+If by any chance it is not part of your {\GAP} distribution, then 
+the standard method is to unpack	 the package into the `pkg'
+directory  of your {\GAP} distribution.  This will create a `guarana'
+subdirectory. 
+For other non-standard options please see  Chapter~"ref:Installing a
+GAP Package" of the {\GAP} Reference Manual.
 
-\){\kernttindent}unzoo -x example-<XXX>
-
-in the `pkg' directory of your version of {\GAP}~4,  or  in  a  directory
-named `pkg' (e.g.~in your home directory). (The only essential difference
-with installing {Guarana} in a `pkg' directory different to the {\GAP}~4
-home directory is that one  must  start  {\GAP}  with  the  `-l'  switch,
-e.g.~if your private `pkg' directory is a subdirectory of `mygap' in your
-home directory you might type:
-
-%begintt
-\){\kernttindent}gap -l ";<myhomedir>/mygap"
-%endtt
-
-where <myhomedir> is the  path  to  your  home  directory,  which  (since
-{\GAP}~4.3) may be replaced  by  a  tilde.  The  empty  path  before  the
-semicolon is  filled  in  by  the  default  path  of  the  {\GAP}~4  home
-directory.)
-
-After unpacking the archive, go to the newly created `example'  directory
-and call `./configure <path>' where <path> is the path to the {\GAP} home
-directory. So for example if you install the package in  the  main  `pkg'
-directory call
-
+Note that the GAP-Packages Alnuth, Polycyclic and RadiRoot 
+are needed for this package.
+Normally they should be contained in your distribution. If not, 
+they can be obtained at
 \begintt
-./configure ../..
+               www.gap-system.org/Packages/packages.html             
+
 \endtt
 
-This will fetch the architecture type for which {\GAP} has been  compiled
-last and create a `Makefile'. Now simply call
 
-\begintt
-make
-\endtt
+%To create the documentation, go into the `doc' directory and type
+%`make_doc'.
 
-to compile the binary and to install it in the appropriate place.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\Section{Loading the Example Package}
+\Section{Loading the Guarana package}\null
 
-To use the {Guarana} Package you have to request it explicitly. This  is
-done by calling
+\atindex{Loading the Guarana package}{@loading the {\Guarana} package}
+If the {\Guarana} Package is not already loaded 
+then you have to request it explicitly. 
+This  can be 
+done by `LoadPackage("guarana")'.
+The `LoadPackage' command is described in Section~"ref:LoadPackage"
+in the {\GAP} Reference Manual.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Section{Running the test suite}
+
+    Once the package is installed, it is possible to check the correct
+    installation by running the test suite of the package.
 
 \beginexample
-gap> LoadPackage("example");
-----------------------------------------------------------------
-Loading  Example 2.0
-by Werner Nickel (http://www.mathematik.tu-darmstadt.de/~nickel)
-   Greg Gamble (http://www.math.rwth-aachen.de/~Greg.Gamble)
-For help, type: ?Example package 
-----------------------------------------------------------------
-true
+    gap> Read( "mygap/pkg/guarana/tst/testall.g" );
 \endexample
+    where `mygap' needs to be replaced with the directory where {\GAP}
+    was installed. For more details on  Test Files see 
+    Section~"ref:Test Files" of the 
+    {\GAP} Reference Manual.
 
-The `LoadPackage' command is described  in  Section~"ref:LoadPackage"  in
-the {\GAP} Reference Manual.
-
-If {\GAP} cannot find a working binary, the call  to  `LoadPackage'  will
-still succeed but a warning is issued informing that  the  `HelloWorld()'
-function will be unavailable.
-
-If you want to load the {Guarana} package by default, you  can  put  the
-`LoadPackage' command  into  your  `.gaprc'  file  (see  Section~"ref:The
-.gaprc file" in the {\GAP} Reference Manual).
+    If the test suite runs into an error, 
+    then please send a message
+    to `bjoern@mcs.st-and.ac.uk' including the error message.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %E
+
+
