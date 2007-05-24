@@ -1,78 +1,81 @@
-                             The Example package
-
-This is the README file for the GAP package "Example".
-
-This package serves as an example of how to create a  GAP  4  package.
-This release (2.0) has  been  updated  for  the  new  package  loading
-mechanism introduced in GAP 4.4. Some indications of what changes were
-necessary will be found in comments.
-
-The  package is  distributed with  the main  GAP archive.  For updates
-between releases of GAP itself check the package Web page
-     http://www.math.rwth-aachen.de/~Greg.Gamble/Example
   
-or the Australian mirrors
+The GAP 4 package `Guarana'
+========================
 
-http://www.maths.uwa.edu.au/~gregg/Example/      (Perth, Australia)
-http://www.itee.uq.edu.au/~gregg/Example/        (Queensland, Australia)
+In this package we demonstrate the algorithmic usefulness of the
+so-called Mal'cev correspondence for computations with infinite polycyclic
+groups; it is a correspondence
+that associates to every $\Q$-powered nilpotent group $H$ a
+unique rational nilpotent Lie algebra $L_H$ and vice-versa.
+The Mal'cev correspondence was discovered
+by Anatoly Mal'cev in 1951.
 
-or via the Packages links from the GAP sites
+ 
+Installing this package
+=======================
 
-http://www.gap-system.org/                       (UK)
-http://www.math.rwth-aachen.de/~GAP/             (Germany)
+The Guarana package is part of the standard distribution of GAP and
+so normally there should be no need to install it separately.
 
-or the GAP ftp servers
+If by any chance it is not part of your GAP distribution, then 
+this package is available at
+        
+     www.gap-system.org/Packages/packages.html
+                                                                           
+in form of a gzipped tar-archive and as an uncompressed tar-archive.
+The standard method is to unpack the package into the `pkg'
+directory  of your GAP distribution.  This will create a `guarana'
+subdirectory. 
+For other non-standard options please see  Chapter 74.1 
+in the GAP Reference Manual.
 
-ftp://ftp-gap.dcs.st-and.ac.uk/pub/gap/gap4/zoo/packages/
-ftp://ftp.math.rwth-aachen.de/pub/gap4/zoo/packages/
+Note that the GAP-Packages Alnuth, Polycyclic and RadiRoot 
+are needed for this package.
+Normally they should be contained in your distribution. If not 
+they can be obtained at
 
-If you prefer tar.gz or tar.bz2 to zoo archives, substitute tar.gz  or
-tar.bz2 (as appropriate) for zoo in the above paths.
+     www.gap-system.org/Packages/packages.html
 
-The Example package uses an external binary and therefore  a  complete
-installation only works on UNIX systems  or  systems  that  support  a
-UNIX-like environment, e.g. Macintosh OSX,  or  Windows  with  Cygwin.
-However,  a  partial  installation  without  the  external  binary  is
-possible on any system.
 
-     Installing  a complete Example package (with external binary)
+Loading the Guarana package
+==========================
 
-To  complete the  installation of  the ``Example''  package go  to the
-directory `example'  created (the  directory contains  a copy  of this
-README file) and call
+If the  Package is not already loaded 
+then you have to request it explicitly. 
+This  can be 
+done by `LoadPackage("guarana")'.
+The `LoadPackage' command is described in Section 72.2.1
+in the GAP Reference Manual.
 
-  /bin/sh ./configure <path>
 
-where <path> is a path to the main GAP root directory; so normally you
-would call
+Running the test suite
+======================
 
-  /bin/sh ./configure ../..
+Once the package is installed, it is possible to check the correct
+installation by running the test suite of the package.
 
-(the ../.. is the default and so may be omitted) and then call
+    gap> Read( "mygap/pkg/guarana/tst/testall.g" );
 
-  make 
-  
-to compile the binary.
+where `mygap' needs to be replaced with the directory where GAP
+was installed. For more details on  Test Files see 
+Section 7.9 of the 
+GAP Reference Manual.
 
-If you installed GAP on several architectures, you  must  execute  the
-configure/make steps for  the  ``Example''  package  on  each  of  the
-architectures  immediately  after  configuring  GAP  itself  on   this
-architecture.
-
-That's it. Now start GAP and type
-
-  LoadPackage("example");
-
-The ``Example" package banner should appear on the screen. If you have
-not compiled the external binary, you  should  receive  a  warning  of
-this.
-
-For details on  how  to  use  the  Example  package  see  the  package
-documentation in the `doc' subdirectory (view either `manual.dvi'  via
-`xdvi' or or `manual.pdf' via a PDF viewer). You will find  additional
-information on how to create a GAP package  in  the  Appendix  of  the
-manual.
-
-  Werner Nickel,
-  Greg Gamble -- 12 February, 2002; 13 January, 2003; 20 June, 2003;
-                 31 January, 2006.
+If the test suite runs into an error, 
+then please send a message
+to `bjoern@mcs.st-and.ac.uk' including the error message.
+                                 
+Author
+======
+ 
+The Guarana package was written by:
+ 
+  Bjoern Assmann, 
+  Mathematical Institute
+  University of St. Andrews
+  North Haugh
+  St. Andrews
+  Fife
+  KY16 9SS
+  Scotland, UK
+  e-mail: bjoern@mcs.st-and.ac.uk

@@ -67,7 +67,7 @@ BannerString := Concatenation([
 "Loading Guarana ",
 ~.Version,
 " ... \n" ]),     
-Autoload := true,
+Autoload := false,
 TestFile := "tst/testall.g",
 Keywords := ["Mal'cev correspondence", "Collection", "Lie algebra", "Baker Campbell Haussdorff Formula" ],    
 
