@@ -57,7 +57,8 @@ Dependencies := rec(
   GAP := ">= 4.3fix4",
   NeededOtherPackages := [[ "polycyclic", ">=1.1" ], 
                           [ "polenta", ">=1.2.3" ],
-                          [ "radiroot", ">=2.0" ]],
+                         # [ "radiroot", ">=2.0" ]
+                          ],
   SuggestedOtherPackages := [ ["nq", ">=2.0"]], 
   ExternalConditions :=[], 
 ), 

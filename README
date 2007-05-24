@@ -29,12 +29,11 @@ subdirectory.
 For other non-standard options please see  Chapter 74.1 
 in the GAP Reference Manual.
 
-Note that the GAP-Packages Alnuth, Polycyclic and RadiRoot 
+Note that the GAP-Packages Polycyclic and Polenta
 are needed for this package.
-Normally they should be contained in your distribution. If not 
+Normally they should be contained in your distribution. If not, 
 they can be obtained at
-
-     www.gap-system.org/Packages/packages.html
+               www.gap-system.org/Packages/packages.html             
 
 
 Loading the Guarana package
