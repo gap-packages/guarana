@@ -33,7 +33,7 @@ Mal'cev Lie elements.
 
 If <N> is a a T-group 
 (i.e. a finitely generated torsion-free nilpotent group),
-give by a polycyclic presentation with respect to Mal'cev basis,
+given by a polycyclic presentation with respect to a Mal'cev basis,
 then this function computes the Mal'cev correspondence for <N> 
 and stores the result in a so-called Mal'cev object. 
 Otherwise this function returns `fail'.
@@ -75,7 +75,7 @@ MalcevGrpElementByExponents( <mo>, <exps> ), where <exps> is an
 exponent vector whose entries are randomly chosen integers between 
 -<range> and <range>.
 
-\> RandomLieElm( <mo> <range> )
+\> RandomLieElm( <mo>, <range> )
 
 For a Mal'cev object <mo> this function returns the output of 
 MalcevLieElementByExponents( <mo>, <coeffs> ), where <coeffs> is 
@@ -85,12 +85,12 @@ a coefficient vector whose entries are randomly chosen integers between
 \> Log( <g> )
 
 For Mal'cev group element <g> this function returns the corresponding
-Lie element.
+Mal'cev Lie element.
 
 \> Exp( <x> )
 
 For Mal'cev Lie element <x> this function returns the corresponding
-group element.
+Mal'cev group element.
 
 \> `<g> * <h>'{multiplication} 
 
