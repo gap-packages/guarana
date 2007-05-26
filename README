@@ -68,10 +68,9 @@ Running the test suite
 Once the package is installed, it is possible to check the correct
 installation by running the test suite of the package.
 
-    gap> Read( "mygap/pkg/guarana/tst/testall.g" );
+gap> Read(Filename(DirectoriesPackageLibrary("guarana","tst")[1],"testall.g"));
 
-where `mygap' needs to be replaced with the directory where GAP
-was installed. For more details on  Test Files see 
+For more details on  Test Files see 
 Section 7.9 of the 
 GAP Reference Manual.
 

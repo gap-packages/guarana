@@ -58,10 +58,9 @@ in the {\GAP} Reference Manual.
     installation by running the test suite of the package.
 
 \beginexample
-    gap> Read( "mygap/pkg/guarana/tst/testall.g" );
+    gap> Read(Filename(DirectoriesPackageLibrary("guarana","tst")[1],"testall.g"));
 \endexample
-    where `mygap' needs to be replaced with the directory where {\GAP}
-    was installed. For more details on  Test Files see 
+    For more details on  Test Files see 
     Section~"ref:Test Files" of the 
     {\GAP} Reference Manual.
 
