@@ -1,0 +1,39 @@
+Study group computations with underlying mal'cev collection.
+
+gap>
+
+InstallMethod( \*, "for pcp elements",
+               IsIdenticalObj,
+               [IsPcpElement ,#and IsMalcevPcpElement,
+                IsPcpElement], 30,
+function( g, h )
+    local malCol, gg, hh, exp_res, res;
+    if IsMalcevPcpElement( g ) then
+        Print( "Malcev coll is used" );
+        malCol := AttachedMalcevCollector( g );
+        gg := MalcevGElementByExponents( malCol, Exponents( g ) );
+        hh := MalcevGElementByExponents( malCol, Exponents( h ) );
+        exp_res := Exponents( gg*hh);
+        res := PcpElementByExponents( g!.collector, exp_res );
+        return res;
+    else
+        TryNextMethod();
+    fi;
+end);
+
+ll := GUARANA.Tr_n_O1( 3 );
+malCol := MalcevCollectorConstruction( ll );
+
+G := malCol!.G;
+AttacheMalcevCollector( G, malCol );
+
+a := Random( G );
+b := Random( G );
+c := a*b;
+
+FittingSubgroup( G );
+
+
+
+
+2. install methods for *, ^, Comm, Inverse
