@@ -1,9 +1,5 @@
 Concrete TODO:
 
-- write robertson for deposit
-
-- how do we set malcev collection as underlying collector ? 
-
 - Run group computations with Malcev collector. 
 
 - integrate code from symbolic.g

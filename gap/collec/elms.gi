@@ -535,7 +535,8 @@ function( g )
 end);
 
 
-GUARANA.UseMalcevColl := true;
+# turn true only for testing purpose
+GUARANA.UseMalcevColl := false;
 if GUARANA.UseMalcevColl then 
 
 InstallMethod( \*, "for pcp elements",
