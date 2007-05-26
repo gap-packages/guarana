@@ -47,6 +47,11 @@ DeclareGlobalFunction( "MalcevGElementByCNElmAndExps" );
 DeclareOperation( "NormalForm" , [IsObject] );
 DeclareOperation( "Normalise" , [IsObject] );
 
+DeclareOperation( "AttacheMalcevCollector", [IsPcpGroup,IsMalcevCollectorRep] );
+DeclareAttribute( "AttachedMalcevCollector", IsPcpElement );
+DeclareProperty( "IsMalcevPcpElement", IsPcpElement );
+GUARANA.MALCEV_COLL_STORAGEPLACE := 1110;
+
 #############################################################################
 ##
 #E

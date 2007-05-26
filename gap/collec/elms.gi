@@ -491,4 +491,65 @@ end);
 
 #############################################################################
 ##
-#E
+## Methods for setting the malcev collector as used collector of pcp groups
+##
+InstallMethod( AttacheMalcevCollector, 
+               "for pcp groups and Mal'cev collectors (Guarana)", 
+               true, 
+               [IsPcpGroup, IsMalcevCollectorRep], 
+               0,
+function( G, malCol )
+    local coll;
+    coll := Collector( G );
+    coll![GUARANA.MALCEV_COLL_STORAGEPLACE] := malCol;
+end);
+
+InstallMethod( AttachedMalcevCollector, 
+               "for pcp elements (Guarana)", 
+               true, 
+               [IsPcpElement ], 
+               0,
+function( g )
+    local coll;
+    coll := Collector( g );
+    if IsBound( coll![GUARANA.MALCEV_COLL_STORAGEPLACE] ) then 
+        return coll![GUARANA.MALCEV_COLL_STORAGEPLACE]; 
+    else
+        return fail;;
+    fi;
+end);
+
+InstallMethod( IsMalcevPcpElement, 
+               "for pcp elements (Guarana)", 
+               true, 
+               [IsPcpElement ], 
+               0,
+function( g )
+    local coll;
+    coll := Collector( g );
+    if IsBound( coll![GUARANA.MALCEV_COLL_STORAGEPLACE] ) then 
+        return true;
+    else
+        return false;
+    fi;
+end);
+
+InstallMethod( \*, "for pcp elements",
+               IsIdenticalObj, 
+               [IsPcpElement and IsMalcevPcpElement, 
+                IsPcpElement], 30,
+function( g, h )
+    local malCol, gg, hh, exp_res, res;
+    if IsMalcevPcpElement( g ) then 
+        Print( "Malcev coll is used" );
+        malCol := AttachedMalcevCollector( g ); 
+        gg := MalcevGElementByExponents( malCol, Exponents( g ) );
+        hh := MalcevGElementByExponents( malCol, Exponents( h ) );
+        exp_res := Exponents( gg*hh);
+        res := PcpElementByExponents( g!.collector, exp_res );
+        return res;
+    else
+        TryNextMethod();
+    fi;
+end);
+
