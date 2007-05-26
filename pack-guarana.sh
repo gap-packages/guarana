@@ -22,7 +22,7 @@ find . -iname TODO | xargs -r -n 20 rm -f
 cd $DIR/doc
 rm   manual.ind  manual.dvi manual.log    manual.aux   manual.idx  manual.bbl   manual.ilg  tthout
 
-VERS=0.9
+VERS=0.91
 
 # remove yourself
 cd $DIR

@@ -7,8 +7,8 @@ SetPackageInfo( rec(
 
 PackageName := "Guarana",
 Subtitle := "Applications of Lie methods for computations with infinite polycyclic  groups",
-Version := "0.9",
-Date := "08/04/2006",
+Version := "0.91",
+Date := "26/05/2007",
 
 ArchiveURL := Concatenation([ 
 "http://www.cs.st-andrews.ac.uk/~bjoern/software/Guarana/Guarana-", 
@@ -40,7 +40,7 @@ Status := "deposited",
 README_URL := "http://www.cs.st-andrews.ac.uk/~bjoern/software/Guarana/README",
 PackageInfoURL := "http://www.cs.st-andrews.ac.uk/~bjoern/software/Guarana/PackageInfo.g",
 
-AbstractHTML := "The Guarana packages provives computational applications of the Mal'cev correspondence, in particular for collection in infinite polycyclic groups.", 
+AbstractHTML := "The Guarana packages proviveds computational applications of the Mal'cev correspondence, in particular for collection in infinite polycyclic groups.", 
 
 PackageWWWHome :="http://www.cs.st-andrews.ac.uk/~bjoern/software/Guarana",
 
@@ -70,7 +70,7 @@ BannerString := Concatenation([
 " ... \n" ]),     
 Autoload := false,
 TestFile := "tst/testall.g",
-Keywords := ["Mal'cev correspondence", "Collection", "Lie algebra", "Baker Campbell Haussdorff Formula" ],    
+Keywords := ["Mal'cev correspondence", "Collection", "Lie algebra", "Baker Campbell Haussdorff Formula", "polycyclic groups" ],    
 
 ));
 
