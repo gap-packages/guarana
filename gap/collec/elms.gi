@@ -534,14 +534,18 @@ function( g )
     fi;
 end);
 
+
+GUARANA.UseMalcevColl := true;
+if GUARANA.UseMalcevColl then 
+
 InstallMethod( \*, "for pcp elements",
                IsIdenticalObj, 
-               [IsPcpElement and IsMalcevPcpElement, 
+               [IsPcpElement ,#and IsMalcevPcpElement, 
                 IsPcpElement], 30,
 function( g, h )
     local malCol, gg, hh, exp_res, res;
     if IsMalcevPcpElement( g ) then 
-        Print( "Malcev coll is used" );
+        Print( "." );
         malCol := AttachedMalcevCollector( g ); 
         gg := MalcevGElementByExponents( malCol, Exponents( g ) );
         hh := MalcevGElementByExponents( malCol, Exponents( h ) );
@@ -552,4 +556,92 @@ function( g, h )
         TryNextMethod();
     fi;
 end);
+
+InstallMethod( COMM, "for pcp elements",
+               IsIdenticalObj, 
+               [IsPcpElement ,#and IsMalcevPcpElement, 
+                IsPcpElement], 30,
+function( g, h )
+    local malCol, gg, hh, exp_res, res;
+    if IsMalcevPcpElement( g ) then 
+        Print( "," );
+        malCol := AttachedMalcevCollector( g ); 
+        gg := MalcevGElementByExponents( malCol, Exponents( g ) );
+        hh := MalcevGElementByExponents( malCol, Exponents( h ) );
+        exp_res := Exponents( g^-1*h^-1*g*h);
+        res := PcpElementByExponents( g!.collector, exp_res );
+        return res;
+    else
+        TryNextMethod();
+    fi;
+end);
+
+InstallMethod( \^, "for pcp elements",
+               [IsPcpElement, IsInt], 30,
+function( g, n )
+    local malCol, gg, hh, exp_res, res;
+    if IsMalcevPcpElement( g ) then
+        Print( ":" );
+        malCol := AttachedMalcevCollector( g );
+        gg := MalcevGElementByExponents( malCol, Exponents( g ) );
+        exp_res := Exponents( gg^n);
+        res := PcpElementByExponents( g!.collector, exp_res );
+        return res;
+    else
+        TryNextMethod();
+    fi;
+end);
+
+InstallMethod( \^, "for two pcp elements",
+               IsIdenticalObj,
+               [IsPcpElement, IsPcpElement], 30,
+function( g, h )
+    local malCol, gg, hh, exp_res, res;
+    if IsMalcevPcpElement( g ) then
+        Print( "-" );
+        malCol := AttachedMalcevCollector( g );
+        gg := MalcevGElementByExponents( malCol, Exponents( g ) );
+        hh := MalcevGElementByExponents( malCol, Exponents( g ) );
+        exp_res := Exponents( h^-1*g*h);
+        res := PcpElementByExponents( g!.collector, exp_res );
+        return res;
+    else
+        TryNextMethod();
+    fi;
+end);
+
+InstallMethod( Inverse, "for pcp elements",
+               [IsPcpElement], 30,
+function( g )
+    local malCol, gg, hh, exp_res, res;
+    if IsMalcevPcpElement( g ) then
+        Print( ";" );
+        malCol := AttachedMalcevCollector( g );
+        gg := MalcevGElementByExponents( malCol, Exponents( g ) );
+        exp_res := Exponents( Inverse(gg ));
+        res := PcpElementByExponents( g!.collector, exp_res );
+        return res;
+    else
+        TryNextMethod();
+    fi;
+end);
+
+InstallMethod( INV, "for pcp elements",
+               [IsPcpElement], 30,
+function( g )
+    local malCol, gg, hh, exp_res, res;
+    if IsMalcevPcpElement( g ) then
+        Print( ";" );
+        malCol := AttachedMalcevCollector( g );
+        gg := MalcevGElementByExponents( malCol, Exponents( g ) );
+        exp_res := Exponents( Inverse(gg ));
+        res := PcpElementByExponents( g!.collector, exp_res );
+        return res;
+    else
+        TryNextMethod();
+    fi;
+end);
+
+fi;
+
 
