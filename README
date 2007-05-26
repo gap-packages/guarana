@@ -1,4 +1,19 @@
-  
+#****************************************************************************
+#
+# Copyright (C) 2007  Björn Assmann <bjoern@mcs.st-and.ac.uk>
+#
+#  Distributed under the terms of the GNU General Public License (GPL)
+#
+#    This code is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty
+#    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+#  See the GNU General Public License for more details; the full text
+#  is available at:
+#
+#                  http://www.gnu.org/licenses/
+#***************************************************************************** 
+ 
 The GAP 4 package `Guarana'
 ========================
 
