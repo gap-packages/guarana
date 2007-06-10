@@ -1,14 +1,14 @@
 #############################################################################
 ##
-##  PackageInfo.g        GAP4 Package `Polenta'                Bjoern Assmann
+##  PackageInfo.g        GAP4 Package `Guarana'               Bjoern Assmann
 ##  
 
 SetPackageInfo( rec(
 
 PackageName := "Guarana",
 Subtitle := "Applications of Lie methods for computations with infinite polycyclic  groups",
-Version := "0.91",
-Date := "26/05/2007",
+Version := "0.92",
+Date := "07/06/2007",
 
 ArchiveURL := Concatenation([ 
 "http://www.cs.st-andrews.ac.uk/~bjoern/software/Guarana/Guarana-", 

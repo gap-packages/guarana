@@ -8,6 +8,7 @@ cd $DIR
 rm -r gap/supple
 rm -r tst/completeOldCode
 rm -r tst/repsWerner
+rm kloc.cfg
 
 # remove tilde files 
 find . -iname \*~ | xargs -r -n 20 rm -f
@@ -21,8 +22,9 @@ find . -iname TODO | xargs -r -n 20 rm -f
 # remove unnecessary doc files
 cd $DIR/doc
 rm   manual.ind  manual.dvi manual.log    manual.aux   manual.idx  manual.bbl   manual.ilg  tthout
+rm make_doc
 
-VERS=0.91
+VERS=0.92
 
 # remove yourself
 cd $DIR

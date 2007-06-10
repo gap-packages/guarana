@@ -121,7 +121,7 @@ end;
 
 #############################################################################
 ##
-#F GUARANA.NilpotentByFreeAbelianExmas( n )
+#F GUARANA.NilpotentByFreeAbelianExams( n )
 ##
 ## IN
 ## n ........... natural number between 1 and 8 for the 

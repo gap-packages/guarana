@@ -11,7 +11,7 @@
 ##
 #############################################################################
 ##
-#F GUARANA.PolycyclicExmas( n )
+#F GUARANA.PolycyclicExams( n )
 ## 
 ## IN 
 ## n ..................... integer between 1 and 13
@@ -32,7 +32,7 @@
 ## This does not work for n=14, which is a bug in polycycyclic.
 ## 
 ##
-GUARANA.PolycyclicExmas := function( n )
+GUARANA.PolycyclicExams := function( n )
   local G, K, N, nat, K_img, K_img_fit, H_img, H, C, CN, C_N;
 
     G := ExamplesOfSomePcpGroups( n );
