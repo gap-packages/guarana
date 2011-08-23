@@ -547,7 +547,7 @@ GUARANA.ExpByStar := function( x )
     fi;
 end;
 
-InstallMethod( Exp, 
+InstallMethod( Exp,
                "for Malcev lie elments (Guarana)",
 	       true,
 	        [IsMalcevLieElement ],

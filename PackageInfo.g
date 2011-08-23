@@ -7,8 +7,8 @@ SetPackageInfo( rec(
 
 PackageName := "Guarana",
 Subtitle := "Applications of Lie methods for computations with infinite polycyclic  groups",
-Version := "0.92",
-Date := "07/06/2007",
+Version := "0.93",
+Date := "23/08/2011",
 
 ArchiveURL := Concatenation([ 
 "http://www.cs.st-andrews.ac.uk/~bjoern/software/Guarana/Guarana-", 
@@ -22,8 +22,21 @@ Persons := [
       LastName      := "Assmann",
       FirstNames    := "Bjoern",
       IsAuthor      := true,
-      IsMaintainer  := true,
+      IsMaintainer  := false,
       Email         := "bjoern@mcs.st-and.ac.uk",
+      PostalAddress := Concatenation( [
+            "Mathematical Institute\n",
+            "University of St. Andrews\n",
+            "North Haugh, St. Andrews\n Fife, KY 16 9SS, Scotland" ] ),
+      Place         := "St. Andrews",
+      Institution   := "University of St. Andrews"),
+
+  rec(
+      LastName      := "McDermott",
+      FirstNames    := "John",
+      IsAuthor      := false,
+      IsMaintainer  := true,
+      Email         := "jjm@mcs.st-and.ac.uk",
       PostalAddress := Concatenation( [
             "Mathematical Institute\n",
             "University of St. Andrews\n",
@@ -37,14 +50,14 @@ Status := "deposited",
 #CommunicatedBy := "Charles Wright (Eugene)",
 #AcceptDate := "08/2005",
 
-README_URL := "http://www.cs.st-andrews.ac.uk/~bjoern/software/Guarana/README",
-PackageInfoURL := "http://www.cs.st-andrews.ac.uk/~bjoern/software/Guarana/PackageInfo.g",
+README_URL := "http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana/README",
+PackageInfoURL := "http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana/PackageInfo.g",
 
-AbstractHTML := "The Guarana packages proviveds computational applications of the Mal'cev correspondence, in particular for collection in infinite polycyclic groups.", 
+AbstractHTML := "The Guarana package provides computational applications of the Mal'cev correspondence, in particular for collection in infinite polycyclic groups.", 
 
-PackageWWWHome :="http://www.cs.st-andrews.ac.uk/~bjoern/software/Guarana",
+PackageWWWHome :="http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana",
 
-PackageDoc := rec(          
+PackageDoc := rec(
   BookName  := "Guarana",
   ArchiveURLSubset := ["doc", "htm"],
   HTMLStart := "htm/chapters.htm",
