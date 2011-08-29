@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Book SYSTEM "gapdoc.dtd">
+<#Include SYSTEM "../VERSION">
+
+<Book Name="Guarana">
+<TitlePage>
+  <Title><Package>Guarana</Package>
+         A Gap4 Package</Title>
+  <Version>Version $VERSIONNUMBER</Version>
+  <Author>Björn Assmann
+  </Author>
+  <Maintainer>John McDermott
+    <Email>jjm@mcs.st-andrews.ac.uk</Email>
+  </Maintainer>
+  <Copyright>&copyright; 2007 BjörnAssmann. <P/>
+  </Copyright>
+</TitlePage>
+
+<TableOfContents/>
+
+<Body>
+  <Chapter> <Heading>Introduction</Heading>
+    <Section Label="sec:about">
+      <Heading>About Guarana</Heading>
+      In this package we demonstrate the algorithmic usefulness of the
+      so-called Mal'cev correspondence for computations with infinite 
+      polycyclic groups; it is a correspondence
+      that associates to every $\Q$-powered nilpotent group $H$ a
+      unique rational nilpotent Lie algebra $L_H$ and vice-versa.
+      The Mal'cev correspondence was discovered 
+      by Anatoly Mal'cev in 1951 <Cite Key="Mal51"/>.
+    </Section>
+    <Section Label="sec:setup">
+      <Heading>Setup for computing the correspondence</Heading>
+      Let $G$ be a finitely generated torsion-free nilpotent group, 
+      i.e.\ a $T$-group.
+      Then $G$ can be embedded in a $\Q$-powered hull $\hat{G}$.
+      The group $\hat{G}$ is
+      a $\Q$-powered nilpotent group and  
+      is unique up to isomorphism. 
+      We denote the Lie algebra
+      which corresponds to $\hat{G}$ under the Mal'cev correspondence by
+      $L(G)= L_{\hat{G}}$.
+
+      We provide an algorithm for setting up the 
+      Mal'cev correspondence
+      between $\hat{G}$ and the Lie algebra $L(G)$. 
+      That is, if $G$
+      is given by a polycyclic presentation with respect to a Mal'cev basis,
+      then we can compute a structure constants table of $L(G)$.
+      Furthermore for a given $g\in G$ we can compute the corresponding 
+      element in $L(G)$ and vice versa. 
+    </Section>
+
+    <Section Label="sec:collect">
+      <Heading>Collection</Heading>
+      Every element of a
+      polycyclically presented
+      group has a unique normal form. An algorithm for computing this normal
+      form is called a collection algorithm. Such an algorithm
+      lies at the heart of most methods
+      dealing with polycyclically presented groups. The current state of
+      the art is collection from the left 
+      \cite{Geb02,LGS90,VLe90}.
+
+      This package contains
+      a new collection algorithm for polycyclically presented groups,
+      which we call Mal'cev collection <Cite Key="ALi07"/>.
+      Mal'cev collection is
+      in some cases dramatically faster than
+      collection from the left, while using less memory.
+    </Section>
+  </Chapter>
+
+  <Chapter>
+    <Heading>Computing the Mal'cev correspondence</Heading>
+
+    <Section Label="sec:mainfuncs">
+      <Heading>The main functions</Heading>
+      Let <M>G</M> be a <M>T</M>-group
+      and <M>\hat{G}</M> its <M>\Q</M>-powered hull.
+      In this chapter we describe functionality 
+      for setting up the 
+      Mal'cev correspondence
+      between <M>\hat{G}</M> and the Lie algebra <M>L(G)</M>.
+
+      The data structures needed for computations with <M>\hat{G}</M> and 
+      <M>L(G)</M> are 
+      stored in a so-called Mal'cev object.
+      Computational representations of 
+      elements of <M>\hat{G}</M>, respectively <M>L(G)</M>, 
+      will be called Mal'cev group elements, respectively 
+      Mal'cev Lie elements.
+
+      <ManSection>
+	<Func Name="MalcevObjectByTGroup", Arg="N"/>
+	<Description>
+	  If <A>N</A> is a a <A>T</A>-group 
+	  (i.e. a finitely generated torsion-free nilpotent group),
+	  given by a polycyclic presentation with respect to a Mal'cev basis,
+	  then this function computes the Mal'cev correspondence for <A>N</A> 
+	  and stores the result in a so-called Mal'cev object. 
+	  Otherwise this function returns `fail'.
+	  In the moment this function is restricted to groups <A>N</A>
+	  of nilpotency class at most 9.
+	</Description>
+
+	<Func Name="UnderlyingGroup" Arg="mo"/>
+	<Description>
+	  For a Mal'cev object <A>mo</A> this function returns the 
+	  <A>T</A>-group, which was used to build <A>mo</A>.
+	</Description>
+
+	<Func Name="UnderlyingLieAlgebra" Arg="mo"/>
+	<Description>
+	  For a Mal'cev object <A>mo</A> this function returns the Lie algebra,
+	  which underlies the correspondence described by <A>mo</A>.
+	</Description>
+
+	<Func Name="Dimension" Arg="mo"/>
+	<Description>
+	  Returns the dimension of the Lie algebra that underlies the
+	  Mal'cev object <A>mo</A>.
+	</Description>
+
+        <Func Name="MalcevGrpElementByExponents" Arg="mo, exps"/>
+	<Description>
+	  For a Mal'cev object <A>mo</A> and an exponent vector <A>exps</A> 
+	  with rational entries, this functions returns the Mal'cev group
+	  element, which has exponents <A>exps</A> with respect to the
+	  Mal'cev basis of the underlying group of <A>mo</A>.
+        </Description>
+
+        <Func Name="MalcevLieElementByCoefficients" Arg="mo, coeffs"/>
+	<Description>
+	  For a Mal'cev object <A>mo</A> and a coefficient vector 
+	  <A>coeffs</A> with rational 
+	  entries, this functions returns the Mal'cev Lie element, which 
+	  has coefficients  <A>coeffs</A> with respect to the basis of 
+	  the underlying Lie algebra of <A>mo</A>.
+        </Description>
+
+        <Func Name="RandomGrpElm" Arg="mo, range"/>
+	<Description>
+	  For a Mal'cev object <A>mo</A> this function returns the output of 
+	  MalcevGrpElementByExponents( <A>mo</A>, <A>exps</A> ), where 
+	  <A>exps</A> is an exponent vector whose entries are randomly 
+	  chosen integers between -<A>range</A> and <A>range</A>.
+        </Description>
+
+        <Func Name="RandomLieElm" Arg="mo, range"/>
+	<Description>
+	  For a Mal'cev object <A>mo</A> this function returns the output of 
+	  MalcevLieElementByExponents( <A>mo</A>, <A>coeffs</A> ), where 
+	  <A>coeffs</A> is a coefficient vector whose entries are randomly 
+	  chosen integers between -<A>range</A> and <A>range</A>.
+        </Description>
+
+        <Func Name="Log" Arg="g"/>
+	<Description>
+	  For Mal'cev group element <A>g</A> this function returns the 
+	  corresponding Mal'cev Lie element.
+        </Description>
+
+        <Func Name="Exp" Arg="x"/>
+	<Description>
+	  For Mal'cev Lie element <A>x</A> this function returns the 
+	  corresponding Mal'cev group element.
+        </Description>
+
+        <Func Name="*" Arg="g, h"/>
+	<Description>
+	  Returns the product of Mal'cev group elements.
+        </Description>
+
+        <Func Name="Comm" Arg="x, y"/>
+	<Description>
+	  If <A>x</A>,<A>y</A> are Mal'cev group elements, then this 
+	  function returns the group theoretic commutator of <A>x</A>
+	  and <A>y</A>.
+	  If <A>x</A>,<A>y</A> are Mal'cev Lie elements, then this function
+	  returns the Lie commutator of <A>x</A> and <A>y</A>.
+        </Description>
+
+        <Func Name="MalcevSymbolicGrpElementByExponents" Arg="mo, exps"/>
+	<Description>
+	  For a Mal'cev object <A>mo</A> and an exponent vector <A>exps</A> 
+	  with rational indeterminates as entries, 
+	  this functions returns the Mal'cev group element, which 
+	  has exponents <A>exps</A> with respect to the Mal'cev basis of the
+	  underlying group of <A>mo</A>.
+        </Description>
+
+        <Func Name="MalcevLieElementByCoefficients" Arg="mo, coeffs"/>
+	<Description>
+	  For a Mal'cev object <A>mo</A> and a coefficient vector 
+	  <A>coeffs</A> with rational indeterminates as entries, 
+	  this functions returns the Mal'cev Lie element, which 
+	  has coefficients  <A>coeffs</A> with respect to the basis of the 
+	  underlying Lie algebra of <A>mo</A>.
+        </Description>
+
+      </ManSection>
+    </Section>
+
+    <Section>
+      <Heading>An example application</Heading>
+<Example>
+gap> n := 2;
+2
+gap> F := FreeGroup( n );
+<free group on the generators [ f1, f2 ]>
+gap> c := 3;
+3
+gap> N := NilpotentQuotient( F, c );
+Pcp-group with orders [ 0, 0, 0, 0, 0 ]
+
+gap> mo := MalcevObjectByTGroup( N );
+<<Malcev object of dimension 5>>
+gap> dim := Dimension( mo );
+5
+gap> UnderlyingGroup( mo );
+Pcp-group with orders [ 0, 0, 0, 0, 0 ]
+gap> UnderlyingLieAlgebra( mo );
+<Lie algebra of dimension 5 over Rationals>
+     
+gap> g := MalcevGrpElementByExponents( mo, [1,1,0,2,-1/2] );
+[ 1, 1, 0, 2, -1/2 ]
+gap> x := MalcevLieElementByCoefficients( mo, [1/2, 2, -1, 3, 5 ] );
+[ 1/2, 2, -1, 3, 5 ]
+
+gap> h := RandomGrpElm( mo );
+[ 5, -3, 0, -2, 8 ]
+gap> y := RandomLieElm( mo );
+[ 3, 9, 5, 5, 2 ]
+
+gap> z := Log( g );
+[ 1, 1, -1/2, 7/3, -1/3 ]
+gap> Exp( z ) = g;
+true
+gap> k := Exp( y );
+[ 3, 9, 37/2, 77/4, 395/4 ]
+gap> Log( k ) = y;
+true
+
+gap> g*h;
+[ 6, -2, 5, 10, -15/2 ]
+gap> Comm(g,h);
+[ 0, 0, 8, 10, -18 ]
+gap> Comm(x,y);
+[ 0, 0, 3/2, -25/4, -79/4 ]
+
+gap> indets := List( List( [1..dim], i->Concatenation( "a_", String(i) ) ),
+>                   x->Indeterminate( Rationals, x : new ) );
+[ a_1, a_2, a_3, a_4, a_5 ]
+gap> g_sym := MalcevSymbolicGrpElementByExponents( mo, indets );
+[ a_1, a_2, a_3, a_4, a_5 ]
+gap> x_sym := Log( g_sym );
+[ a_1, a_2, -1/2*a_1*a_2+a_3, 1/12*a_1^2*a_2+1/4*a_1*a_2-1/2*a_1*a_3+a_4,
+  -1/12*a_1*a_2^2+1/4*a_1*a_2-1/2*a_2*a_3+a_5 ]
+gap> g_sym * g;
+[ a_1+1, a_2+1, a_2+a_3, a_3+a_4+2, 1/2*a_2^2+1/2*a_2+a_3+a_5-1/2 ]
+</Example>
+
+  </Chapter>
+
+  <Chapter>
+    <Heading>Mal'cev collection
+    </Heading>
+    Let <M>G</M> be an infinite polycyclic group. It is well-known that
+    there exist  a normal <M>T</M>-group <M>N</M> and a <M>T</M>-group 
+    <M>C</M> such that <M>H=CN</M> is normal
+    of finite index in <M>G</M> and  <M>H/N</M> is free abelian of finite 
+    rank <Cite Key="Seg83"/>. 
+
+    In this chapter we present an effective collection method for an infinite
+    polycyclic group which is given by a polycyclic presentation 
+    with respect to a polycyclic sequence <M>P</M> going through the normal
+    series <M>1 \le N \le H \le G</M>.
+
+    This polycyclic sequence <M>P</M> must be chosen as follows.
+    Let <M>(n_1,\dots,n_l)</M> be a Mal'cev basis of <M>N</M> and let
+    <M>(c_1N,\dots,c_k N)</M> be a basis for
+    the free abelian group <M>CN/N</M>.
+    Then <M>(c_1,\dots,c_k,n_1,\dots,n_l)</M>
+    is a polycyclic sequence for <M>H=CN</M>. Further there exists
+    <M>f_1,\dots, f_j \in G</M> such that <M>(f_1 H, \dots, f_j H)</M> is
+    a polycyclic sequence for <M>G/H</M>. Now we set
+
+    <Display>P = (f_1,\dots,f_j, c_1, \dots , c_k, n_1, \dots, n_l )</Display>
+
+    <ManSection>
+      <Heading>The main functions
+      </Heading>
+
+      <Func Name="MalcevCollectorConstruction" Arg="G, inds, C, CC, N, NN"/>
+      <Description>
+	Returns a Mal'cev collector for the infinite polycyclically
+	presented group <M>G</M>. The group <M>G</M> must be given
+	with respect to a polycyclic sequence <M>(g_1,\dots,g_r, c_{r+1},
+	  \dots, c_{r+s}, n_{r+s+1}, \dots, n_{r+s+t})</M>
+	with the following properties:
+	<List>
+	  <Item (a)>
+	    <M>(n_{r+s+1}, \dots, n_{r+s+t})</M> is a Mal'cev basis for 
+	    the <M>T</M>-group <M>N \leq G</M>,
+	  </Item>
+	  <Item (b)>
+	    <M>(c_{r+1}N, \dots, c_{r+s}N)</M> is a basis for the 
+	    free-abelian group <M>CN/N</M> where <M>C \leq G</M> is a 
+	    <M>T</M>-group generated by <M>c_{r+1}, \dots, c_{r+s}</M>,
+	  </Item>
+	  <Item (c)>
+	    <M>(g_1 CN, \dots, g_r CN)</M> is a polycyclic sequence for 
+	    the finite group <M>G/CN</M>.
+	  </Item>
+	</List>
+	
+	The list <A>inds</A> is equal to 
+	<M>[ [1,\dots,r],[r+1,\dots,r+s],[r+s+1,\dots,r+s+t]]</M>. 
+	The group <M>CC</M> is isomorphic to <M>C</M> via 
+	<A>CC</A>!.bijection 
+	and given by a polycyclic presentation with respect 
+	to a Mal'cev basis starting with <M>c_{r+1}, \dots, c_{r+s}</M>.
+	The  group <M>NN</M> is isomorphic to <M>N</M> via 
+	<A>NN</A>!.bijection.
+	and given by a polycyclic presentation with respect 
+	to the Mal'cev basis <M>( n_{r+s+1}, \dots, n_{r+s+t})</M>.
+      </Description>
+      
+      <Func Name="GUARANA.Tr_n_O1" Arg="n" />
+      <Func Name="GUARANA.Tr_n_O2" Arg="n" />
+      <Description>
+	for a positive integer <A>n</A> 
+	these functions construct polycyclically presented groups 
+	that can be used to test the Mal'cev collector.
+	They return a list which can be used as input for the function
+	MalcevCollectorConstruction.
+	The constructed groups are isomorphic to triangular matrix groups
+	of dimension <A>n</A> over the ring <M>O_1</M>, respectively 
+	<M>O_2</M>.
+	The ring <M>O_1</M>, respectively <M>O_2</M>, is the maximal order
+	of <M>\Q(\theta_i)</M> where <M>\theta_1</M>, respectively
+	<M>\theta_2</M>, is a zero of the polynomial 
+	<M>p_1(x) = x^2-3</M>, respectively 
+	<M>p_2(x)=x^3 -x^2 +4</M>.
+      </Description>
+
+      <Func Name="GUARANA.F_2c_Aut1" Arg="c" />
+      <Func Name="GUARANA.F_3c_Aut1" Arg="c" />
+      <Description>
+	for a positive integer <A>c</A> 
+	these functions construct polycyclically presented groups
+	that can be used to test the Mal'cev collector.
+	They return a list which can be used as input for the function
+	MalcevCollectorConstruction.
+	These groups are constructed as follows:
+	Let <M>F_{n,c}</M> be the free nilpotent of class <M>c</M> group on
+	<M>n</M> generators.
+	An automorphism <M>\varphi</M> of the free group <M>F_n</M>
+	naturally induces an automorphism
+	<M>\bar{\varphi}</M> of <M>F_{n,c}</M>.
+	We use the automorphism <M>\varphi_1</M> of <M>F_2</M>
+	which maps <M>f_1</M> to <M>f_2^{-1}</M> and <M>f_2</M> to
+	<M>f_1 f_2^3</M> and the automorphism <M>\varphi_2</M> of 
+	<M>F_3</M> mapping <M>f_1</M> to <M>f_2^{-1}</M>, <M>f_2</M>
+	to <M>f_3^{-1}</M> and <M>f_3</M> to <M>f_2^{-3}f_1^{-1}</M>
+	for our construction.
+	The returned group F_2c_Aut1, respectively F_3c_Aut2, is 
+	isomorphic to the semidirect product 
+	<M>\langle \varphi_1 \rangle \ltimes F_{2,c}</M>, respectively
+	<M>\langle \varphi_2 \rangle \ltimes F_{3,c}</M>.
+      </Description>
+      
+      <Func Name="MalcevGElementByExponents" Arg="malCol, exps" />
+      <Description>
+	For a Mal'cev collector <A>malCol</A> of a group <M>G</M> 
+	and an exponent vector <A>exps</A> with integer
+	entries, this functions returns the group element of <M>G</M>, which 
+	has exponents <A>exps</A> with respect to the polycyclic sequence 
+	underlying <A>malCol</A>.
+      </Description>
+      
+      <Func Name="Random" Arg="malCol, range" />
+      <Description>
+	For a Mal'cev collector <A>malCol</A> this function returns the 
+	output of MalcevGElementByExponents( <A>malCol</A>, <A>exps</A> ),
+	where <A>exps</A> is an exponent vector whose entries are randomly
+	chosen integers between -<A>range</A> and <A>range</A>.
+      </Description>
+      
+      <Func Name="*" Arg="g, h" />
+      <Description>
+	Returns the product of group elements which are defined with respect 
+	to a Mal'cev collector by the the function MalcevGElementByExponents.
+      </Description>
+      
+      <Func Name="GUARANA.AverageRuntimeCollec" Arg="malCol, ranges, no" /> 
+      <Description>
+	For a Mal'cev collector <A>malCol</A>, a list of positive integers 
+	<A>ranges</A> and a positive integer <A>no</A> 
+	this function computes for each number <A>r</A> in <A>ranges</A> 
+	the average runtime of <A>no</A> multiplications of 
+	two random elements of <A>malCol</A> of range <A>r</A>, as
+	generated by Random( <A>malCol</A>, <A>r</A> ). 
+      </Description>
+    </ManSection>
+
+  <Section>
+    <Heading>An example application
+    </Heading>
+
+<Example>
+gap> ll := GUARANA.Tr_n_O1( 3 );
+[ Pcp-group with orders [ 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+  [ [ 1 .. 3 ], [ 4 .. 6 ], [ 7 .. 12 ] ],
+  Pcp-group with orders [ 0, 0, 0, 0, 0, 0 ],
+  Pcp-group with orders [ 0, 0, 0, 0, 0, 0 ],
+  Pcp-group with orders [ 0, 0, 0 ], Pcp-group with orders [ 0, 0, 0 ] ]
+gap> malCol := MalcevCollectorConstruction( ll );
+<<Malcev collector>>
+  F : [ 2, 2, 2 ]
+  C : <<Malcev object of dimension 3>>
+  N : <<Malcev object of dimension 6>>
+
+gap> exps_g := [ 1, 1, 1, -3, -2, 1, -2, -1, 0, 3, -1,3 ];
+[ 1, 1, 1, -3, -2, 1, -2, -1, 0, 3, -1, 3 ]
+gap> exps_h := [ 1, 0, 1, -1, 0, 2, 0, 4, -1, 5, 9,-5 ];
+[ 1, 0, 1, -1, 0, 2, 0, 4, -1, 5, 9, -5 ]
+gap> g := MalcevGElementByExponents( malCol, exps_g );
+[ 1, 1, 1, -3, -2, 1, -2, -1, 0, 3, -1, 3 ]
+gap> h := MalcevGElementByExponents( malCol, exps_h );
+[ 1, 0, 1, -1, 0, 2, 0, 4, -1, 5, 9, -5 ]
+
+gap> k := g*h;
+[ 0, 1, 0, -4, -2, 3, 1, 4, 35, -16, -404, 232 ]
+
+gap> Random( malCol, 10 );
+[ 0, 0, 1, 9, 5, 5, 2, -2, 7, -10, 7, -6 ]
+
+</Example>
+
+  </Chapter>
+
+  <Chapter>
+    <Heading>Installation
+    </Heading>
+    <Section>
+      <Heading>Installing this package
+      </Heading>
+      The Guarana package is part of the standard distribution of &GAP; and
+      so normally there should be no need to install it separately.
+      If by any chance it is not part of your &GAP; distribution, then 
+      the standard method is to unpack the package into the `pkg'
+      directory  of your &GAP; distribution.  This will create a `guarana'
+      subdirectory. 
+      For other non-standard options please see Chapter
+      <Ref Chap="Installing a GAP Package" BookName="ref" /> of the &GAP; 
+      Reference Manual.
+
+      Note that the GAP-Packages Polycyclic and Polenta
+      are needed for this package.
+      Normally they should be contained in your distribution. If not, 
+      they can be obtained at
+      <URL>http://www.gap-system.org/Packages/packages.html</URL>
+
+<!-- findme: comment about building docs? -->
+    </Section>
+    <Section>
+      <Heading>Loading the Guarana package
+      </Heading>
+      If the <Package>Guarana</Package> Package is not already loaded 
+      then you have to request it explicitly. 
+      This can be done by `LoadPackage("guarana")'.
+      The `LoadPackage' command is described in Section
+      <Ref Sect="LoadPackage" BookName="ref" />
+      in the &GAP; Reference Manual.
+    </Section>
+
+    <Section>
+      <Heading>Running the test suite
+      </Heading>
+      Once the package is installed, it is possible to check the correct
+      installation by running the test suite of the package.
+
+<Example>
+gap> Read(Filename(DirectoriesPackageLibrary("guarana","tst")[1],"testall.g"));
+</Example>
+
+      For more details on  Test Files see 
+      Section <Ref Sect="Test Files" BookName="ref" /> of the 
+      &GAP; Reference Manual.
+
+      If the test suite runs into an error, 
+      then please send a message
+      to `jjm@mcs.st-andrews.ac.uk' including the error message.
+
+    </Section>
+
+  </Chapter>
+
+  <Appendix>
+    <Heading>
+    </Heading>
+  </Appendix>
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%F  UseReferences . . . . . . . . . . . . . . . . . .  specify references
+%%
+\UseReferences{../../../doc/ext}
+\UseReferences{../../../doc/ref}
+\UseGapDocReferences{../../gapdoc/doc}  %Refs to a GAPDoc-produced manual
+
+\Appendices
+%\Input{hints}
+\Bibliography
+\Index                        %to generate a proper index `manual.mst'
+
+</Body>
+
+</Book>

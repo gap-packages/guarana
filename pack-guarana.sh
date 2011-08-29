@@ -24,7 +24,7 @@ cd $DIR/doc
 rm   manual.ind  manual.dvi manual.log    manual.aux   manual.idx  manual.bbl   manual.ilg  tthout
 rm make_doc
 
-VERS=0.92
+VERS=0.93
 
 # remove yourself
 cd $DIR
@@ -45,9 +45,9 @@ cp guarana/README Guarana
 cp guarana/PackageInfo.g Guarana
 mv guarana Guarana
 
-#scp -r /tmp/Guarana/* bjoern@home-rsch.cs.st-andrews.ac.uk:~/public_html/software/Guarana
+#scp -r /tmp/Guarana/* jjm@campbell.mcs.st-andrews.ac.uk:~/public_html/software/Guarana
 
-rsync --delete --verbose --progress --stats --compress --rsh=/usr/bin/ssh --recursive --times --perms --links /tmp/Guarana/* bjoern@home-rsch.cs.st-andrews.ac.uk:~/public_html/software/Guarana/
+rsync --delete --verbose --progress --stats --compress --rsh=/usr/bin/ssh --recursive --times --perms --links /tmp/Guarana/* jjm@campbell.mcs.st-andrews.ac.uk:~/public_html/software/Guarana/
 
 # remove the unnecessary diretory
 rm -r /tmp/Guarana
