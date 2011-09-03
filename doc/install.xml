@@ -1,0 +1,56 @@
+<Chapter>
+  <Heading>Installation
+  </Heading>
+  <Section>
+    <Heading>Installing this package
+    </Heading>
+    The Guarana package is part of the standard distribution of &GAP; and
+    so normally there should be no need to install it separately.
+    If by any chance it is not part of your &GAP; distribution, then 
+  	the standard method is to unpack the package into the `pkg'
+  	directory  of your &GAP; distribution.  This will create a `guarana'
+  	subdirectory. 
+  	For other non-standard options please see Chapter
+  	<Ref Chap="Installing a GAP Package" BookName="ref" /> of the &GAP; 
+  	Reference Manual.
+
+  	Note that the GAP-Packages Polycyclic and Polenta
+  	are needed for this package.
+  	Normally they should be contained in your distribution. If not, 
+  	they can be obtained at
+  	<URL>http://www.gap-system.org/Packages/packages.html</URL>
+
+  	<!-- findme: comment about building docs? -->
+  </Section>
+  <Section>
+  	<Heading>Loading the Guarana package
+  	</Heading>
+  	If the <Package>Guarana</Package> Package is not already loaded 
+  	then you have to request it explicitly. 
+  	This can be done by `LoadPackage("guarana")'.
+  	The `LoadPackage' command is described in Section
+  	<Ref Sect="LoadPackage" BookName="ref" />
+  	in the &GAP; Reference Manual.
+  </Section>
+
+  <Section>
+	<Heading>Running the test suite
+	</Heading>
+	Once the package is installed, it is possible to check the correct
+	installation by running the test suite of the package.
+
+	<Example>
+	gap> Read(Filename(DirectoriesPackageLibrary("guarana","tst")[1],"testall.g"));
+	</Example>
+
+	For more details on  Test Files see 
+	Section <Ref Sect="Test Files" BookName="ref" /> of the 
+	&GAP; Reference Manual.
+
+	If the test suite runs into an error, 
+	then please send a message
+  	to `jjm@mcs.st-andrews.ac.uk' including the error message.
+  </Section>
+
+</Chapter>
+

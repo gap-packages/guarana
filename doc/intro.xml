@@ -1,0 +1,54 @@
+<Chapter>
+	<Heading>Introduction</Heading>
+	<Section Label="sec:about">
+	  <Heading>About Guarana</Heading>
+	  In this package we demonstrate the algorithmic usefulness of the
+	  so-called Mal'cev correspondence for computations with infinite 
+	  polycyclic groups; it is a correspondence
+	  that associates to every <M>\Q</M>-powered nilpotent group <M>H</M> a
+	  unique rational nilpotent Lie algebra <M>L_H</M> and vice-versa.
+	  The Mal'cev correspondence was discovered 
+	  by Anatoly Mal'cev in 1951 <Cite Key="Mal51"/>.
+	</Section>
+	<Section Label="sec:setup">
+	  <Heading>Setup for computing the correspondence</Heading>
+	  Let <M>G</M> be a finitely generated torsion-free nilpotent group, 
+	  i.e.\ a <M>T</M>-group.
+	  Then <M>G</M> can be embedded in a <M>\Q</M>-powered hull <M>G&#94;</M>.
+	  The group <M>G&#94;</M> is
+	  a <M>\Q</M>-powered nilpotent group and  
+	  is unique up to isomorphism. 
+	  We denote the Lie algebra
+	  which corresponds to <M>G&#94;</M> under the Mal'cev correspondence by
+	  <M>L(G)= L_{G&#94;}</M>.
+	
+	  We provide an algorithm for setting up the 
+	  Mal'cev correspondence
+	  between <M>G&#94;</M> and the Lie algebra <M>L(G)</M>. 
+	  That is, if <M>G</M>
+	  is given by a polycyclic presentation with respect to a Mal'cev basis,
+	  then we can compute a structure constants table of <M>L(G)</M>.
+	  Furthermore for a given <M>g\in G</M> we can compute the corresponding 
+	  element in <M>L(G)</M> and vice versa. 
+	</Section>
+	
+	<Section Label="sec:collect">
+	  <Heading>Collection</Heading>
+	  Every element of a
+	  polycyclically presented
+	  group has a unique normal form. An algorithm for computing this normal
+	  form is called a collection algorithm. Such an algorithm
+	  lies at the heart of most methods
+	  dealing with polycyclically presented groups. The current state of
+	  the art is collection from the left 
+	  <Cite Key="Geb02"/><Cite Key="LGS90"/><Cite Key="VLe90"/>	}.
+	
+	  This package contains
+	  a new collection algorithm for polycyclically presented groups,
+	  which we call Mal'cev collection <Cite Key="ALi07"/>.
+	  Mal'cev collection is
+	  in some cases dramatically faster than
+	  collection from the left, while using less memory.
+	</Section>
+</Chapter>
+

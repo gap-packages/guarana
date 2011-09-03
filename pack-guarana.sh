@@ -8,23 +8,23 @@ cd $DIR
 rm -r gap/supple
 rm -r tst/completeOldCode
 rm -r tst/repsWerner
-rm kloc.cfg
 
 # remove tilde files 
-find . -iname \*~ | xargs -r -n 20 rm -f
+find . -iname \*~ | xargs -n 20 rm -f
 
 # remove CVS stuff
-find . -iname CVS | xargs -r -n 20 rm -rf
+find . -iname CVS | xargs -n 20 rm -rf
 
 # remove TODO files
-find . -iname TODO | xargs -r -n 20 rm -f
+find . -iname TODO | xargs -n 20 rm -f
 
 # remove unnecessary doc files
 cd $DIR/doc
-rm   manual.ind  manual.dvi manual.log    manual.aux   manual.idx  manual.bbl   manual.ilg  tthout
-rm make_doc
+rm -f manual.ind manual.dvi manual.log manual.aux manual.idx manual.bbl manual.ilg
 
-VERS=0.93
+#check the version number
+cd $DIR
+VERS=`cat VERSION`
 
 # remove yourself
 cd $DIR
