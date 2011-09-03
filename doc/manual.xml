@@ -4,7 +4,9 @@
 <Book Name="Guarana">
 <TitlePage>
   <Title><Package>Guarana</Package>
-         A Gap4 Package</Title>
+  </Title>
+  <Subtitle>A Gap4 Package
+  </Subtitle>
   <Version>( Version 
 <#Include SYSTEM "../VERSION">
  )

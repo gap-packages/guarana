@@ -1,6 +1,6 @@
 #!/bin/bash
-cp -r ../guarana /tmp  
-DIR=/tmp/guarana
+cp -r ../guarana /tmp/guarana_build  
+DIR=/tmp/guarana_build
 cd $DIR
 
 
@@ -13,7 +13,7 @@ rm -r tst/repsWerner
 find . -iname \*~ | xargs -n 20 rm -f
 
 # remove CVS stuff
-find . -iname CVS | xargs -n 20 rm -rf
+find . -iname .hg | xargs -n 20 rm -rf
 
 # remove TODO files
 find . -iname TODO | xargs -n 20 rm -f
@@ -33,17 +33,17 @@ rm pack-guarana.sh
 # create tar archive and compress it
 cd /tmp
 
-tar cf Guarana-$VERS.tar guarana
+tar cf Guarana-$VERS.tar guarana_build
 gzip -9 Guarana-$VERS.tar
-tar cf Guarana-$VERS.tar guarana
+tar cf Guarana-$VERS.tar guarana_build
 
 # assemble all necessary files
 mkdir Guarana
 mv Guarana-$VERS.tar Guarana
 mv Guarana-$VERS.tar.gz Guarana
-cp guarana/README Guarana
-cp guarana/PackageInfo.g Guarana
-mv guarana Guarana
+cp guarana_build/README Guarana
+cp guarana_build/PackageInfo.g Guarana
+mv guarana_build Guarana/guarana
 
 #scp -r /tmp/Guarana/* jjm@campbell.mcs.st-andrews.ac.uk:~/public_html/software/Guarana
 
