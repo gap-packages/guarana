@@ -1,6 +1,6 @@
 #!/bin/bash
-cp -r ../guarana /tmp/guarana_build  
-DIR=/tmp/guarana_build
+cp -r ../guarana /tmp/guarana
+DIR=/tmp/guarana
 cd $DIR
 
 
@@ -33,9 +33,12 @@ rm pack-guarana.sh
 # create tar archive and compress it
 cd /tmp
 
-tar cf Guarana-$VERS.tar guarana_build
+tar cf Guarana-$VERS.tar guarana
 gzip -9 Guarana-$VERS.tar
-tar cf Guarana-$VERS.tar guarana_build
+tar cf Guarana-$VERS.tar guarana
+
+#avoid problem that on Mac OS X Guarana and guarana are the same!
+mv guarana guarana_build
 
 # assemble all necessary files
 mkdir Guarana

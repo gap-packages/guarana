@@ -11,7 +11,7 @@ Version := "0.93",
 Date := "23/08/2011",
 
 ArchiveURL := Concatenation([ 
-"http://www.cs.st-andrews.ac.uk/~bjoern/software/Guarana/Guarana-", 
+"http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana/Guarana-", 
 ~.Version]),
 ArchiveFormats := ".tar.gz",
 
@@ -67,12 +67,15 @@ PackageDoc := rec(
   Autoload  := true ),
 
 Dependencies := rec(
-  GAP := ">= 4.3fix4",
-  NeededOtherPackages := [[ "polycyclic", ">=1.1" ], 
-                          [ "polenta", ">=1.2.3" ],
+  GAP := ">= 4.4",
+  NeededOtherPackages := [ [ "gapdoc",">=1.3"],
+                           [ "polycyclic", ">=1.1" ], 
+                           [ "polenta", ">=1.2.3" ],
                          # [ "radiroot", ">=2.0" ]
-                          ],
-  SuggestedOtherPackages := [ ["nq", ">=2.0"]], 
+                         ],
+  SuggestedOtherPackages := [ [ "nq", ">=2.0" ],
+                              [ "alnuth", "" ]
+                            ], 
   ExternalConditions :=[], 
 ), 
 
