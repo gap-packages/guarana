@@ -1,8 +1,4 @@
 gap> START_TEST("Test 2 of guarana package");
-gap> if TestPackageAvailability("alnuth") <> true then
-> Print( "pkg alnuth not available - guarana2.tst not executed.\n" );
-> STOP_TEST( "guarana.tst", 100000 );
-> fi;
 gap> ll := GUARANA.Tr_n_O1( 3 );
 [ Pcp-group with orders [ 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
   [ [ 1 .. 3 ], [ 4 .. 6 ], [ 7 .. 12 ] ],

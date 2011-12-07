@@ -59,8 +59,8 @@ PackageWWWHome :="http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana",
 
 PackageDoc := rec(
   BookName  := "Guarana",
-  ArchiveURLSubset := ["doc", "htm"],
-  HTMLStart := "htm/chapters.htm",
+  ArchiveURLSubset := ["./doc", "./htm"],
+  HTMLStart := "doc/manual.html",
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/manual.six",
   LongTitle := "Applications of Lie methods for computations with infinite polycyclic groups",
@@ -74,7 +74,7 @@ Dependencies := rec(
                          # [ "radiroot", ">=2.0" ]
                          ],
   SuggestedOtherPackages := [ [ "nq", ">=2.0" ],
-                              [ "alnuth", "" ]
+                              [ "alnuth", ">=3.0.0" ]
                             ], 
   ExternalConditions :=[], 
 ), 

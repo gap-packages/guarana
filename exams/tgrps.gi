@@ -13,7 +13,7 @@
 GUARANA.NilpotentQuotient := function( ) return 0; end;
 GUARANA.NilpotentEngelQuotient := function( ) return 0; end;
 
-if TestPackageAvailability( "nq" , "2.0" )=fail then 
+if IsPackageMarkedForLoading( "nq" , "2.0" ) <> true then 
     GUARANA.NqAvailable := false;
 else
     GUARANA.NqAvailable := true;

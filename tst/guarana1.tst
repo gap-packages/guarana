@@ -1,4 +1,4 @@
-gap> START_TEST("Test 1 of guarana package");  
+gap> START_TEST("Test 1 of guarana package");
 gap> n := 2;
 2
 gap> F := FreeGroup( n );
