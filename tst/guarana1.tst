@@ -47,5 +47,5 @@ gap> x_sym := Log( g_sym );
   -1/12*a_1*a_2^2+1/4*a_1*a_2-1/2*a_2*a_3+a_5 ]
 gap> g_sym * g;
 [ a_1+1, a_2+1, a_2+a_3, a_3+a_4+2, 1/2*a_2^2+1/2*a_2+a_3+a_5-1/2 ]
-gap> STOP_TEST( "guarana.tst", 100000);   
+gap> STOP_TEST( "guarana1.tst", 5000);
 

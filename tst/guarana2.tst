@@ -20,5 +20,5 @@ gap> h := MalcevGElementByExponents( malCol, exps_h );
 [ 1, 0, 1, -1, 0, 2, 0, 4, -1, 5, 9, -5 ]
 gap> k := g*h;
 [ 0, 1, 0, -4, -2, 3, 1, 4, 35, -16, -404, 232 ]
-gap> STOP_TEST( "guarana.tst", 100000);   
+gap> STOP_TEST( "guarana2.tst", 20000);
 
