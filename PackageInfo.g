@@ -59,7 +59,7 @@ PackageWWWHome :="http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana",
 
 PackageDoc := rec(
   BookName  := "Guarana",
-  ArchiveURLSubset := ["./doc"],
+  ArchiveURLSubset := ["doc"],
   HTMLStart := "doc/manual.html",
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/manual.six",
