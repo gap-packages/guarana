@@ -7,8 +7,8 @@ SetPackageInfo( rec(
 
 PackageName := "Guarana",
 Subtitle := "Applications of Lie methods for computations with infinite polycyclic  groups",
-Version := "0.93",
-Date := "23/08/2011",
+Version := "0.94",
+Date := "27/04/2012",
 
 ArchiveURL := Concatenation([ 
 "http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana/Guarana-", 
