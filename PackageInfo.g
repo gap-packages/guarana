@@ -35,7 +35,8 @@ Persons := [
       LastName      := "McDermott",
       FirstNames    := "John",
       IsAuthor      := false,
-      IsMaintainer  := true,
+      IsMaintainer  := false,
+      # Former maintainer; converted the manual to GAPDoc
       Email         := "jjm@mcs.st-and.ac.uk",
       PostalAddress := Concatenation( [
             "Mathematical Institute\n",

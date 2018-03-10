@@ -18,7 +18,7 @@
   	are needed for this package.
   	Normally they should be contained in your distribution. If not, 
   	they can be obtained at
-  	<URL>http://www.gap-system.org/Packages/packages.html</URL>
+  	<URL>http://www.gap-system.org/Packages/packages.html</URL>.
 
   	<!-- findme: comment about building docs? -->
   </Section>
@@ -40,25 +40,17 @@
 	installation by running the test suite of the package.
 
 	<Example>
-	gap> Read(Filename(DirectoriesPackageLibrary("guarana","tst")[1],"testall.g"));
-	</Example>
-
-	Note that this now disables running of the tests in tst/guarana2.tst, since
-	these require alnuth which in turn requires kash/kant. If your system has
-	these prerequisites in place you can manually run those test examples as
-	follows.
-	
-	<Example>
-	gap> ReadTest(Filename(DirectoriesPackageLibrary("guarana","tst")[1],"guarana2.tst"));
+	gap> Read(Filename(DirectoriesPackageLibrary("guarana","tst"),"testall.g"));
 	</Example>
 	
 	For more details on  Test Files see 
 	Section <Ref Sect="Test Files" BookName="ref" /> of the 
 	&GAP; Reference Manual.
 
-	If the test suite runs into an error, 
-	then please send a message
-  	to `jjm@mcs.st-andrews.ac.uk' including the error message.
+    If the test suite runs into an error, then please submit
+    a report to our issue tracker at
+    <URL>https://github.com/gap-packages/guarana/issues</URL>.
+
   </Section>
 
 </Chapter>

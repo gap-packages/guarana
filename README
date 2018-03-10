@@ -80,15 +80,15 @@ Running the test suite
 Once the package is installed, it is possible to check the correct
 installation by running the test suite of the package.
 
-gap> Read(Filename(DirectoriesPackageLibrary("guarana","tst")[1],"testall.g"));
+gap> Read(Filename(DirectoriesPackageLibrary("guarana","tst"),"testall.g"));
 
 For more details on  Test Files see 
-Section 7.9 of the 
-GAP Reference Manual.
+Section 7.9 of the GAP Reference Manual.
 
-If the test suite runs into an error, 
-then please send a message
-to `jjm@mcs.st-and.ac.uk' including the error message.
+If the test suite runs into an error, then please submit
+a report to our issue tracker at
+  <https://github.com/gap-packages/guarana/issues>
+
                                  
 Author
 ======
@@ -104,18 +104,3 @@ The Guarana package was written by:
   KY16 9SS
   Scotland, UK
   e-mail: bjoern@mcs.st-and.ac.uk
-
-Maintainer
-==========
-
-The Guarana package is maintained by:
-
-  John McDermott
-  Mathematical Institute
-  University of St. Andrews
-  North Haugh
-  St. Andrews
-  Fife
-  KY16 9SS
-  Scotland, UK
-  e-mail: jjm@mcs.st-and.ac.uk
