@@ -26,11 +26,6 @@ ReadPackage( GuaranaPkgName, "gap/collec/setup.gd" );
 ReadPackage( GuaranaPkgName, "gap/collec/elms.gd" );
 ReadPackage( GuaranaPkgName, "gap/symbol/setup.gd" );
 
-############################################################################
-#R  read other packages
-##
-RequirePackage( "polycyclic" );
-
 #############################################################################
 ##
 #E
