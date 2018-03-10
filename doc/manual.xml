@@ -2,20 +2,7 @@
 <!DOCTYPE Book SYSTEM "gapdoc.dtd">
 
 <Book Name="Guarana">
-<TitlePage>
-  <Title><Package>Guarana</Package>
-  </Title>
-  <Subtitle>A Gap4 Package
-  </Subtitle>
-  <Version>( Version 
-<#Include SYSTEM "../VERSION">
- )
-  </Version>
-  <Author>Björn Assmann
-  </Author>
-  <Copyright>&copyright; 2007 BjörnAssmann. <P/>
-  </Copyright>
-</TitlePage>
+<#Include SYSTEM "title.xml">
 
 <TableOfContents/>
 
