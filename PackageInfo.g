@@ -7,7 +7,7 @@ SetPackageInfo( rec(
 
 PackageName := "Guarana",
 Subtitle := "Applications of Lie methods for computations with infinite polycyclic  groups",
-Version := "0.94",
+Version := "0.95dev",
 Date := "27/04/2012",
 
 ArchiveURL := Concatenation([ 
@@ -67,7 +67,7 @@ PackageDoc := rec(
   Autoload  := true ),
 
 Dependencies := rec(
-  GAP := ">= 4.4",
+  GAP := ">= 4.7",
   NeededOtherPackages := [ [ "gapdoc",">=1.3"],
                            [ "polycyclic", ">=1.1" ], 
                            [ "polenta", ">=1.2.3" ],
