@@ -1,12 +1,7 @@
 LoadPackage( "guarana" );
+LoadPackage( "nq" );
+LoadPackage( "alnuth" );
+
 dirs := DirectoriesPackageLibrary( "guarana", "tst" );
-if IsPackageMarkedForLoading("nq", "2.0") <> true then
- Print( "pkg nq not available - guarana1.tst not executed.\n" );
-else
- Test( Filename( dirs, "guarana1.tst" ) );
-fi;
-if IsPackageMarkedForLoading("alnuth", "3.0.0") <> true then
- Print( "pkg alnuth not available - guarana2.tst not executed.\n" );
-else
- Test( Filename( dirs, "guarana2.tst" ) );
-fi;
+TestDirectory(dirs, rec(exitGAP := true));
+FORCE_QUIT_GAP(1);
