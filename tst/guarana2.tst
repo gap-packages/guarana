@@ -1,9 +1,9 @@
 gap> START_TEST("Test 2 of guarana package");
 gap> ll := GUARANA.Tr_n_O1( 3 );
-[ Pcp-group with orders [ 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
-  [ [ 1 .. 3 ], [ 4 .. 6 ], [ 7 .. 12 ] ],
-  Pcp-group with orders [ 0, 0, 0, 0, 0, 0 ],
-  Pcp-group with orders [ 0, 0, 0, 0, 0, 0 ],
+[ Pcp-group with orders [ 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0 ], 
+  [ [ 1 .. 3 ], [ 4 .. 6 ], [ 7 .. 12 ] ], 
+  Pcp-group with orders [ 0, 0, 0, 0, 0, 0 ], 
+  Pcp-group with orders [ 0, 0, 0, 0, 0, 0 ], 
   Pcp-group with orders [ 0, 0, 0 ], Pcp-group with orders [ 0, 0, 0 ] ]
 gap> malCol := MalcevCollectorConstruction( ll );
 <<Malcev collector>>
