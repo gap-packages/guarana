@@ -1,102 +1,103 @@
 #############################################################################
-##  
-##  Demo PackageInfo.g for the GitHubPagesForGAP
 ##
+##  PackageInfo.g        GAP4 Package `Guarana'               Bjoern Assmann
+##  
 
 SetPackageInfo( rec(
 
-PackageName := "GitHubPagesForGAP",
+PackageName := "Guarana",
+Subtitle := "Applications of Lie methods for computations with infinite polycyclic  groups",
+Version := "0.95dev",
+Date := "27/04/2012",
 
-Subtitle := "A GitHub Pages generator for GAP packages",
-Version := "0.2",
-Date := "04/02/2017", # dd/mm/yyyy format
+ArchiveURL := Concatenation([ 
+"http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana/Guarana-", 
+~.Version]),
+ArchiveFormats := ".tar.gz",
+
 
 Persons := [
-  rec(
-    LastName      := "Horn",
-    FirstNames    := "Max",
-    IsAuthor      := true,
-    IsMaintainer  := true,
-    Email         := "max.horn@math.uni-giessen.de",
-    WWWHome       := "http://www.quendi.de/math",
-    PostalAddress := Concatenation(
-                       "AG Algebra\n",
-                       "Mathematisches Institut\n",
-                       "Justus-Liebig-Universität Gießen\n",
-                       "Arndtstraße 2\n",
-                       "35392 Gießen\n",
-                       "Germany" ),
-    Place         := "Gießen",
-    Institution   := "Justus-Liebig-Universität Gießen"
-  ),
 
   rec(
-    LastName      := "Thor",
-    FirstNames    := "A. U.",
-    IsAuthor      := true,
-    IsMaintainer  := false,
-    #Email         := "author@example.com",
-  ),
+      LastName      := "Assmann",
+      FirstNames    := "Bjoern",
+      IsAuthor      := true,
+      IsMaintainer  := false,
+      Email         := "bjoern@mcs.st-and.ac.uk",
+      PostalAddress := Concatenation( [
+            "Mathematical Institute\n",
+            "University of St. Andrews\n",
+            "North Haugh, St. Andrews\n Fife, KY 16 9SS, Scotland" ] ),
+      Place         := "St. Andrews",
+      Institution   := "University of St. Andrews"),
 
   rec(
-    LastName      := "Itor",
-    FirstNames    := "Jan",
-    IsAuthor      := false,
-    IsMaintainer  := true,
-    #Email         := "janitor@example.com",
-  ),
+      LastName      := "McDermott",
+      FirstNames    := "John",
+      IsAuthor      := false,
+      IsMaintainer  := false,
+      # Former maintainer; converted the manual to GAPDoc
+      Email         := "jjm@mcs.st-and.ac.uk",
+      PostalAddress := Concatenation( [
+            "Mathematical Institute\n",
+            "University of St. Andrews\n",
+            "North Haugh, St. Andrews\n Fife, KY 16 9SS, Scotland" ] ),
+      Place         := "St. Andrews",
+      Institution   := "University of St. Andrews"),
+
 ],
 
-Status := "other",
+Status := "deposited",
+#CommunicatedBy := "Charles Wright (Eugene)",
+#AcceptDate := "08/2005",
 
-# The following are not strictly necessary in your own PackageInfo.g
-# (in the sense that update.g only looks at the usual fields
-# like PackageWWWHome, ArchiveURL etc.). But they are convenient
-# if you use exactly the scheme for your package website that we propose.
-GithubUser := "gap-system",
-GithubRepository := ~.PackageName,
-GithubWWW := Concatenation("https://github.com/", ~.GithubUser, "/", ~.GithubRepository),
+README_URL := "http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana/README",
+PackageInfoURL := "http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana/PackageInfo.g",
 
-PackageWWWHome := Concatenation("https://", ~.GithubUser, ".github.io/", ~.GithubRepository, "/"),
-README_URL     := Concatenation( ~.PackageWWWHome, "README.md" ),
-PackageInfoURL := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
-# The following assumes you are using the Github releases system. If not, adjust
-# it accordingly.
-ArchiveURL     := Concatenation(~.GithubWWW,
-                    "/releases/download/v", ~.Version, "/",
-                    ~.GithubRepository, "-", ~.Version),
+AbstractHTML := "The Guarana package provides computational applications of the Mal'cev correspondence, in particular for collection in infinite polycyclic groups.", 
 
-ArchiveFormats := ".tar.gz .tar.bz2",
-
-AbstractHTML := 
-  "This is a pseudo package that contains no actual\
-  <span class=\"pkgname\">GAP</span> code. Instead, it is a template for other\
-  GAP packages that allows to quickly setup GitHub Pages.",
+PackageWWWHome :="http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana",
 
 PackageDoc := rec(
-  BookName  := "GitHubPagesForGAP",
+  BookName  := "Guarana",
   ArchiveURLSubset := ["doc"],
   HTMLStart := "doc/chap0.html",
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/manual.six",
-  LongTitle := "A GitHub Pages generator for GAP packages",
-),
+  LongTitle := "Applications of Lie methods for computations with infinite polycyclic groups",
+  Autoload  := true ),
 
-# The following dependencies are fake and for testing / demo purposes
 Dependencies := rec(
-  GAP := ">=4.8.1",
-  NeededOtherPackages := [
-    ["GAPDoc", ">= 1.2"],
-    ["IO", ">= 4.1"],
-  ],
-  SuggestedOtherPackages := [["orb", ">= 4.2"]],
-  ExternalConditions := []
-),
+  GAP := ">= 4.7",
+  NeededOtherPackages := [ [ "gapdoc",">=1.3"],
+                           [ "polycyclic", ">=1.1" ], 
+                           [ "polenta", ">=1.2.3" ],
+                         # [ "radiroot", ">=2.0" ]
+                         ],
+  SuggestedOtherPackages := [ [ "nq", ">=2.0" ],
+                              [ "alnuth", ">=3.0.0" ]
+                            ], 
+  ExternalConditions :=[], 
+), 
 
-AvailabilityTest := ReturnTrue,
+AvailabilityTest := ReturnTrue,             
+BannerString := Concatenation([ 
+"Loading Guarana ",
+~.Version,
+" ... \n" ]),     
+Autoload := false,
+TestFile := "tst/testall.g",
+Keywords := ["Mal'cev correspondence", "Collection", "Lie algebra", "Baker Campbell Haussdorff Formula", "polycyclic groups" ],    
 
-Keywords := ["GitHub Pages", "GAP"]
+  AutoDoc := rec(
+    TitlePage := rec(
+      Copyright := "&copyright; 2007 BjörnAssmann.",
+    ),
+  ),
 
 ));
 
+#############################################################################
+##
+#E
 

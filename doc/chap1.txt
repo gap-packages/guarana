@@ -1,0 +1,37 @@
+  
+  [1X1 [33X[0;0YIntroduction[133X[101X
+  
+  
+  [1X1.1 [33X[0;0YAbout Guarana[133X[101X
+  
+  [33X[0;0YIn  this  package we demonstrate the algorithmic usefulness of the so-called
+  Mal'cev  correspondence for computations with infinite polycyclic groups; it
+  is  a  correspondence that associates to every [22XQ[122X-powered nilpotent group [22XH[122X a
+  unique  rational  nilpotent  Lie  algebra  [22XL_H[122X  and  vice-versa. The Mal'cev
+  correspondence was discovered by Anatoly Mal'cev in 1951 [Mal51].[133X
+  
+  
+  [1X1.2 [33X[0;0YSetup for computing the correspondence[133X[101X
+  
+  [33X[0;0YLet [22XG[122X be a finitely generated torsion-free nilpotent group, i.e.\ a [22XT[122X-group.
+  Then  [22XG[122X  can be embedded in a [22XQ[122X-powered hull [22XG^[122X. The group [22XG^[122X is a [22XQ[122X-powered
+  nilpotent  group  and is unique up to isomorphism. We denote the Lie algebra
+  which  corresponds  to [22XG^[122X under the Mal'cev correspondence by [22XL(G)= L_G^[122X. We
+  provide  an  algorithm  for setting up the Mal'cev correspondence between [22XG^[122X
+  and  the  Lie  algebra  [22XL(G)[122X.  That  is,  if  [22XG[122X  is  given  by  a polycyclic
+  presentation  with  respect  to  a  Mal'cev  basis,  then  we  can compute a
+  structure  constants  table  of  [22XL(G)[122X.  Furthermore  for a given [22Xg∈ G[122X we can
+  compute the corresponding element in [22XL(G)[122X and vice versa.[133X
+  
+  
+  [1X1.3 [33X[0;0YCollection[133X[101X
+  
+  [33X[0;0YEvery  element of a polycyclically presented group has a unique normal form.
+  An  algorithm  for  computing  this  normal  form  is  called  a  collection
+  algorithm.  Such an algorithm lies at the heart of most methods dealing with
+  polycyclically  presented groups. The current state of the art is collection
+  from the left [Geb02][LGS90][VL90] }. This package contains a new collection
+  algorithm  for  polycyclically  presented  groups,  which  we  call  Mal'cev
+  collection  [AL07].  Mal'cev collection is in some cases dramatically faster
+  than collection from the left, while using less memory.[133X
+  

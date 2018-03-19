@@ -1,0 +1,28 @@
+  
+  
+  [1XIndex[101X
+  
+  [2X*[102X 2.1-11  3.1-6 
+  [2XComm[102X 2.1-12 
+  [2XDimension[102X 2.1-4 
+  [2XExp[102X 2.1-10 
+  [2XGUARANA.AverageRuntimeCollec[102X 3.1-7 
+  [2XGUARANA.F_2c_Aut1[102X 3.1-3 
+  [2XGUARANA.F_3c_Aut1[102X 3.1-3 
+  [2XGUARANA.Tr_n_O1[102X 3.1-2 
+  [2XGUARANA.Tr_n_O2[102X 3.1-2 
+  [2XLog[102X 2.1-9 
+  [2XMalcevCollectorConstruction[102X 3.1-1 
+  [2XMalcevGElementByExponents[102X 3.1-4 
+  [2XMalcevGrpElementByExponents[102X 2.1-5 
+  [2XMalcevLieElementByCoefficients[102X 2.1-6  2.1-14 
+  [2XMalcevObjectByTGroup[102X 2.1-1 
+  [2XMalcevSymbolicGrpElementByExponents[102X 2.1-13 
+  [2XRandom[102X 3.1-5 
+  [2XRandomGrpElm[102X 2.1-7 
+  [2XRandomLieElm[102X 2.1-8 
+  [2XUnderlyingGroup[102X 2.1-2 
+  [2XUnderlyingLieAlgebra[102X 2.1-3 
+  
+  
+  -------------------------------------------------------

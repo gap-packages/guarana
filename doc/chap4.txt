@@ -1,0 +1,41 @@
+  
+  [1X4 [33X[0;0YInstallation[133X[101X
+  
+  
+  [1X4.1 [33X[0;0YInstalling this package[133X[101X
+  
+  [33X[0;0YThe  Guarana  package  is  part  of  the standard distribution of [5XGAP[105X and so
+  normally  there should be no need to install it separately. If by any chance
+  it  is  not  part  of  your [5XGAP[105X distribution, then the standard method is to
+  unpack  the  package into the `pkg' directory of your [5XGAP[105X distribution. This
+  will  create a `guarana' subdirectory. For other non-standard options please
+  see  Chapter  [14X'Reference:  Installing  a  GAP  Package'[114X of the [5XGAP[105X Reference
+  Manual.  Note  that  the  GAP-Packages Polycyclic and Polenta are needed for
+  this  package.  Normally  they  should be contained in your distribution. If
+  not,           they           can           be          obtained          at
+  [7Xhttp://www.gap-system.org/Packages/packages.html[107X.[133X
+  
+  
+  [1X4.2 [33X[0;0YLoading the Guarana package[133X[101X
+  
+  [33X[0;0YIf  the  [5XGuarana[105X  Package  is not already loaded then you have to request it
+  explicitly.  This can be done by `LoadPackage("guarana")'. The `LoadPackage'
+  command  is  described  in  Section  [14X'Reference:  LoadPackage'[114X  in  the  [5XGAP[105X
+  Reference Manual.[133X
+  
+  
+  [1X4.3 [33X[0;0YRunning the test suite[133X[101X
+  
+  [33X[0;0YOnce  the  package  is  installed,  it  is  possible  to  check  the correct
+  installation by running the test suite of the package.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[28X	gap> Read(Filename(DirectoriesPackageLibrary("guarana","tst"),"testall.g"));[128X[104X
+    [4X[28X	[128X[104X
+  [4X[32X[104X
+  
+  [33X[0;0YFor  more  details  on Test Files see Section [14X'Reference: Test Files'[114X of the
+  [5XGAP[105X  Reference  Manual.  If  the  test suite runs into an error, then please
+  submit       a       report      to      our      issue      tracker      at
+  [7Xhttps://github.com/gap-packages/guarana/issues[107X.[133X
+  

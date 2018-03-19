@@ -1,0 +1,185 @@
+  
+  [1X2 [33X[0;0YComputing the Mal'cev correspondence[133X[101X
+  
+  
+  [1X2.1 [33X[0;0YThe main functions[133X[101X
+  
+  [33X[0;0YLet  [22XG[122X  be  a [22XT[122X-group and [22XG^[122X its [22XQ[122X-powered hull. In this chapter we describe
+  functionality  for  setting up the Mal'cev correspondence between [22XG^[122X and the
+  Lie  algebra  [22XL(G)[122X.  The data structures needed for computations with [22XG^[122X and
+  [22XL(G)[122X are stored in a so-called Mal'cev object. Computational representations
+  of elements of [22XG^[122X, respectively [22XL(G)[122X, will be called Mal'cev group elements,
+  respectively Mal'cev Lie elements.[133X
+  
+  [1X2.1-1 MalcevObjectByTGroup[101X
+  
+  [33X[1;0Y[29X[2XMalcevObjectByTGroup[102X( [3XN[103X ) [32X function[133X
+  
+  [33X[0;0YIf  [3XN[103X  is  a  a  [3XT[103X-group  (i.e.  a finitely generated torsion-free nilpotent
+  group),  given by a polycyclic presentation with respect to a Mal'cev basis,
+  then  this function computes the Mal'cev correspondence for [3XN[103X and stores the
+  result  in  a  so-called  Mal'cev  object.  Otherwise  this function returns
+  `fail'.  In the moment this function is restricted to groups [3XN[103X of nilpotency
+  class at most 9.[133X
+  
+  [1X2.1-2 UnderlyingGroup[101X
+  
+  [33X[1;0Y[29X[2XUnderlyingGroup[102X( [3Xmo[103X ) [32X function[133X
+  
+  [33X[0;0YFor a Mal'cev object [3Xmo[103X this function returns the [3XT[103X-group, which was used to
+  build [3Xmo[103X.[133X
+  
+  [1X2.1-3 UnderlyingLieAlgebra[101X
+  
+  [33X[1;0Y[29X[2XUnderlyingLieAlgebra[102X( [3Xmo[103X ) [32X function[133X
+  
+  [33X[0;0YFor  a  Mal'cev  object  [3Xmo[103X  this  function  returns  the Lie algebra, which
+  underlies the correspondence described by [3Xmo[103X.[133X
+  
+  [1X2.1-4 Dimension[101X
+  
+  [33X[1;0Y[29X[2XDimension[102X( [3Xmo[103X ) [32X function[133X
+  
+  [33X[0;0YReturns  the  dimension of the Lie algebra that underlies the Mal'cev object
+  [3Xmo[103X.[133X
+  
+  [1X2.1-5 MalcevGrpElementByExponents[101X
+  
+  [33X[1;0Y[29X[2XMalcevGrpElementByExponents[102X( [3Xmo[103X, [3Xexps[103X ) [32X function[133X
+  
+  [33X[0;0YFor  a  Mal'cev object [3Xmo[103X and an exponent vector [3Xexps[103X with rational entries,
+  this  functions  returns the Mal'cev group element, which has exponents [3Xexps[103X
+  with respect to the Mal'cev basis of the underlying group of [3Xmo[103X.[133X
+  
+  [1X2.1-6 MalcevLieElementByCoefficients[101X
+  
+  [33X[1;0Y[29X[2XMalcevLieElementByCoefficients[102X( [3Xmo[103X, [3Xcoeffs[103X ) [32X function[133X
+  
+  [33X[0;0YFor  a  Mal'cev  object  [3Xmo[103X  and  a  coefficient vector [3Xcoeffs[103X with rational
+  entries,   this  functions  returns  the  Mal'cev  Lie  element,  which  has
+  coefficients  [3Xcoeffs[103X with respect to the basis of the underlying Lie algebra
+  of [3Xmo[103X.[133X
+  
+  [1X2.1-7 RandomGrpElm[101X
+  
+  [33X[1;0Y[29X[2XRandomGrpElm[102X( [3Xmo[103X, [3Xrange[103X ) [32X function[133X
+  
+  [33X[0;0YFor   a   Mal'cev   object   [3Xmo[103X   this   function   returns  the  output  of
+  MalcevGrpElementByExponents(  [3Xmo[103X,  [3Xexps[103X  ), where [3Xexps[103X is an exponent vector
+  whose entries are randomly chosen integers between -[3Xrange[103X and [3Xrange[103X.[133X
+  
+  [1X2.1-8 RandomLieElm[101X
+  
+  [33X[1;0Y[29X[2XRandomLieElm[102X( [3Xmo[103X, [3Xrange[103X ) [32X function[133X
+  
+  [33X[0;0YFor   a   Mal'cev   object   [3Xmo[103X   this   function   returns  the  output  of
+  MalcevLieElementByExponents(  [3Xmo[103X,  [3Xcoeffs[103X  ),  where [3Xcoeffs[103X is a coefficient
+  vector whose entries are randomly chosen integers between -[3Xrange[103X and [3Xrange[103X.[133X
+  
+  [1X2.1-9 Log[101X
+  
+  [33X[1;0Y[29X[2XLog[102X( [3Xg[103X ) [32X function[133X
+  
+  [33X[0;0YFor  Mal'cev group element [3Xg[103X this function returns the corresponding Mal'cev
+  Lie element.[133X
+  
+  [1X2.1-10 Exp[101X
+  
+  [33X[1;0Y[29X[2XExp[102X( [3Xx[103X ) [32X function[133X
+  
+  [33X[0;0YFor  Mal'cev  Lie  element [3Xx[103X this function returns the corresponding Mal'cev
+  group element.[133X
+  
+  [1X2.1-11 *[101X
+  
+  [33X[1;0Y[29X[2X*[102X( [3Xg[103X, [3Xh[103X ) [32X function[133X
+  
+  [33X[0;0YReturns the product of Mal'cev group elements.[133X
+  
+  [1X2.1-12 Comm[101X
+  
+  [33X[1;0Y[29X[2XComm[102X( [3Xx[103X, [3Xy[103X ) [32X function[133X
+  
+  [33X[0;0YIf  [3Xx[103X,[3Xy[103X  are  Mal'cev  group  elements, then this function returns the group
+  theoretic  commutator of [3Xx[103X and [3Xy[103X. If [3Xx[103X,[3Xy[103X are Mal'cev Lie elements, then this
+  function returns the Lie commutator of [3Xx[103X and [3Xy[103X.[133X
+  
+  [1X2.1-13 MalcevSymbolicGrpElementByExponents[101X
+  
+  [33X[1;0Y[29X[2XMalcevSymbolicGrpElementByExponents[102X( [3Xmo[103X, [3Xexps[103X ) [32X function[133X
+  
+  [33X[0;0YFor  a  Mal'cev  object  [3Xmo[103X  and  an  exponent  vector  [3Xexps[103X  with  rational
+  indeterminates as entries, this functions returns the Mal'cev group element,
+  which has exponents [3Xexps[103X with respect to the Mal'cev basis of the underlying
+  group of [3Xmo[103X.[133X
+  
+  [1X2.1-14 MalcevLieElementByCoefficients[101X
+  
+  [33X[1;0Y[29X[2XMalcevLieElementByCoefficients[102X( [3Xmo[103X, [3Xcoeffs[103X ) [32X function[133X
+  
+  [33X[0;0YFor  a  Mal'cev  object  [3Xmo[103X  and  a  coefficient vector [3Xcoeffs[103X with rational
+  indeterminates  as  entries, this functions returns the Mal'cev Lie element,
+  which  has  coefficients  [3Xcoeffs[103X with respect to the basis of the underlying
+  Lie algebra of [3Xmo[103X.[133X
+  
+  
+  [1X2.2 [33X[0;0YAn example application[133X[101X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[28X	gap> n := 2;[128X[104X
+    [4X[28X	2[128X[104X
+    [4X[28X	gap> F := FreeGroup( n );[128X[104X
+    [4X[28X	<free group on the generators [ f1, f2 ]>[128X[104X
+    [4X[28X	gap> c := 3;[128X[104X
+    [4X[28X	3[128X[104X
+    [4X[28X	gap> N := NilpotentQuotient( F, c );[128X[104X
+    [4X[28X	Pcp-group with orders [ 0, 0, 0, 0, 0 ][128X[104X
+    [4X[28X	[128X[104X
+    [4X[28X	gap> mo := MalcevObjectByTGroup( N );[128X[104X
+    [4X[28X	<<Malcev object of dimension 5>>[128X[104X
+    [4X[28X	gap> dim := Dimension( mo );[128X[104X
+    [4X[28X	5[128X[104X
+    [4X[28X	gap> UnderlyingGroup( mo );[128X[104X
+    [4X[28X	Pcp-group with orders [ 0, 0, 0, 0, 0 ][128X[104X
+    [4X[28X	gap> UnderlyingLieAlgebra( mo );[128X[104X
+    [4X[28X	<Lie algebra of dimension 5 over Rationals>[128X[104X
+    [4X[28X	 [128X[104X
+    [4X[28X	gap> g := MalcevGrpElementByExponents( mo, [1,1,0,2,-1/2] );[128X[104X
+    [4X[28X	[ 1, 1, 0, 2, -1/2 ][128X[104X
+    [4X[28X	gap> x := MalcevLieElementByCoefficients( mo, [1/2, 2, -1, 3, 5 ] );[128X[104X
+    [4X[28X	[ 1/2, 2, -1, 3, 5 ][128X[104X
+    [4X[28X	[128X[104X
+    [4X[28X	gap> h := RandomGrpElm( mo );[128X[104X
+    [4X[28X	[ 5, -3, 0, -2, 8 ][128X[104X
+    [4X[28X	gap> y := RandomLieElm( mo );[128X[104X
+    [4X[28X	[ 3, 9, 5, 5, 2 ][128X[104X
+    [4X[28X	[128X[104X
+    [4X[28X	gap> z := Log( g );[128X[104X
+    [4X[28X	[ 1, 1, -1/2, 7/3, -1/3 ][128X[104X
+    [4X[28X	gap> Exp( z ) = g;[128X[104X
+    [4X[28X	true[128X[104X
+    [4X[28X	gap> k := Exp( y );[128X[104X
+    [4X[28X	[ 3, 9, 37/2, 77/4, 395/4 ][128X[104X
+    [4X[28X	gap> Log( k ) = y;[128X[104X
+    [4X[28X	true[128X[104X
+    [4X[28X	[128X[104X
+    [4X[28X	gap> g*h;[128X[104X
+    [4X[28X	[ 6, -2, 5, 10, -15/2 ][128X[104X
+    [4X[28X	gap> Comm(g,h);[128X[104X
+    [4X[28X	[ 0, 0, 8, 10, -18 ][128X[104X
+    [4X[28X	gap> Comm(x,y);[128X[104X
+    [4X[28X	[ 0, 0, 3/2, -25/4, -79/4 ][128X[104X
+    [4X[28X	[128X[104X
+    [4X[28X	gap> indets := List( List( [1..dim], i->Concatenation( "a_", String(i) ) ),[128X[104X
+    [4X[28X	>                   x->Indeterminate( Rationals, x : new ) );[128X[104X
+    [4X[28X	[ a_1, a_2, a_3, a_4, a_5 ][128X[104X
+    [4X[28X	gap> g_sym := MalcevSymbolicGrpElementByExponents( mo, indets );[128X[104X
+    [4X[28X	[ a_1, a_2, a_3, a_4, a_5 ][128X[104X
+    [4X[28X	gap> x_sym := Log( g_sym );[128X[104X
+    [4X[28X	[ a_1, a_2, -1/2*a_1*a_2+a_3, 1/12*a_1^2*a_2+1/4*a_1*a_2-1/2*a_1*a_3+a_4,[128X[104X
+    [4X[28X	-1/12*a_1*a_2^2+1/4*a_1*a_2-1/2*a_2*a_3+a_5 ][128X[104X
+    [4X[28X	gap> g_sym * g;[128X[104X
+    [4X[28X	[ a_1+1, a_2+1, a_2+a_3, a_3+a_4+2, 1/2*a_2^2+1/2*a_2+a_3+a_5-1/2 ][128X[104X
+    [4X[28X	[128X[104X
+  [4X[32X[104X
+  
