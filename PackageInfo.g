@@ -81,17 +81,13 @@ Dependencies := rec(
 ), 
 
 AvailabilityTest := ReturnTrue,             
-BannerString := Concatenation([ 
-"Loading Guarana ",
-~.Version,
-" ... \n" ]),     
-Autoload := false,
+
 TestFile := "tst/testall.g",
 Keywords := ["Mal'cev correspondence", "Collection", "Lie algebra", "Baker Campbell Haussdorff Formula", "polycyclic groups" ],    
 
   AutoDoc := rec(
     TitlePage := rec(
-      Copyright := "&copyright; 2007 BjörnAssmann.",
+      Copyright := "&copyright; 2007 Björn Assmann.",
     ),
   ),
 
