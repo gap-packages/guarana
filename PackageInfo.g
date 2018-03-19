@@ -10,12 +10,6 @@ Subtitle := "Applications of Lie methods for computations with infinite polycycl
 Version := "0.95dev",
 Date := "27/04/2012",
 
-ArchiveURL := Concatenation([ 
-"http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana/Guarana-", 
-~.Version]),
-ArchiveFormats := ".tar.gz",
-
-
 Persons := [
 
   rec(
@@ -51,12 +45,20 @@ Status := "deposited",
 #CommunicatedBy := "Charles Wright (Eugene)",
 #AcceptDate := "08/2005",
 
-README_URL := "http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana/README",
-PackageInfoURL := "http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana/PackageInfo.g",
+PackageWWWHome  := "https://gap-packages.github.io/guarana/",
+README_URL      := Concatenation( ~.PackageWWWHome, "README" ),
+PackageInfoURL  := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
+SourceRepository := rec(
+    Type := "git",
+    URL := "https://github.com/gap-packages/guarana",
+),
+IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
+ArchiveURL      := Concatenation( ~.SourceRepository.URL,
+                                 "/releases/download/v", ~.Version,
+                                 "/guarana-", ~.Version ),
+ArchiveFormats := ".tar.gz",
 
 AbstractHTML := "The Guarana package provides computational applications of the Mal'cev correspondence, in particular for collection in infinite polycyclic groups.", 
-
-PackageWWWHome :="http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana",
 
 PackageDoc := rec(
   BookName  := "Guarana",
