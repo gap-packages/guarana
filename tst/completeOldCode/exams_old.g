@@ -1,5 +1,5 @@
 
- RequirePackage( "nq" );
+ LoadPackage( "nq" );
 
 FindNonZeroEntry := function ( mat )
     # only for unipotent matrices with one non-zero entry
