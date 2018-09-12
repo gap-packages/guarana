@@ -141,6 +141,7 @@ GUARANA.Tests_G_Collection := function( malCol, range )
 	    Error( " " );
 	fi;
     od;
+    Print("\n");
 end;
 
 GUARANA.Test_G_Inversion := function( malCol, range )
@@ -170,6 +171,7 @@ GUARANA.Tests_G_Inversion := function( malCol, range )
 	    Error( " " );
 	fi;
     od;
+    Print("\n");
 end;
 
 GUARANA.Test_SmallExams := function()
