@@ -80,7 +80,7 @@ PackageDoc := rec(
 Dependencies := rec(
   GAP := ">= 4.7",
   NeededOtherPackages := [ [ "gapdoc",">=1.3"],
-                           [ "polycyclic", ">=1.1" ], 
+                           [ "polycyclic", ">=2.11" ],
                            [ "polenta", ">=1.2.3" ],
                          # [ "radiroot", ">=2.0" ]
                          ],
