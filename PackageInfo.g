@@ -6,9 +6,9 @@
 SetPackageInfo( rec(
 
 PackageName := "Guarana",
-Subtitle := "Applications of Lie methods for computations with infinite polycyclic  groups",
-Version := "0.95dev",
-Date := "27/04/2012",
+Subtitle := "Applications of Lie methods for computations with infinite polycyclic groups",
+Version := "0.96",
+Date := "12/09/2018",
 
 Persons := [
 
