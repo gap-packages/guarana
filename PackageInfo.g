@@ -6,15 +6,9 @@
 SetPackageInfo( rec(
 
 PackageName := "Guarana",
-Subtitle := "Applications of Lie methods for computations with infinite polycyclic  groups",
-Version := "0.95dev",
-Date := "27/04/2012",
-
-ArchiveURL := Concatenation([ 
-"http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana/Guarana-", 
-~.Version]),
-ArchiveFormats := ".tar.gz",
-
+Subtitle := "Applications of Lie methods for computations with infinite polycyclic groups",
+Version := "0.96",
+Date := "12/09/2018",
 
 Persons := [
 
@@ -45,18 +39,34 @@ Persons := [
       Place         := "St. Andrews",
       Institution   := "University of St. Andrews"),
 
+  rec(
+      LastName      := "GAP Team",
+      FirstNames    := "The",
+      IsAuthor      := false,
+      IsMaintainer  := true,
+      Email         := "support@gap-system.org",
+  ),
+
 ],
 
 Status := "deposited",
 #CommunicatedBy := "Charles Wright (Eugene)",
 #AcceptDate := "08/2005",
 
-README_URL := "http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana/README",
-PackageInfoURL := "http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana/PackageInfo.g",
+PackageWWWHome  := "https://gap-packages.github.io/guarana/",
+README_URL      := Concatenation( ~.PackageWWWHome, "README.md" ),
+PackageInfoURL  := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
+SourceRepository := rec(
+    Type := "git",
+    URL := "https://github.com/gap-packages/guarana",
+),
+IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
+ArchiveURL      := Concatenation( ~.SourceRepository.URL,
+                                 "/releases/download/v", ~.Version,
+                                 "/guarana-", ~.Version ),
+ArchiveFormats := ".tar.gz",
 
 AbstractHTML := "The Guarana package provides computational applications of the Mal'cev correspondence, in particular for collection in infinite polycyclic groups.", 
-
-PackageWWWHome :="http://www-circa.mcs.st-andrews.ac.uk/~jjm/software/Guarana",
 
 PackageDoc := rec(
   BookName  := "Guarana",
@@ -70,7 +80,7 @@ PackageDoc := rec(
 Dependencies := rec(
   GAP := ">= 4.7",
   NeededOtherPackages := [ [ "gapdoc",">=1.3"],
-                           [ "polycyclic", ">=1.1" ], 
+                           [ "polycyclic", ">=2.11" ],
                            [ "polenta", ">=1.2.3" ],
                          # [ "radiroot", ">=2.0" ]
                          ],
@@ -81,17 +91,13 @@ Dependencies := rec(
 ), 
 
 AvailabilityTest := ReturnTrue,             
-BannerString := Concatenation([ 
-"Loading Guarana ",
-~.Version,
-" ... \n" ]),     
-Autoload := false,
+
 TestFile := "tst/testall.g",
 Keywords := ["Mal'cev correspondence", "Collection", "Lie algebra", "Baker Campbell Haussdorff Formula", "polycyclic groups" ],    
 
   AutoDoc := rec(
     TitlePage := rec(
-      Copyright := "&copyright; 2007 BjörnAssmann.",
+      Copyright := "&copyright; 2007 Björn Assmann.",
     ),
   ),
 

@@ -2,17 +2,23 @@
   
   [1XReferences[101X
   
-  [[20XAL07[120X] [16XAssmann, B. and Linton, S.[116X, [17XUsing the Mal'cev correspondence for collection in polycyclic groups[117X, [18XJournal of Algebra[118X (2007).
+  [[20XAL07[120X]  [16XAssmann,  B.  and  Linton,  S.[116X, [17XUsing the Mal'cev correspondence for
+  collection in polycyclic groups[117X, [18XJournal of Algebra[118X (2007).
   
-  [[20XGeb02[120X] [16XGebhardt, V.[116X, [17XEfficient collection in infinite polycyclic groups[117X, [18XJournal of Symbolic Computation[118X, [19X34[119X, 3 (2002), 213--228.
+  [[20XGeb02[120X]  [16XGebhardt,  V.[116X,  [17XEfficient collection in infinite polycyclic groups[117X,
+  [18XJournal of Symbolic Computation[118X, [19X34[119X, 3 (2002), 213--228.
   
-  [[20XLGS90[120X] [16XLeedham-Green, C. R. and Soicher, L. H.[116X, [17XCollection from the left and other strategies[117X, [18XJournal of Symbolic Computation[118X, [19X9[119X (1990), 665 -- 675.
+  [[20XLGS90[120X]  [16XLeedham-Green,  C.  R. and Soicher, L. H.[116X, [17XCollection from the left
+  and other strategies[117X, [18XJournal of Symbolic Computation[118X, [19X9[119X (1990), 665 -- 675.
   
-  [[20XMal51[120X] [16XMal'cev, A. J.[116X, [17XOn certain classes of infinite soluble groups[117X, [18XMat. Sb.[118X, [19X28[119X (1951), 567 -- 588.
+  [[20XMal51[120X]  [16XMal'cev, A. J.[116X, [17XOn certain classes of infinite soluble groups[117X, [18XMat.
+  Sb.[118X, [19X28[119X (1951), 567 -- 588.
   
-  [[20XSeg83[120X] [16XSegal, D.[116X, [17XPolycyclic Groups[117X, Cambridge University Press, Cambridge (1983).
+  [[20XSeg83[120X]  [16XSegal, D.[116X, [17XPolycyclic Groups[117X, Cambridge University Press, Cambridge
+  (1983).
   
-  [[20XVL90[120X] [16XVaughan-Lee, M.[116X, [17XCollection from the left[117X, [18XJournal of Symbolic Computation[118X, [19X9[119X (1990), 725--733.
+  [[20XVL90[120X]  [16XVaughan-Lee,  M.[116X,  [17XCollection  from  the  left[117X,  [18XJournal of Symbolic
+  Computation[118X, [19X9[119X (1990), 725--733.
   
   
   
