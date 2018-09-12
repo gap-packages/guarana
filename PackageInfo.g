@@ -54,7 +54,7 @@ Status := "deposited",
 #AcceptDate := "08/2005",
 
 PackageWWWHome  := "https://gap-packages.github.io/guarana/",
-README_URL      := Concatenation( ~.PackageWWWHome, "README" ),
+README_URL      := Concatenation( ~.PackageWWWHome, "README.md" ),
 PackageInfoURL  := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
 SourceRepository := rec(
     Type := "git",
