@@ -14,7 +14,7 @@ Persons := [
 
   rec(
       LastName      := "Assmann",
-      FirstNames    := "Bjoern",
+      FirstNames    := "Björn",
       IsAuthor      := true,
       IsMaintainer  := false,
       Email         := "bjoern@mcs.st-and.ac.uk",
