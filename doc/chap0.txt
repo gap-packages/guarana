@@ -7,13 +7,13 @@
                                     groups [101X
   
   
-                                      0.96
+                                     0.96.1
   
   
-                               12 September 2018
+                               21 September 2018
   
   
-                                 Bjoern Assmann
+                                 Björn Assmann
   
                                  John McDermott
   
@@ -21,7 +21,7 @@
   
   
   
-  Bjoern Assmann
+  Björn Assmann
       Email:    [7Xmailto:bjoern@mcs.st-and.ac.uk[107X
       Address:  [33X[0;14YMathematical Institute[133X
                 [33X[0;14YUniversity of St. Andrews[133X

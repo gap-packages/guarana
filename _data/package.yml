@@ -1,11 +1,11 @@
 name: Guarana
-version: 0.96
-date: 2018-09-12
+version: 0.96.1
+date: 2018-09-21
 description: |
     Applications of Lie methods for computations with infinite polycyclic groups
 
 authors:
-    - name: Bjoern Assmann
+    - name: Björn Assmann
       url: mailto:bjoern@mcs.st-and.ac.uk
 
 maintainers:
@@ -43,7 +43,7 @@ packageinfo: https://gap-packages.github.io/guarana/PackageInfo.g
 
 downloads:
     - name: .tar.gz
-      url: https://github.com/gap-packages/guarana/releases/download/v0.96/guarana-0.96.tar.gz
+      url: https://github.com/gap-packages/guarana/releases/download/v0.96.1/guarana-0.96.1.tar.gz
 
 abstract: |
     The Guarana package provides computational applications of the Mal'cev correspondence, in particular for collection in infinite polycyclic groups.
@@ -57,7 +57,7 @@ citeas: |
     <p class='BibEntry'>
     [<span class='BibKey'>AT18</span>]   <b class='BibAuthor'>Assmann, B. and GAP Team, T.</b>,
      <i class='BibTitle'>Guarana, Applications of Lie methods for computations with infinite polycyclic groups,
-             Version 0.96</i>
+             Version 0.96.1</i>
      (<span class='BibYear'>2018</span>)<br />
     (<span class='BibNote'>GAP package</span>),
     <span class='BibHowpublished'><a href="https://gap-packages.github.io/guarana/">https://gap-packages.github.io/guarana/</a></span>.
@@ -65,11 +65,11 @@ citeas: |
     
 
 bibtex: |
-    @misc{ Guarana0.96,
+    @misc{ Guarana0.96.1,
       author =           {Assmann, B. and GAP Team, T.},
       title =            {{Guarana},    Applications    of   Lie   methods   for
                           computations    with   infinite   polycyclic   groups,
-                          {V}ersion 0.96},
+                          {V}ersion 0.96.1},
       month =            {Sep},
       year =             {2018},
       note =             {GAP package},
