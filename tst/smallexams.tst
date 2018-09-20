@@ -1,4 +1,6 @@
 #
+gap> LoadPackage("fga", false);
+true
 gap> exam := GUARANA.SomePolyMalcevExams( 1 );;
 gap> malCol := MalcevCollectorConstruction( exam );
 <<Malcev collector>>
