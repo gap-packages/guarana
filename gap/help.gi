@@ -129,7 +129,7 @@ GUARANA.IsWeightedCollector :=  function( coll )
             return false;
         fi;
     fi;
-    SetFeatureObj( coll, IsWeightedCollector, true  );
+    SetFilterObj( coll, IsWeightedCollector );
     return true;
 end;
 
