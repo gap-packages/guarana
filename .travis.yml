@@ -3,6 +3,7 @@ env:
   global:
     - GAPROOT=gaproot
     - COVDIR=coverage
+    - GAP_PKGS_TO_CLONE="nq"    # WORKAROUND issue in nq 2.5.3
     - GAP_PKGS_TO_BUILD="nq io profiling"
 
 addons:
@@ -31,6 +32,7 @@ branches:
 
 before_script:
   - export GAPROOT="$HOME/gap"
+  - git clone https://github.com/gap-system/pkg-ci-scripts.git scripts
   - scripts/build_gap.sh
 script:
   - scripts/build_pkg.sh && scripts/run_tests.sh
