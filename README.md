@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/gap-packages/guarana.svg?branch=master)](https://travis-ci.org/gap-packages/guarana)
+[![Build Status](https://travis-ci.com/gap-packages/guarana.svg?branch=master)](https://travis-ci.com/gap-packages/guarana)
 [![Code Coverage](https://codecov.io/github/gap-packages/guarana/coverage.svg?branch=master&token=)](https://codecov.io/gh/gap-packages/guarana)
 
 # The GAP 4 package `Guarana`
