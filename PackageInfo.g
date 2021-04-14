@@ -19,12 +19,7 @@ Persons := [
       IsAuthor      := true,
       IsMaintainer  := false,
       Email         := "bjoern@mcs.st-and.ac.uk",
-      PostalAddress := Concatenation( [
-            "Mathematical Institute\n",
-            "University of St. Andrews\n",
-            "North Haugh, St. Andrews\n Fife, KY 16 9SS, Scotland" ] ),
-      Place         := "St. Andrews",
-      Institution   := "University of St. Andrews"),
+  ),
 
   rec(
       LastName      := "McDermott",
