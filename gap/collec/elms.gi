@@ -627,7 +627,7 @@ function( g )
     fi;
 end);
 
-InstallMethod( INV, "for pcp elements",
+InstallMethod( InverseMutable, "for pcp elements",
                [IsPcpElement], 30,
 function( g )
     local malCol, gg, hh, exp_res, res;
