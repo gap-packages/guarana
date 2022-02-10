@@ -7,8 +7,9 @@ SetPackageInfo( rec(
 
 PackageName := "Guarana",
 Subtitle := "Applications of Lie methods for computations with infinite polycyclic groups",
-Version := "0.96.2",
-Date := "15/11/2018",
+Version := "0.96.3",
+Date := "11/02/2022", # dd/mm/yyyy format
+License := "GPL-2.0-or-later",
 
 Persons := [
 
@@ -18,12 +19,7 @@ Persons := [
       IsAuthor      := true,
       IsMaintainer  := false,
       Email         := "bjoern@mcs.st-and.ac.uk",
-      PostalAddress := Concatenation( [
-            "Mathematical Institute\n",
-            "University of St. Andrews\n",
-            "North Haugh, St. Andrews\n Fife, KY 16 9SS, Scotland" ] ),
-      Place         := "St. Andrews",
-      Institution   := "University of St. Andrews"),
+  ),
 
   rec(
       LastName      := "McDermott",

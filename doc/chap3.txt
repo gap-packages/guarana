@@ -6,7 +6,7 @@
   [22XG[122X and [22XH/N[122X is free abelian of finite rank [Seg83]. In this chapter we present
   an  effective  collection  method  for an infinite polycyclic group which is
   given  by  a polycyclic presentation with respect to a polycyclic sequence [22XP[122X
-  going through the normal series [22X1 le N le H le G[122X. This polycyclic sequence [22XP[122X
+  going  through  the  normal series [22X1 ≤ N ≤ H ≤ G[122X. This polycyclic sequence [22XP[122X
   must  be  chosen  as follows. Let [22X(n_1,dots,n_l)[122X be a Mal'cev basis of [22XN[122X and
   let  [22X(c_1N,dots,c_k  N)[122X  be  a  basis  for the free abelian group [22XCN/N[122X. Then
   [22X(c_1,dots,c_k,n_1,dots,n_l)[122X is a polycyclic sequence for [22XH=CN[122X. Further there

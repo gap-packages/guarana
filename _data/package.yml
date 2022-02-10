@@ -1,6 +1,6 @@
 name: Guarana
-version: 0.96.2
-date: 2018-11-15
+version: 0.96.3
+date: 2022-02-11
 description: |
     Applications of Lie methods for computations with infinite polycyclic groups
 
@@ -32,7 +32,7 @@ needed-pkgs:
 suggested-pkgs:
     - name: "nq"
       version: ">=2.0"
-      url: "http://gap-packages.github.io/nq/"
+      url: "https://gap-packages.github.io/nq/"
     - name: "alnuth"
       version: ">=3.0.0"
       url: "https://gap-packages.github.io/alnuth"
@@ -43,7 +43,7 @@ packageinfo: https://gap-packages.github.io/guarana/PackageInfo.g
 
 downloads:
     - name: .tar.gz
-      url: https://github.com/gap-packages/guarana/releases/download/v0.96.2/guarana-0.96.2.tar.gz
+      url: https://github.com/gap-packages/guarana/releases/download/v0.96.3/guarana-0.96.3.tar.gz
 
 abstract: |
     The Guarana package provides computational applications of the Mal'cev correspondence, in particular for collection in infinite polycyclic groups.
@@ -55,29 +55,29 @@ keywords: |
     Mal'cev correspondence, Collection, Lie algebra, Baker Campbell Haussdorff Formula, polycyclic groups.
 citeas: |
     <p class='BibEntry'>
-    [<span class='BibKey'>AT18</span>]   <b class='BibAuthor'>Assmann, B. and GAP Team, T.</b>,
+    [<span class='BibKey'>AT22</span>]   <b class='BibAuthor'>Assmann, B. and GAP Team, T.</b>,
      <i class='BibTitle'>Guarana, Applications of Lie methods for computations with infinite polycyclic groups,
-             Version 0.96.2</i>
-     (<span class='BibYear'>2018</span>)<br />
+             Version 0.96.3</i>
+     (<span class='BibYear'>2022</span>)<br />
     (<span class='BibNote'>GAP package</span>),
     <span class='BibHowpublished'><a href="https://gap-packages.github.io/guarana/">https://gap-packages.github.io/guarana/</a></span>.
     </p>
     
 
 bibtex: |
-    @misc{ Guarana0.96.2,
+    @misc{ Guarana0.96.3,
       author =           {Assmann, B. and GAP Team, T.},
       title =            {{Guarana},    Applications    of   Lie   methods   for
                           computations    with   infinite   polycyclic   groups,
-                          {V}ersion 0.96.2},
-      month =            {Nov},
-      year =             {2018},
+                          {V}ersion 0.96.3},
+      month =            {Feb},
+      year =             {2022},
       note =             {GAP package},
       howpublished =     {\href        {https://gap-packages.github.io/guarana/}
                           {\texttt{https://gap-packages.github.io/}\discretionary
                           {}{}{}\texttt{guarana/}}},
       keywords =         {Mal'cev correspondence; Collection; Lie algebra; Baker
                           Campbell Haussdorff Formula; polycyclic groups},
-      printedkey =       {AT18}
+      printedkey =       {AT22}
     }
 
