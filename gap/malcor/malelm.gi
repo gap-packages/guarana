@@ -521,7 +521,7 @@ function( k, x )
     fi;
 end);
 
-InstallOtherMethod( AINV_MUT, 
+InstallOtherMethod( AdditiveInverseMutable, 
                "additive inverse for Malcev Lie elments (Guarana)",
 	       true,
 	        [IsMalcevLieElement ],
