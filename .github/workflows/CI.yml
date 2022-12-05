@@ -19,7 +19,7 @@ jobs:
   # The CI test job
   test:
     name: ${{ matrix.gap-branch }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -49,7 +49,7 @@ jobs:
   # The documentation job
   manual:
     name: Build manuals
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v3
