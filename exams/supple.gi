@@ -5,10 +5,6 @@
 ## Examples of polycyclic groups given together with a normal
 ## T-group N and a nilpotent almost supplement C. 
 ##
-#H  @(#)$Id$
-##
-#Y 2006
-##
 #############################################################################
 ##
 #F GUARANA.PolycyclicExams( n )

@@ -5,11 +5,6 @@
 ## Examples that were used in the Groups St Andrews 2005 paper 
 ## "Algorithmic use of the Mal'cev correspondence". 
 ##
-#H  @(#)$Id$
-##
-#Y 2006
-##
-##
 
 #############################################################################
 ##

@@ -3,10 +3,6 @@
 ##
 ## Functions to print polycyclic presentations to files  
 ##
-#H  @(#)$Id$
-##
-#Y 2006
-##
 
 GUARANA.Print2FilePcpMagmaStyle := function( G, grpName, file )
     local gens, rods, n, conj, g, h;

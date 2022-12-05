@@ -5,11 +5,6 @@
 ## Implementation of Algorithm Almost Complement, Eick habil p. 81
 ## given Group E polycyclic, M free abelian normal subgroup
 ##
-#H  @(#)$Id$
-##
-#Y 2006
-##
-##
 ## TODO: -checke funktionen auf Extremfaelle
 
 GUARANA.Supple_GetSys := function( CR )

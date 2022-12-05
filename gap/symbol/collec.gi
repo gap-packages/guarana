@@ -4,11 +4,6 @@
 ##
 ## Methods for  symbolic collection ( in CN ).
 ##
-#H  @(#)$Id$
-##
-#Y 2006
-##
-##
 
 # TODO
 # - Test the duSautoy function via the evaluation thing.

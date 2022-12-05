@@ -4,12 +4,6 @@
 ##
 ## Examples of T-groups.
 ##
-#H  @(#)$Id$
-##
-#Y 2006
-##
-##
-##
 GUARANA.NilpotentQuotient := function( ) return 0; end;
 GUARANA.NilpotentEngelQuotient := function( ) return 0; end;
 

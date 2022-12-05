@@ -5,11 +5,6 @@
 ## Methods for setting up the data structures that are needed for 
 ## symbolic collection ( in CN ).
 ##
-#H  @(#)$Id$
-##
-#Y 2006
-##
-##
 
 #############################################################################
 ##

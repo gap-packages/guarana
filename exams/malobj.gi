@@ -4,11 +4,6 @@
 ##
 ## Some Examples of Mal'cev records.  
 ##
-#H  @(#)$Id$
-##
-#Y 2006
-##
-##
 ExamplesOfSomeMalcevObjects := function( x )
     if x = 0 then 
         return GUARANA.Get_Unitriangular_MalcevObject( 1, 2);

@@ -3,9 +3,6 @@
 ##
 ## Magma code for testing the runtime of collection from the left.  
 ##
-#H  @(#)$Id$
-##
-#Y 2006
 */
 
 RuntimeCftl := function( G, range )

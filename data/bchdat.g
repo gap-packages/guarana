@@ -11,11 +11,6 @@
 ## 
 ## This was computed with the code in gap/bch.gi
 ##
-##
-#H  @(#)$Id$
-##
-#Y 2006
-##
 GUARANA.recBCH := 
 rec( 
 length := 9,

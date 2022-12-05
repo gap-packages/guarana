@@ -4,9 +4,6 @@
 ##
 ## Methods for computing nilpotent almost supplements
 ##
-#H  @(#)$Id$
-##
-#Y 2006
 
 #############################################################################
 #
