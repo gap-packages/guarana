@@ -1,5 +1,6 @@
 name: Guarana
-version: 0.96.3
+version: "0.96.3"
+license: "GPL-2.0-or-later"
 date: 2022-02-11
 description: |
     Applications of Lie methods for computations with infinite polycyclic groups
