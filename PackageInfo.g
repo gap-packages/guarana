@@ -71,7 +71,7 @@ PackageDoc := rec(
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/manual.six",
   LongTitle := "Applications of Lie methods for computations with infinite polycyclic groups",
-  Autoload  := true ),
+),
 
 Dependencies := rec(
   GAP := ">= 4.7",
