@@ -33,7 +33,7 @@ jobs:
           - stable-4.9
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: 'Install PARI/GP for Alnuth'
         run: |
           sudo apt-get update
@@ -44,12 +44,12 @@ jobs:
           GAP_PKGS_TO_BUILD: "nq io profiling"
           GAPBRANCH: ${{ matrix.gap-branch }}
       - uses: gap-actions/build-pkg@v1
-      - uses: gap-actions/run-pkg-tests@v2
-      - uses: gap-actions/run-pkg-tests@v2
+      - uses: gap-actions/run-pkg-tests@v3
+      - uses: gap-actions/run-pkg-tests@v3
         with:
           only-needed: true
       - uses: gap-actions/process-coverage@v2
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: gap-actions/setup-gap@v2
         with:
           #GAP_PKGS_TO_CLONE: "nq"    # WORKAROUND issue in nq 2.5.3
