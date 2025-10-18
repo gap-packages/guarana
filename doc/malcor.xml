@@ -70,8 +70,8 @@
 		<Func Name="MalcevLieElementByCoefficients" Arg="mo, coeffs"/>
 		<Description>
 		  For a Mal'cev object <A>mo</A> and a coefficient vector 
-		  <A>coeffs</A> with rational 
-		  entries, this functions returns the Mal'cev Lie element, which 
+		  <A>coeffs</A> with rational entries,
+		  this functions returns the Mal'cev Lie element, which 
 		  has coefficients  <A>coeffs</A> with respect to the basis of 
 		  the underlying Lie algebra of <A>mo</A>.
 		</Description>
@@ -114,7 +114,7 @@
 	</ManSection>
 	
 	<ManSection>
-		<Func Name="*" Arg="g, h"/>
+		<Func Name="*" Arg="g, h" Label="for two Mal'cev group elements"/>
 		<Description>
 		  Returns the product of Mal'cev group elements.
 		</Description>
@@ -141,17 +141,7 @@
 		  underlying group of <A>mo</A>.
 		</Description>
 	</ManSection>
-	
-	<ManSection>
-		<Func Name="MalcevLieElementByCoefficients" Arg="mo, coeffs"/>
-		<Description>
-		  For a Mal'cev object <A>mo</A> and a coefficient vector 
-		  <A>coeffs</A> with rational indeterminates as entries, 
-		  this functions returns the Mal'cev Lie element, which 
-		  has coefficients  <A>coeffs</A> with respect to the basis of the 
-		  underlying Lie algebra of <A>mo</A>.
-		</Description>	
-	</ManSection>
+
   </Section>
 
   <Section>

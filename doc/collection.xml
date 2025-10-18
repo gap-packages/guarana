@@ -134,10 +134,10 @@
 	</ManSection>
 	
 	<ManSection>
-		<Func Name="*" Arg="g, h" />
+		<Func Name="*" Arg="g, h" Label="for two group elements defined with respect to a Mal'cev collector"/>
 		<Description>
 		Returns the product of group elements which are defined with respect 
-		to a Mal'cev collector by the the function MalcevGElementByExponents.
+		to a Mal'cev collector by the function MalcevGElementByExponents.
 		</Description>
 	</ManSection>
 	
