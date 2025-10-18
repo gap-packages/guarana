@@ -6,7 +6,7 @@
 In this package we demonstrate the algorithmic usefulness of the
 so-called Mal'cev correspondence for computations with infinite
 polycyclic groups; it is a correspondence that associates to every
-$\Q$-powered nilpotent group $H$ a unique rational nilpotent Lie algebra
+$\mathbb{Q}$-powered nilpotent group $H$ a unique rational nilpotent Lie algebra
 $L_H$ and vice-versa. The Mal'cev correspondence was discovered by
 Anatoly Mal'cev in 1951.
 

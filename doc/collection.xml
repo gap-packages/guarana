@@ -77,7 +77,7 @@
 		of dimension <A>n</A> over the ring <M>O_1</M>, respectively 
 		<M>O_2</M>.
 		The ring <M>O_1</M>, respectively <M>O_2</M>, is the maximal order
-		of <M>\Q(\theta_i)</M> where <M>\theta_1</M>, respectively
+		of <M>\mathbb{Q}(\theta_i)</M> where <M>\theta_1</M>, respectively
 		<M>\theta_2</M>, is a zero of the polynomial 
 		<M>p_1(x) = x^2-3</M>, respectively 
 		<M>p_2(x)=x^3 -x^2 +4</M>.

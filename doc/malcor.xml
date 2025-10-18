@@ -4,17 +4,17 @@
   <Section Label="sec:mainfuncs">
 	  <Heading>The main functions</Heading>
 	  Let <M>G</M> be a <M>T</M>-group
-	  and <M>G&#94;</M> its <M>\Q</M>-powered hull.
+	  and <M>\hat{G}</M> its <M>\mathbb{Q}</M>-powered hull.
 	  In this chapter we describe functionality 
 	  for setting up the 
 	  Mal'cev correspondence
-	  between <M>G&#94;</M> and the Lie algebra <M>L(G)</M>.
+	  between <M>\hat{G}</M> and the Lie algebra <M>L(G)</M>.
 	
-	  The data structures needed for computations with <M>G&#94;</M> and 
+	  The data structures needed for computations with <M>\hat{G}</M> and 
 	  <M>L(G)</M> are 
 	  stored in a so-called Mal'cev object.
 	  Computational representations of 
-	  elements of <M>G&#94;</M>, respectively <M>L(G)</M>, 
+	  elements of <M>\hat{G}</M>, respectively <M>L(G)</M>, 
 	  will be called Mal'cev group elements, respectively 
 	  Mal'cev Lie elements.
 	
