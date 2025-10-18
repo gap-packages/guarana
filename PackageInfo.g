@@ -74,14 +74,14 @@ PackageDoc := rec(
 ),
 
 Dependencies := rec(
-  GAP := ">= 4.7",
+  GAP := ">= 4.12",
   NeededOtherPackages := [ [ "gapdoc",">=1.3"],
                            [ "polycyclic", ">=2.11" ],
                            [ "polenta", ">=1.2.3" ],
                          # [ "radiroot", ">=2.0" ]
                          ],
   SuggestedOtherPackages := [ [ "nq", ">=2.0" ],
-                              [ "alnuth", ">=3.0.0" ]
+                              [ "alnuth", ">=3.2.0" ]
                             ], 
   ExternalConditions :=[], 
 ), 
