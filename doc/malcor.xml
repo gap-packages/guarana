@@ -2,150 +2,150 @@
   <Heading>Computing the Mal'cev correspondence</Heading>
 
   <Section Label="sec:mainfuncs">
-	  <Heading>The main functions</Heading>
-	  Let <M>G</M> be a <M>T</M>-group
-	  and <M>\hat{G}</M> its <M>\mathbb{Q}</M>-powered hull.
-	  In this chapter we describe functionality
-	  for setting up the 
-	  Mal'cev correspondence
-	  between <M>\hat{G}</M> and the Lie algebra <M>L(G)</M>.
-	
-	  The data structures needed for computations with <M>\hat{G}</M> and 
-	  <M>L(G)</M> are 
-	  stored in a so-called Mal'cev object.
-	  Computational representations of 
-	  elements of <M>\hat{G}</M>, respectively <M>L(G)</M>, 
-	  will be called Mal'cev group elements, respectively 
-	  Mal'cev Lie elements.
-	
-	<ManSection>
-		<Func Name="MalcevObjectByTGroup" Arg="N"/>
-		<Description>
-		  If <A>N</A> is a a <A>T</A>-group 
-		  (i.e. a finitely generated torsion-free nilpotent group),
-		  given by a polycyclic presentation with respect to a Mal'cev basis,
-		  then this function computes the Mal'cev correspondence for <A>N</A> 
-		  and stores the result in a so-called Mal'cev object. 
-		  Otherwise this function returns `fail'.
-		  In the moment this function is restricted to groups <A>N</A>
-		  of nilpotency class at most 9.
-		</Description>
-	</ManSection>
-	
-	<ManSection>
-		<Func Name="UnderlyingGroup" Arg="mo"/>
-		<Description>
-		  For a Mal'cev object <A>mo</A> this function returns the 
-		  <A>T</A>-group, which was used to build <A>mo</A>.
-		</Description>
-	</ManSection>
-	
-	<ManSection>
-		<Func Name="UnderlyingLieAlgebra" Arg="mo"/>
-		<Description>
-		  For a Mal'cev object <A>mo</A> this function returns the Lie algebra,
-		  which underlies the correspondence described by <A>mo</A>.
-		</Description>
-	</ManSection>
-	
-	<ManSection>
-		<Func Name="Dimension" Arg="mo"/>
-		<Description>
-		  Returns the dimension of the Lie algebra that underlies the
-		  Mal'cev object <A>mo</A>.
-		</Description>
-	</ManSection>
-	
-	<ManSection>
-		<Func Name="MalcevGrpElementByExponents" Arg="mo, exps"/>
-		<Description>
-		  For a Mal'cev object <A>mo</A> and an exponent vector <A>exps</A> 
-		  with rational entries, this functions returns the Mal'cev group
-		  element, which has exponents <A>exps</A> with respect to the
-		  Mal'cev basis of the underlying group of <A>mo</A>.
-		</Description>
-	</ManSection>
-	
-	<ManSection>
-		<Func Name="MalcevLieElementByCoefficients" Arg="mo, coeffs"/>
-		<Description>
-		  For a Mal'cev object <A>mo</A> and a coefficient vector 
-		  <A>coeffs</A> with rational entries,
-		  this functions returns the Mal'cev Lie element, which 
-		  has coefficients  <A>coeffs</A> with respect to the basis of 
-		  the underlying Lie algebra of <A>mo</A>.
-		</Description>
-	</ManSection>
-	
-	<ManSection>
-		<Func Name="RandomGrpElm" Arg="mo, range"/>
-		<Description>
-		  For a Mal'cev object <A>mo</A> this function returns the output of 
-		  MalcevGrpElementByExponents( <A>mo</A>, <A>exps</A> ), where 
-		  <A>exps</A> is an exponent vector whose entries are randomly 
-		  chosen integers between -<A>range</A> and <A>range</A>.
-		</Description>
-	</ManSection>
-	
-	<ManSection>
-		<Func Name="RandomLieElm" Arg="mo, range"/>
-		<Description>
-		  For a Mal'cev object <A>mo</A> this function returns the output of 
-		  MalcevLieElementByExponents( <A>mo</A>, <A>coeffs</A> ), where 
-		  <A>coeffs</A> is a coefficient vector whose entries are randomly 
-		  chosen integers between -<A>range</A> and <A>range</A>.
-		</Description>
-	</ManSection>
-	
-	<ManSection>
-		<Func Name="Log" Arg="g"/>
-		<Description>
-		  For Mal'cev group element <A>g</A> this function returns the 
-		  corresponding Mal'cev Lie element.
-		</Description>
-	</ManSection>
-	
-	<ManSection>
-		<Func Name="Exp" Arg="x"/>
-		<Description>
-		  For Mal'cev Lie element <A>x</A> this function returns the 
-		  corresponding Mal'cev group element.
-		</Description>
-	</ManSection>
-	
-	<ManSection>
-		<Func Name="*" Arg="g, h" Label="for two Mal'cev group elements"/>
-		<Description>
-		  Returns the product of Mal'cev group elements.
-		</Description>
-	</ManSection>
-	
-	<ManSection>
-		<Func Name="Comm" Arg="x, y"/>
-		<Description>
-		  If <A>x</A>,<A>y</A> are Mal'cev group elements, then this 
-		  function returns the group theoretic commutator of <A>x</A>
-		  and <A>y</A>.
-		  If <A>x</A>,<A>y</A> are Mal'cev Lie elements, then this function
-		  returns the Lie commutator of <A>x</A> and <A>y</A>.
-		</Description>
-	</ManSection>
-	
-	<ManSection>
-		<Func Name="MalcevSymbolicGrpElementByExponents" Arg="mo, exps"/>
-		<Description>
-		  For a Mal'cev object <A>mo</A> and an exponent vector <A>exps</A> 
-		  with rational indeterminates as entries, 
-		  this functions returns the Mal'cev group element, which 
-		  has exponents <A>exps</A> with respect to the Mal'cev basis of the
-		  underlying group of <A>mo</A>.
-		</Description>
-	</ManSection>
+      <Heading>The main functions</Heading>
+      Let <M>G</M> be a <M>T</M>-group
+      and <M>\hat{G}</M> its <M>\mathbb{Q}</M>-powered hull.
+      In this chapter we describe functionality
+      for setting up the
+      Mal'cev correspondence
+      between <M>\hat{G}</M> and the Lie algebra <M>L(G)</M>.
+
+      The data structures needed for computations with <M>\hat{G}</M> and
+      <M>L(G)</M> are
+      stored in a so-called Mal'cev object.
+      Computational representations of
+      elements of <M>\hat{G}</M>, respectively <M>L(G)</M>,
+      will be called Mal'cev group elements, respectively
+      Mal'cev Lie elements.
+
+    <ManSection>
+        <Func Name="MalcevObjectByTGroup" Arg="N"/>
+        <Description>
+          If <A>N</A> is a a <A>T</A>-group
+          (i.e. a finitely generated torsion-free nilpotent group),
+          given by a polycyclic presentation with respect to a Mal'cev basis,
+          then this function computes the Mal'cev correspondence for <A>N</A>
+          and stores the result in a so-called Mal'cev object.
+          Otherwise this function returns `fail'.
+          In the moment this function is restricted to groups <A>N</A>
+          of nilpotency class at most 9.
+        </Description>
+    </ManSection>
+
+    <ManSection>
+        <Func Name="UnderlyingGroup" Arg="mo"/>
+        <Description>
+          For a Mal'cev object <A>mo</A> this function returns the
+          <A>T</A>-group, which was used to build <A>mo</A>.
+        </Description>
+    </ManSection>
+
+    <ManSection>
+        <Func Name="UnderlyingLieAlgebra" Arg="mo"/>
+        <Description>
+          For a Mal'cev object <A>mo</A> this function returns the Lie algebra,
+          which underlies the correspondence described by <A>mo</A>.
+        </Description>
+    </ManSection>
+
+    <ManSection>
+        <Func Name="Dimension" Arg="mo"/>
+        <Description>
+          Returns the dimension of the Lie algebra that underlies the
+          Mal'cev object <A>mo</A>.
+        </Description>
+    </ManSection>
+
+    <ManSection>
+        <Func Name="MalcevGrpElementByExponents" Arg="mo, exps"/>
+        <Description>
+          For a Mal'cev object <A>mo</A> and an exponent vector <A>exps</A>
+          with rational entries, this functions returns the Mal'cev group
+          element, which has exponents <A>exps</A> with respect to the
+          Mal'cev basis of the underlying group of <A>mo</A>.
+        </Description>
+    </ManSection>
+
+    <ManSection>
+        <Func Name="MalcevLieElementByCoefficients" Arg="mo, coeffs"/>
+        <Description>
+          For a Mal'cev object <A>mo</A> and a coefficient vector
+          <A>coeffs</A> with rational entries,
+          this functions returns the Mal'cev Lie element, which
+          has coefficients  <A>coeffs</A> with respect to the basis of
+          the underlying Lie algebra of <A>mo</A>.
+        </Description>
+    </ManSection>
+
+    <ManSection>
+        <Func Name="RandomGrpElm" Arg="mo, range"/>
+        <Description>
+          For a Mal'cev object <A>mo</A> this function returns the output of
+          MalcevGrpElementByExponents( <A>mo</A>, <A>exps</A> ), where
+          <A>exps</A> is an exponent vector whose entries are randomly
+          chosen integers between -<A>range</A> and <A>range</A>.
+        </Description>
+    </ManSection>
+
+    <ManSection>
+        <Func Name="RandomLieElm" Arg="mo, range"/>
+        <Description>
+          For a Mal'cev object <A>mo</A> this function returns the output of
+          MalcevLieElementByExponents( <A>mo</A>, <A>coeffs</A> ), where
+          <A>coeffs</A> is a coefficient vector whose entries are randomly
+          chosen integers between -<A>range</A> and <A>range</A>.
+        </Description>
+    </ManSection>
+
+    <ManSection>
+        <Func Name="Log" Arg="g"/>
+        <Description>
+          For Mal'cev group element <A>g</A> this function returns the
+          corresponding Mal'cev Lie element.
+        </Description>
+    </ManSection>
+
+    <ManSection>
+        <Func Name="Exp" Arg="x"/>
+        <Description>
+          For Mal'cev Lie element <A>x</A> this function returns the
+          corresponding Mal'cev group element.
+        </Description>
+    </ManSection>
+
+    <ManSection>
+        <Func Name="*" Arg="g, h" Label="for two Mal'cev group elements"/>
+        <Description>
+          Returns the product of Mal'cev group elements.
+        </Description>
+    </ManSection>
+
+    <ManSection>
+        <Func Name="Comm" Arg="x, y"/>
+        <Description>
+          If <A>x</A>,<A>y</A> are Mal'cev group elements, then this
+          function returns the group theoretic commutator of <A>x</A>
+          and <A>y</A>.
+          If <A>x</A>,<A>y</A> are Mal'cev Lie elements, then this function
+          returns the Lie commutator of <A>x</A> and <A>y</A>.
+        </Description>
+    </ManSection>
+
+    <ManSection>
+        <Func Name="MalcevSymbolicGrpElementByExponents" Arg="mo, exps"/>
+        <Description>
+          For a Mal'cev object <A>mo</A> and an exponent vector <A>exps</A>
+          with rational indeterminates as entries,
+          this functions returns the Mal'cev group element, which
+          has exponents <A>exps</A> with respect to the Mal'cev basis of the
+          underlying group of <A>mo</A>.
+        </Description>
+    </ManSection>
 
   </Section>
 
   <Section>
-	<Heading>An example application</Heading>
+    <Heading>An example application</Heading>
 <Example><![CDATA[
 gap> n := 2;
 2
@@ -203,5 +203,5 @@ gap> g_sym * g;
 [ a_1+1, a_2+1, a_2+a_3, a_3+a_4+2, 1/2*a_2^2+1/2*a_2+a_3+a_5-1/2 ]
 ]]></Example>
 
-	</Section>
+    </Section>
 </Chapter>
