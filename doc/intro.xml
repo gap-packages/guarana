@@ -41,7 +41,7 @@
 	  lies at the heart of most methods
 	  dealing with polycyclically presented groups. The current state of
 	  the art is collection from the left 
-	  <Cite Key="Geb02"/><Cite Key="LGS90"/><Cite Key="VLe90"/>	}.
+	  <Cite Key="Geb02"/><Cite Key="LGS90"/><Cite Key="VLe90"/>.
 	
 	  This package contains
 	  a new collection algorithm for polycyclically presented groups,
@@ -51,4 +51,3 @@
 	  collection from the left, while using less memory.
 	</Section>
 </Chapter>
-

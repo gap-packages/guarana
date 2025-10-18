@@ -18,7 +18,7 @@
   	are needed for this package.
   	Normally they should be contained in your distribution. If not, 
   	they can be obtained at
-  	<URL>https://www.gap-system.org/Packages/packages.html</URL>.
+  	<URL>https://www.gap-system.org/packages/</URL>.
 
   	<!-- findme: comment about building docs? -->
   </Section>
@@ -39,9 +39,9 @@
 	Once the package is installed, it is possible to check the correct
 	installation by running the test suite of the package.
 
-	<Example>
-	gap> Read(Filename(DirectoriesPackageLibrary("guarana","tst"),"testall.g"));
-	</Example>
+<Example><![CDATA[
+gap> Read(Filename(DirectoriesPackageLibrary("guarana","tst"),"testall.g"));
+]]></Example>
 	
 	For more details on  Test Files see 
 	Section <Ref Sect="Test Files" BookName="ref" /> of the 
@@ -54,4 +54,3 @@
   </Section>
 
 </Chapter>
-
