@@ -78,11 +78,11 @@ Dependencies := rec(
   NeededOtherPackages := [ [ "gapdoc",">=1.3"],
                            [ "polycyclic", ">=2.11" ],
                            [ "polenta", ">=1.2.3" ],
-                         # [ "radiroot", ">=2.0" ]
                          ],
-  SuggestedOtherPackages := [ [ "nq", ">=2.0" ],
-                              [ "alnuth", ">=3.2.0" ]
-                            ], 
+  SuggestedOtherPackages := [ [ "alnuth", ">=3.2.0" ]
+                            ],
+  TestPackages := [ [ "nq", ">=2.0" ],
+                  ],
   ExternalConditions :=[], 
 ), 
 
