@@ -75,13 +75,12 @@ PackageDoc := rec(
 
 Dependencies := rec(
   GAP := ">= 4.12",
-  NeededOtherPackages := [ [ "polycyclic", ">=2.11" ],
+  NeededOtherPackages := [ [ "nq", ">=2.0" ],
+                           [ "polycyclic", ">=2.11" ],
                            [ "polenta", ">=1.2.3" ],
                          ],
   SuggestedOtherPackages := [ [ "alnuth", ">=3.2.0" ]
                             ],
-  TestPackages := [ [ "nq", ">=2.0" ],
-                  ],
   ExternalConditions :=[], 
 ), 
 
@@ -97,8 +96,3 @@ Keywords := ["Mal'cev correspondence", "Collection", "Lie algebra", "Baker Campb
   ),
 
 ));
-
-#############################################################################
-##
-#E
-
