@@ -75,8 +75,7 @@ PackageDoc := rec(
 
 Dependencies := rec(
   GAP := ">= 4.12",
-  NeededOtherPackages := [ [ "gapdoc",">=1.3"],
-                           [ "polycyclic", ">=2.11" ],
+  NeededOtherPackages := [ [ "polycyclic", ">=2.11" ],
                            [ "polenta", ">=1.2.3" ],
                          ],
   SuggestedOtherPackages := [ [ "alnuth", ">=3.2.0" ]
