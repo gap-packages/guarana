@@ -18,7 +18,13 @@ gap> g := MalcevGElementByExponents( malCol, exps_g );
 [ 1, 1, 1, -3, -2, 1, -2, -1, 0, 3, -1, 3 ]
 gap> h := MalcevGElementByExponents( malCol, exps_h );
 [ 1, 0, 1, -1, 0, 2, 0, 4, -1, 5, 9, -5 ]
-gap> k := g*h;
-[ 0, 1, 0, -4, -2, 3, -7, 0, -37, -16, -352, -212 ]
+gap> k := g*h;;
+
+# the presentation depends on the integral basis PARI/GP picks, so compare
+# with collection in the pcp group instead of a fixed exponent vector
+gap> coll := Collector( ll[1] );;
+gap> Exponents( k ) = Exponents( PcpElementByExponents( coll, exps_g )
+>                                * PcpElementByExponents( coll, exps_h ) );
+true
 gap> STOP_TEST( "guarana2.tst", 20000);
 
