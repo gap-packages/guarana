@@ -1,11 +1,14 @@
 This file describes changes in the Guarana package.
 
-## Unreleased
+## 0.96.4 (2026-11-10)
 
 - Require GAP >= 4.12 and Alnuth >= 3.2.0, as older Alnuth versions do not work
   with current PARI
+- Suggest FGA, which `GUARANA.F_2c_Aut1` and `GUARANA.F_3c_Aut2` need
 - Drop the dependency on GAPDoc
-- Fix issues in the manual
+- Fix a test that failed with PARI 2.17
+- Fix errors in the manual, among them the documented arguments of
+  `MalcevCollectorConstruction`, and in the bibliography
 
 ## 0.96.3 (2022-02-11)
 
