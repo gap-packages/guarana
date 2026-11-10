@@ -1,103 +1,99 @@
 #############################################################################
-##  
-##  Demo PackageInfo.g for the GitHubPagesForGAP
 ##
+##  PackageInfo.g        GAP4 Package `Guarana'               Bjoern Assmann
+##  
 
 SetPackageInfo( rec(
 
-PackageName := "GitHubPagesForGAP",
-
-Subtitle := "A GitHub Pages generator for GAP packages",
-Version := "0.4",
-Date := "10/04/2025", # dd/mm/yyyy format
-License := "0BSD",
+PackageName := "Guarana",
+Subtitle := "Applications of Lie methods for computations with infinite polycyclic groups",
+Version := "0.96.4",
+Date := "10/11/2026", # dd/mm/yyyy format
+License := "GPL-2.0-or-later",
 
 Persons := [
+
   rec(
-    LastName      := "Horn",
-    FirstNames    := "Max",
-    IsAuthor      := true,
-    IsMaintainer  := true,
-    Email         := "mhorn@rptu.de",
-    WWWHome       := "https://www.quendi.de/math",
-    GitHubUsername:= "fingolfin",
-    PostalAddress := Concatenation(
-                       "Fachbereich Mathematik\n",
-                       "RPTU Kaiserslautern-Landau\n",
-                       "Gottlieb-Daimler-Straße 48\n",
-                       "67663 Kaiserslautern\n",
-                       "Germany" ),
-    Place         := "Kaiserslautern, Germany",
-    Institution   := "RPTU Kaiserslautern-Landau"
+      LastName      := "Assmann",
+      FirstNames    := "Björn",
+      IsAuthor      := true,
+      IsMaintainer  := false,
+      Email         := "bjoern@mcs.st-and.ac.uk",
   ),
 
   rec(
-    LastName      := "Thor",
-    FirstNames    := "A. U.",
-    IsAuthor      := true,
-    IsMaintainer  := false,
-    #Email         := "author@example.com",
-  ),
+      LastName      := "McDermott",
+      FirstNames    := "John",
+      IsAuthor      := false,
+      IsMaintainer  := false,
+      # Former maintainer; converted the manual to GAPDoc
+      Email         := "jjm@mcs.st-and.ac.uk",
+      PostalAddress := Concatenation( [
+            "Mathematical Institute\n",
+            "University of St. Andrews\n",
+            "North Haugh, St. Andrews\n Fife, KY 16 9SS, Scotland" ] ),
+      Place         := "St. Andrews",
+      Institution   := "University of St. Andrews"),
 
   rec(
-    LastName      := "Itor",
-    FirstNames    := "Jan",
-    IsAuthor      := false,
-    IsMaintainer  := true,
-    #Email         := "janitor@example.com",
+      LastName      := "GAP Team",
+      FirstNames    := "The",
+      IsAuthor      := false,
+      IsMaintainer  := true,
+      Email         := "support@gap-system.org",
   ),
+
 ],
 
-Status := "other",
+Status := "deposited",
+#CommunicatedBy := "Charles Wright (Eugene)",
+#AcceptDate := "08/2005",
 
-# The following are not strictly necessary in your own PackageInfo.g
-# (in the sense that update.g only looks at the usual fields
-# like PackageWWWHome, ArchiveURL etc.). But they are convenient
-# if you use exactly the scheme for your package website that we propose.
-GithubUser := "gap-system",
-GithubRepository := ~.PackageName,
-GithubWWW := Concatenation("https://github.com/", ~.GithubUser, "/", ~.GithubRepository),
+PackageWWWHome  := "https://gap-packages.github.io/guarana/",
+README_URL      := Concatenation( ~.PackageWWWHome, "README.md" ),
+PackageInfoURL  := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
+SourceRepository := rec(
+    Type := "git",
+    URL := "https://github.com/gap-packages/guarana",
+),
+IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
+ArchiveURL      := Concatenation( ~.SourceRepository.URL,
+                                 "/releases/download/v", ~.Version,
+                                 "/guarana-", ~.Version ),
+ArchiveFormats := ".tar.gz",
 
-PackageWWWHome := Concatenation("https://", ~.GithubUser, ".github.io/", ~.GithubRepository, "/"),
-README_URL     := Concatenation( ~.PackageWWWHome, "README.md" ),
-PackageInfoURL := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
-# The following assumes you are using the Github releases system. If not, adjust
-# it accordingly.
-ArchiveURL     := Concatenation(~.GithubWWW,
-                    "/releases/download/v", ~.Version, "/",
-                    ~.GithubRepository, "-", ~.Version),
-
-ArchiveFormats := ".tar.gz .tar.bz2",
-
-AbstractHTML := 
-  "This is a pseudo package that contains no actual\
-  <span class=\"pkgname\">GAP</span> code. Instead, it is a template for other\
-  GAP packages that allows to quickly setup GitHub Pages.",
+AbstractHTML := "The Guarana package provides computational applications of the Mal'cev correspondence, in particular for collection in infinite polycyclic groups.", 
 
 PackageDoc := rec(
-  BookName  := "GitHubPagesForGAP",
+  BookName  := "Guarana",
   ArchiveURLSubset := ["doc"],
-  HTMLStart := "doc/chap0.html",
+  HTMLStart := "doc/chap0_mj.html",
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/manual.six",
-  LongTitle := "A GitHub Pages generator for GAP packages",
+  LongTitle := "Applications of Lie methods for computations with infinite polycyclic groups",
 ),
 
-# The following dependencies are fake and for testing / demo purposes
 Dependencies := rec(
-  GAP := ">=4.8.1",
-  NeededOtherPackages := [
-    ["GAPDoc", ">= 1.2"],
-    ["IO", ">= 4.1"],
-  ],
-  SuggestedOtherPackages := [["orb", ">= 4.2"]],
-  ExternalConditions := []
-),
+  GAP := ">= 4.12",
+  NeededOtherPackages := [ [ "nq", ">=2.0" ],
+                           [ "polycyclic", ">=2.11" ],
+                           [ "polenta", ">=1.2.3" ],
+                         ],
+  SuggestedOtherPackages := [ [ "alnuth", ">=3.2.0" ],
+                              [ "fga", ">=1.0" ],
+                            ],
+  ExternalConditions :=[], 
+), 
 
-AvailabilityTest := ReturnTrue,
+AvailabilityTest := ReturnTrue,             
 
-Keywords := ["GitHub Pages", "GAP"]
+TestFile := "tst/testall.g",
+Keywords := ["Mal'cev correspondence", "Collection", "Lie algebra", "Baker Campbell Hausdorff Formula", "polycyclic groups" ],
+
+  AutoDoc := rec(
+    TitlePage := rec(
+      Copyright := "&copyright; 2007 Björn Assmann.",
+    ),
+  ),
 
 ));
-
-
