@@ -13,7 +13,7 @@
     <Section Label="sec:setup">
       <Heading>Setup for computing the correspondence</Heading>
       Let <M>G</M> be a finitely generated torsion-free nilpotent group,
-      i.e.\ a <M>T</M>-group.
+      i.e. a <M>T</M>-group.
       Then <M>G</M> can be embedded in a <M>\mathbb{Q}</M>-powered hull <M>\hat{G}</M>.
       The group <M>\hat{G}</M> is
       a <M>\mathbb{Q}</M>-powered nilpotent group and
