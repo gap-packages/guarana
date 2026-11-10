@@ -79,7 +79,8 @@ Dependencies := rec(
                            [ "polycyclic", ">=2.11" ],
                            [ "polenta", ">=1.2.3" ],
                          ],
-  SuggestedOtherPackages := [ [ "alnuth", ">=3.2.0" ]
+  SuggestedOtherPackages := [ [ "alnuth", ">=3.2.0" ],
+                              [ "fga", ">=1.0" ],
                             ],
   ExternalConditions :=[], 
 ), 
@@ -87,7 +88,7 @@ Dependencies := rec(
 AvailabilityTest := ReturnTrue,             
 
 TestFile := "tst/testall.g",
-Keywords := ["Mal'cev correspondence", "Collection", "Lie algebra", "Baker Campbell Haussdorff Formula", "polycyclic groups" ],    
+Keywords := ["Mal'cev correspondence", "Collection", "Lie algebra", "Baker Campbell Hausdorff Formula", "polycyclic groups" ],
 
   AutoDoc := rec(
     TitlePage := rec(

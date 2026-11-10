@@ -17,7 +17,7 @@
     <M>(c_1N,\dots,c_k N)</M> be a basis for
     the free abelian group <M>CN/N</M>.
     Then <M>(c_1,\dots,c_k,n_1,\dots,n_l)</M>
-    is a polycyclic sequence for <M>H=CN</M>. Further there exists
+    is a polycyclic sequence for <M>H=CN</M>. Further there exist
     <M>f_1,\dots, f_j \in G</M> such that <M>(f_1 H, \dots, f_j H)</M> is
     a polycyclic sequence for <M>G/H</M>. Now we set
 
@@ -28,10 +28,13 @@
         </Heading>
 
         <ManSection>
-        <Func Name="MalcevCollectorConstruction" Arg="G, inds, C, CC, N, NN"/>
+        <Func Name="MalcevCollectorConstruction" Arg="list"/>
         <Description>
         Returns a Mal'cev collector for the infinite polycyclically
-        presented group <M>G</M>. The group <M>G</M> must be given
+        presented group <M>G</M>.
+        The argument <A>list</A> is the list
+        <M>[ G, inds, N, NN, C, CC ]</M> described below.
+        The group <M>G</M> must be given
         with respect to a polycyclic sequence <M>(g_1,\dots,g_r, c_{r+1},
         \dots, c_{r+s}, n_{r+s+1}, \dots, n_{r+s+t})</M>
         with the following properties:
@@ -51,14 +54,14 @@
             </Item>
         </List>
 
-        The list <A>inds</A> is equal to
+        The list <M>inds</M> is equal to
         <M>[ [1,\dots,r],[r+1,\dots,r+s],[r+s+1,\dots,r+s+t]]</M>.
         The group <M>CC</M> is isomorphic to <M>C</M> via
-        <A>CC</A>!.bijection
+        <C>CC!.bijection</C>
         and given by a polycyclic presentation with respect
         to a Mal'cev basis starting with <M>c_{r+1}, \dots, c_{r+s}</M>.
         The  group <M>NN</M> is isomorphic to <M>N</M> via
-        <A>NN</A>!.bijection.
+        <C>NN!.bijection</C>
         and given by a polycyclic presentation with respect
         to the Mal'cev basis <M>( n_{r+s+1}, \dots, n_{r+s+t})</M>.
         </Description>
@@ -68,7 +71,7 @@
         <Func Name="GUARANA.Tr_n_O1" Arg="n" />
         <Func Name="GUARANA.Tr_n_O2" Arg="n" />
         <Description>
-        for a positive integer <A>n</A>
+        For a positive integer <A>n</A>
         these functions construct polycyclically presented groups
         that can be used to test the Mal'cev collector.
         They return a list which can be used as input for the function
@@ -86,15 +89,15 @@
 
     <ManSection>
         <Func Name="GUARANA.F_2c_Aut1" Arg="c" />
-        <Func Name="GUARANA.F_3c_Aut1" Arg="c" />
+        <Func Name="GUARANA.F_3c_Aut2" Arg="c" />
         <Description>
-        for a positive integer <A>c</A>
+        For a positive integer <A>c</A>
         these functions construct polycyclically presented groups
         that can be used to test the Mal'cev collector.
         They return a list which can be used as input for the function
         MalcevCollectorConstruction.
         These groups are constructed as follows:
-        Let <M>F_{n,c}</M> be the free nilpotent of class <M>c</M> group on
+        Let <M>F_{n,c}</M> be the free nilpotent group of class <M>c</M> on
         <M>n</M> generators.
         An automorphism <M>\varphi</M> of the free group <M>F_n</M>
         naturally induces an automorphism
@@ -105,8 +108,8 @@
         <M>F_3</M> mapping <M>f_1</M> to <M>f_2^{-1}</M>, <M>f_2</M>
         to <M>f_3^{-1}</M> and <M>f_3</M> to <M>f_2^{-3}f_1^{-1}</M>
         for our construction.
-        The returned group F_2c_Aut1, respectively F_3c_Aut2, is
-        isomorphic to the semidirect product
+        The group in the list returned by <C>GUARANA.F_2c_Aut1</C>,
+        respectively <C>GUARANA.F_3c_Aut2</C>, is isomorphic to the semidirect product
         <M>\langle \varphi_1 \rangle \ltimes F_{2,c}</M>, respectively
         <M>\langle \varphi_2 \rangle \ltimes F_{3,c}</M>.
         </Description>
@@ -117,7 +120,7 @@
         <Description>
         For a Mal'cev collector <A>malCol</A> of a group <M>G</M>
         and an exponent vector <A>exps</A> with integer
-        entries, this functions returns the group element of <M>G</M>, which
+        entries, this function returns the group element of <M>G</M>, which
         has exponents <A>exps</A> with respect to the polycyclic sequence
         underlying <A>malCol</A>.
         </Description>
